@@ -20,12 +20,14 @@ import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
 import com.adviverse.api.models.CarouselItemDto;
+import com.adviverse.api.models.CompanionDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +53,12 @@ import com.adviverse.api.ApiClient;
   CreateCreativeDto.JSON_PROPERTY_WIDTH,
   CreateCreativeDto.JSON_PROPERTY_HEIGHT,
   CreateCreativeDto.JSON_PROPERTY_WEIGHT,
-  CreateCreativeDto.JSON_PROPERTY_CAROUSEL_ITEMS
+  CreateCreativeDto.JSON_PROPERTY_CAROUSEL_ITEMS,
+  CreateCreativeDto.JSON_PROPERTY_DURATION,
+  CreateCreativeDto.JSON_PROPERTY_SKIP_OFFSET_SEC,
+  CreateCreativeDto.JSON_PROPERTY_VPAID_URL,
+  CreateCreativeDto.JSON_PROPERTY_COMPANIONS,
+  CreateCreativeDto.JSON_PROPERTY_VAST_TAG_URL
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class CreateCreativeDto {
@@ -99,6 +106,21 @@ public class CreateCreativeDto {
 
   public static final String JSON_PROPERTY_CAROUSEL_ITEMS = "carouselItems";
   private List<CarouselItemDto> carouselItems = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_DURATION = "duration";
+  private BigDecimal duration;
+
+  public static final String JSON_PROPERTY_SKIP_OFFSET_SEC = "skipOffsetSec";
+  private BigDecimal skipOffsetSec;
+
+  public static final String JSON_PROPERTY_VPAID_URL = "vpaidUrl";
+  private URI vpaidUrl;
+
+  public static final String JSON_PROPERTY_COMPANIONS = "companions";
+  private List<CompanionDto> companions = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_VAST_TAG_URL = "vastTagUrl";
+  private URI vastTagUrl;
 
   public CreateCreativeDto() { 
   }
@@ -471,6 +493,138 @@ public class CreateCreativeDto {
   }
 
 
+  public CreateCreativeDto duration(BigDecimal duration) {
+    this.duration = duration;
+    return this;
+  }
+
+  /**
+   * Get duration
+   * minimum: 1
+   * maximum: 600
+   * @return duration
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_DURATION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public BigDecimal getDuration() {
+    return duration;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_DURATION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDuration(BigDecimal duration) {
+    this.duration = duration;
+  }
+
+
+  public CreateCreativeDto skipOffsetSec(BigDecimal skipOffsetSec) {
+    this.skipOffsetSec = skipOffsetSec;
+    return this;
+  }
+
+  /**
+   * &gt;0 makes the linear ad skippable after N seconds (VAST skipoffset).
+   * minimum: 0
+   * maximum: 600
+   * @return skipOffsetSec
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_SKIP_OFFSET_SEC)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public BigDecimal getSkipOffsetSec() {
+    return skipOffsetSec;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_SKIP_OFFSET_SEC)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSkipOffsetSec(BigDecimal skipOffsetSec) {
+    this.skipOffsetSec = skipOffsetSec;
+  }
+
+
+  public CreateCreativeDto vpaidUrl(URI vpaidUrl) {
+    this.vpaidUrl = vpaidUrl;
+    return this;
+  }
+
+  /**
+   * Interactive VPAID (application/javascript) creative file, https.
+   * @return vpaidUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VPAID_URL)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public URI getVpaidUrl() {
+    return vpaidUrl;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_VPAID_URL)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVpaidUrl(URI vpaidUrl) {
+    this.vpaidUrl = vpaidUrl;
+  }
+
+
+  public CreateCreativeDto companions(List<CompanionDto> companions) {
+    this.companions = companions;
+    return this;
+  }
+
+  public CreateCreativeDto addCompanionsItem(CompanionDto companionsItem) {
+    if (this.companions == null) {
+      this.companions = new ArrayList<>();
+    }
+    this.companions.add(companionsItem);
+    return this;
+  }
+
+  /**
+   * Companion banners (VAST CompanionAds), max 5.
+   * @return companions
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_COMPANIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<CompanionDto> getCompanions() {
+    return companions;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_COMPANIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCompanions(List<CompanionDto> companions) {
+    this.companions = companions;
+  }
+
+
+  public CreateCreativeDto vastTagUrl(URI vastTagUrl) {
+    this.vastTagUrl = vastTagUrl;
+    return this;
+  }
+
+  /**
+   * Third-party VAST tag (the advertiser&#39;s own ad server), https. Only valid for type video/audio. Makes assetUrl optional: with no assetUrl the engine serves a VAST &lt;Wrapper&gt; pointing at this tag; when both are set the inline asset wins.
+   * @return vastTagUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VAST_TAG_URL)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public URI getVastTagUrl() {
+    return vastTagUrl;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_VAST_TAG_URL)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVastTagUrl(URI vastTagUrl) {
+    this.vastTagUrl = vastTagUrl;
+  }
+
+
   /**
    * Return true if this CreateCreativeDto object is equal to o.
    */
@@ -497,12 +651,17 @@ public class CreateCreativeDto {
         Objects.equals(this.width, createCreativeDto.width) &&
         Objects.equals(this.height, createCreativeDto.height) &&
         Objects.equals(this.weight, createCreativeDto.weight) &&
-        Objects.equals(this.carouselItems, createCreativeDto.carouselItems);
+        Objects.equals(this.carouselItems, createCreativeDto.carouselItems) &&
+        Objects.equals(this.duration, createCreativeDto.duration) &&
+        Objects.equals(this.skipOffsetSec, createCreativeDto.skipOffsetSec) &&
+        Objects.equals(this.vpaidUrl, createCreativeDto.vpaidUrl) &&
+        Objects.equals(this.companions, createCreativeDto.companions) &&
+        Objects.equals(this.vastTagUrl, createCreativeDto.vastTagUrl);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(campaignId, type, assetUrl, landingUrl, title, description, iconUrl, mainImageUrl, cta, brandName, starRating, width, height, weight, carouselItems);
+    return Objects.hash(campaignId, type, assetUrl, landingUrl, title, description, iconUrl, mainImageUrl, cta, brandName, starRating, width, height, weight, carouselItems, duration, skipOffsetSec, vpaidUrl, companions, vastTagUrl);
   }
 
   @Override
@@ -524,6 +683,11 @@ public class CreateCreativeDto {
     sb.append("    height: ").append(toIndentedString(height)).append("\n");
     sb.append("    weight: ").append(toIndentedString(weight)).append("\n");
     sb.append("    carouselItems: ").append(toIndentedString(carouselItems)).append("\n");
+    sb.append("    duration: ").append(toIndentedString(duration)).append("\n");
+    sb.append("    skipOffsetSec: ").append(toIndentedString(skipOffsetSec)).append("\n");
+    sb.append("    vpaidUrl: ").append(toIndentedString(vpaidUrl)).append("\n");
+    sb.append("    companions: ").append(toIndentedString(companions)).append("\n");
+    sb.append("    vastTagUrl: ").append(toIndentedString(vastTagUrl)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -649,6 +813,36 @@ public class CreateCreativeDto {
           "".equals(suffix) ? "" : String.format("%s%d%s", containerPrefix, i, containerSuffix))));
         }
       }
+    }
+
+    // add `duration` to the URL query string
+    if (getDuration() != null) {
+      joiner.add(String.format("%sduration%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getDuration()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `skipOffsetSec` to the URL query string
+    if (getSkipOffsetSec() != null) {
+      joiner.add(String.format("%sskipOffsetSec%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getSkipOffsetSec()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `vpaidUrl` to the URL query string
+    if (getVpaidUrl() != null) {
+      joiner.add(String.format("%svpaidUrl%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getVpaidUrl()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `companions` to the URL query string
+    if (getCompanions() != null) {
+      for (int i = 0; i < getCompanions().size(); i++) {
+        if (getCompanions().get(i) != null) {
+          joiner.add(getCompanions().get(i).toUrlQueryString(String.format("%scompanions%s%s", prefix, suffix,
+          "".equals(suffix) ? "" : String.format("%s%d%s", containerPrefix, i, containerSuffix))));
+        }
+      }
+    }
+
+    // add `vastTagUrl` to the URL query string
+    if (getVastTagUrl() != null) {
+      joiner.add(String.format("%svastTagUrl%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getVastTagUrl()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

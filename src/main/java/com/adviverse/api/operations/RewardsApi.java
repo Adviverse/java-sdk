@@ -17,6 +17,7 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.CreateOnchainPoolDto;
 import com.adviverse.api.models.FundPoolDto;
 import com.adviverse.api.models.SetPoolStatusDto;
 import com.adviverse.api.models.SetWorldWebhookDto;
@@ -164,6 +165,87 @@ public class RewardsApi {
     localVarRequestBuilder.header("Accept", "application/json");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * 
+   * 
+   * @param createOnchainPoolDto  (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void rewardsControllerCreateOnchainPool(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
+    rewardsControllerCreateOnchainPoolWithHttpInfo(createOnchainPoolDto);
+  }
+
+  /**
+   * 
+   * 
+   * @param createOnchainPoolDto  (required)
+   * @return ApiResponse&lt;Void&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Void> rewardsControllerCreateOnchainPoolWithHttpInfo(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = rewardsControllerCreateOnchainPoolRequestBuilder(createOnchainPoolDto);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("rewardsControllerCreateOnchainPool", localVarResponse);
+        }
+        return new ApiResponse<Void>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          null
+        );
+      } finally {
+        // Drain the InputStream
+        while (localVarResponse.body().read() != -1) {
+            // Ignore
+        }
+        localVarResponse.body().close();
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder rewardsControllerCreateOnchainPoolRequestBuilder(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
+    // verify the required parameter 'createOnchainPoolDto' is set
+    if (createOnchainPoolDto == null) {
+      throw new ApiException(400, "Missing the required parameter 'createOnchainPoolDto' when calling rewardsControllerCreateOnchainPool");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/rewards/pools/onchain";
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(createOnchainPoolDto);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
     if (memberVarReadTimeout != null) {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }
@@ -657,6 +739,82 @@ public class RewardsApi {
     } catch (IOException e) {
       throw new ApiException(e);
     }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * 
+   * 
+   * @param campaignId  (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void rewardsControllerVoucherSecret(String campaignId) throws ApiException {
+    rewardsControllerVoucherSecretWithHttpInfo(campaignId);
+  }
+
+  /**
+   * 
+   * 
+   * @param campaignId  (required)
+   * @return ApiResponse&lt;Void&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Void> rewardsControllerVoucherSecretWithHttpInfo(String campaignId) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = rewardsControllerVoucherSecretRequestBuilder(campaignId);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("rewardsControllerVoucherSecret", localVarResponse);
+        }
+        return new ApiResponse<Void>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          null
+        );
+      } finally {
+        // Drain the InputStream
+        while (localVarResponse.body().read() != -1) {
+            // Ignore
+        }
+        localVarResponse.body().close();
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder rewardsControllerVoucherSecretRequestBuilder(String campaignId) throws ApiException {
+    // verify the required parameter 'campaignId' is set
+    if (campaignId == null) {
+      throw new ApiException(400, "Missing the required parameter 'campaignId' when calling rewardsControllerVoucherSecret");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/rewards/pools/{campaignId}/voucher-secret"
+        .replace("{campaignId}", ApiClient.urlEncode(campaignId.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }

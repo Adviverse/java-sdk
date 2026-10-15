@@ -36,6 +36,7 @@ src/main/java/com/adviverse/api/models/ClaimScreenDto.java
 src/main/java/com/adviverse/api/models/ClaimSurfaceDto.java
 src/main/java/com/adviverse/api/models/ClientPingDto.java
 src/main/java/com/adviverse/api/models/ComboUnitDto.java
+src/main/java/com/adviverse/api/models/CompanionDto.java
 src/main/java/com/adviverse/api/models/ConsentConfigDto.java
 src/main/java/com/adviverse/api/models/ConsentDto.java
 src/main/java/com/adviverse/api/models/CreateAppDto.java
@@ -49,6 +50,7 @@ src/main/java/com/adviverse/api/models/CreateDestinationDto.java
 src/main/java/com/adviverse/api/models/CreateFeedDto.java
 src/main/java/com/adviverse/api/models/CreateGuideDto.java
 src/main/java/com/adviverse/api/models/CreateKeyDto.java
+src/main/java/com/adviverse/api/models/CreateOnchainPoolDto.java
 src/main/java/com/adviverse/api/models/CreatePlacementDto.java
 src/main/java/com/adviverse/api/models/CreatePortalConfigDto.java
 src/main/java/com/adviverse/api/models/CreatePostDto.java

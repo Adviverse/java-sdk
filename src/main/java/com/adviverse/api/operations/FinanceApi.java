@@ -19,6 +19,17 @@ import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.CurrencyDto;
 import com.adviverse.api.models.DepositDto;
+import com.adviverse.api.models.FinBalance;
+import com.adviverse.api.models.FinCurrencyRate;
+import com.adviverse.api.models.FinDeposit;
+import com.adviverse.api.models.FinDepositResult;
+import com.adviverse.api.models.FinLedgerEntry;
+import com.adviverse.api.models.FinPayout;
+import com.adviverse.api.models.FinTaxForm;
+import com.adviverse.api.models.FinanceControllerMethods200Response;
+import com.adviverse.api.models.FinanceControllerPayout201Response;
+import com.adviverse.api.models.FinanceControllerPaypalWebhook201Response;
+import com.adviverse.api.models.FinanceControllerStripeWebhook201Response;
 import com.adviverse.api.models.PayoutDto;
 import com.adviverse.api.models.TaxFormDto;
 
@@ -85,21 +96,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Get the caller&#39;s available and held balance
+   * Returns the materialized balance row for the caller&#39;s account: available funds, funds held (pending payouts and unmatured earnings) and the account currency. Returns zeros in USD when no ledger activity exists.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return FinBalance
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerBalance() throws ApiException {
-    financeControllerBalanceWithHttpInfo();
+  public FinBalance financeControllerBalance() throws ApiException {
+    ApiResponse<FinBalance> localVarResponse = financeControllerBalanceWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the caller&#39;s available and held balance
+   * Returns the materialized balance row for the caller&#39;s account: available funds, funds held (pending payouts and unmatured earnings) and the account currency. Returns zeros in USD when no ledger activity exists.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;FinBalance&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerBalanceWithHttpInfo() throws ApiException {
+  public ApiResponse<FinBalance> financeControllerBalanceWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerBalanceRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -112,17 +125,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerBalance", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinBalance>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinBalance>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -154,23 +162,25 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Receive OxaPay crypto webhooks
+   * Called by OxaPay. Verifies the &#x60;hmac&#x60; header (HMAC-SHA512 of the raw body). Payment callbacks (merchant key) credit the deposit when status is &#39;Paid&#39;; payout callbacks (payout key) settle the held funds as paid on &#39;Confirmed&#39; or return them on &#39;Failed&#39;/&#39;Rejected&#39;. Always answers 200 with the plain body &#39;ok&#39; once verified so OxaPay stops retrying.  Auth: public, no credentials required.
    * @param hmac  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerCryptoWebhook(String hmac) throws ApiException {
-    financeControllerCryptoWebhookWithHttpInfo(hmac);
+  public String financeControllerCryptoWebhook(String hmac) throws ApiException {
+    ApiResponse<String> localVarResponse = financeControllerCryptoWebhookWithHttpInfo(hmac);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Receive OxaPay crypto webhooks
+   * Called by OxaPay. Verifies the &#x60;hmac&#x60; header (HMAC-SHA512 of the raw body). Payment callbacks (merchant key) credit the deposit when status is &#39;Paid&#39;; payout callbacks (payout key) settle the held funds as paid on &#39;Confirmed&#39; or return them on &#39;Failed&#39;/&#39;Rejected&#39;. Always answers 200 with the plain body &#39;ok&#39; once verified so OxaPay stops retrying.  Auth: public, no credentials required.
    * @param hmac  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerCryptoWebhookWithHttpInfo(String hmac) throws ApiException {
+  public ApiResponse<String> financeControllerCryptoWebhookWithHttpInfo(String hmac) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerCryptoWebhookRequestBuilder(hmac);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -183,17 +193,20 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerCryptoWebhook", localVarResponse);
         }
-        return new ApiResponse<Void>(
-          localVarResponse.statusCode(),
-          localVarResponse.headers().map(),
-          null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
+        // for plain text response
+        if (localVarResponse.headers().map().containsKey("Content-Type") &&
+                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
+          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
+          String responseBodyText = s.hasNext() ? s.next() : "";
+          return new ApiResponse<String>(
+                  localVarResponse.statusCode(),
+                  localVarResponse.headers().map(),
+                  responseBodyText
+          );
+        } else {
+            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
         }
-        localVarResponse.body().close();
+      } finally {
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -219,7 +232,7 @@ public class FinanceApi {
     if (hmac != null) {
       localVarRequestBuilder.header("hmac", hmac.toString());
     }
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/plain");
 
     localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -232,21 +245,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * List registered currencies and token rates
+   * Returns every row of currency_rates (fiat codes and tenant-registered tokens) with its USD rate in micro-USD, optional live price feed and last update, ordered by most recently updated.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;FinCurrencyRate&gt;
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerCurrencies() throws ApiException {
-    financeControllerCurrenciesWithHttpInfo();
+  public List<FinCurrencyRate> financeControllerCurrencies() throws ApiException {
+    ApiResponse<List<FinCurrencyRate>> localVarResponse = financeControllerCurrenciesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List registered currencies and token rates
+   * Returns every row of currency_rates (fiat codes and tenant-registered tokens) with its USD rate in micro-USD, optional live price feed and last update, ordered by most recently updated.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;FinCurrencyRate&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerCurrenciesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<FinCurrencyRate>> financeControllerCurrenciesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerCurrenciesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -259,17 +274,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerCurrencies", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<FinCurrencyRate>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<FinCurrencyRate>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -301,23 +311,25 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Start a deposit
+   * Creates a pending deposit for &#x60;amount&#x60; (0.01..1,000,000, 2 dp) through &#x60;provider&#x60;: stripe (default) / card, paypal, crypto, wire, paxum, or mock (refused in production). The deposit is denominated in the account&#39;s currency; tokens not at USD par are charged to the provider in USD. Hosted-checkout providers return a redirectUrl and are credited later by webhook; wire/paxum return transfer instructions and are credited when ops confirm receipt; mock completes immediately. An unconfigured provider is refused.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param depositDto  (required)
+   * @return FinDepositResult
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerDeposit(DepositDto depositDto) throws ApiException {
-    financeControllerDepositWithHttpInfo(depositDto);
+  public FinDepositResult financeControllerDeposit(DepositDto depositDto) throws ApiException {
+    ApiResponse<FinDepositResult> localVarResponse = financeControllerDepositWithHttpInfo(depositDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start a deposit
+   * Creates a pending deposit for &#x60;amount&#x60; (0.01..1,000,000, 2 dp) through &#x60;provider&#x60;: stripe (default) / card, paypal, crypto, wire, paxum, or mock (refused in production). The deposit is denominated in the account&#39;s currency; tokens not at USD par are charged to the provider in USD. Hosted-checkout providers return a redirectUrl and are credited later by webhook; wire/paxum return transfer instructions and are credited when ops confirm receipt; mock completes immediately. An unconfigured provider is refused.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param depositDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;FinDepositResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerDepositWithHttpInfo(DepositDto depositDto) throws ApiException {
+  public ApiResponse<FinDepositResult> financeControllerDepositWithHttpInfo(DepositDto depositDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerDepositRequestBuilder(depositDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -330,17 +342,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerDeposit", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinDepositResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinDepositResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -382,21 +389,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * List the caller&#39;s deposits
+   * Returns the caller&#39;s 100 most recent deposits (all statuses), newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;FinDeposit&gt;
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerDeposits() throws ApiException {
-    financeControllerDepositsWithHttpInfo();
+  public List<FinDeposit> financeControllerDeposits() throws ApiException {
+    ApiResponse<List<FinDeposit>> localVarResponse = financeControllerDepositsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List the caller&#39;s deposits
+   * Returns the caller&#39;s 100 most recent deposits (all statuses), newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;FinDeposit&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerDepositsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<FinDeposit>> financeControllerDepositsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerDepositsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -409,17 +418,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerDeposits", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<FinDeposit>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<FinDeposit>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -451,21 +455,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * List the caller&#39;s ledger entries
+   * Returns the caller&#39;s 100 most recent ledger entries, newest first. Every money movement is one immutable, signed entry with a running balance_after and a unique idempotency key.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;FinLedgerEntry&gt;
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerHistory() throws ApiException {
-    financeControllerHistoryWithHttpInfo();
+  public List<FinLedgerEntry> financeControllerHistory() throws ApiException {
+    ApiResponse<List<FinLedgerEntry>> localVarResponse = financeControllerHistoryWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List the caller&#39;s ledger entries
+   * Returns the caller&#39;s 100 most recent ledger entries, newest first. Every money movement is one immutable, signed entry with a running balance_after and a unique idempotency key.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;FinLedgerEntry&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerHistoryWithHttpInfo() throws ApiException {
+  public ApiResponse<List<FinLedgerEntry>> financeControllerHistoryWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerHistoryRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -478,17 +484,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerHistory", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<FinLedgerEntry>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<FinLedgerEntry>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -520,21 +521,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * List configured deposit and payout rails
+   * Returns the payment rails usable in this environment, derived from configured provider credentials. Deposit rails can include card, crypto, paypal, wire, paxum (and mock outside production); payout rails crypto, paxum and wire (wire payout is always offered as a manual bank transfer).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return FinanceControllerMethods200Response
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerMethods() throws ApiException {
-    financeControllerMethodsWithHttpInfo();
+  public FinanceControllerMethods200Response financeControllerMethods() throws ApiException {
+    ApiResponse<FinanceControllerMethods200Response> localVarResponse = financeControllerMethodsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List configured deposit and payout rails
+   * Returns the payment rails usable in this environment, derived from configured provider credentials. Deposit rails can include card, crypto, paypal, wire, paxum (and mock outside production); payout rails crypto, paxum and wire (wire payout is always offered as a manual bank transfer).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;FinanceControllerMethods200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerMethodsWithHttpInfo() throws ApiException {
+  public ApiResponse<FinanceControllerMethods200Response> financeControllerMethodsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerMethodsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -547,17 +550,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerMethods", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinanceControllerMethods200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinanceControllerMethods200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -589,23 +587,25 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Request a payout
+   * Requests a withdrawal of &#x60;amount&#x60; via &#x60;method&#x60; (crypto, paxum or wire) to &#x60;destination&#x60; (method-specific object). Enforces the minimum payout and, when configured, a tax form on file. Inside one transaction the balance row is locked, available funds are re-checked (400 &#39;insufficient available balance&#39;), and the amount is moved from available to held. Dispatch to the provider happens later; the payout starts in status &#39;requested&#39;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param payoutDto  (required)
+   * @return FinanceControllerPayout201Response
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerPayout(PayoutDto payoutDto) throws ApiException {
-    financeControllerPayoutWithHttpInfo(payoutDto);
+  public FinanceControllerPayout201Response financeControllerPayout(PayoutDto payoutDto) throws ApiException {
+    ApiResponse<FinanceControllerPayout201Response> localVarResponse = financeControllerPayoutWithHttpInfo(payoutDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Request a payout
+   * Requests a withdrawal of &#x60;amount&#x60; via &#x60;method&#x60; (crypto, paxum or wire) to &#x60;destination&#x60; (method-specific object). Enforces the minimum payout and, when configured, a tax form on file. Inside one transaction the balance row is locked, available funds are re-checked (400 &#39;insufficient available balance&#39;), and the amount is moved from available to held. Dispatch to the provider happens later; the payout starts in status &#39;requested&#39;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param payoutDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;FinanceControllerPayout201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerPayoutWithHttpInfo(PayoutDto payoutDto) throws ApiException {
+  public ApiResponse<FinanceControllerPayout201Response> financeControllerPayoutWithHttpInfo(PayoutDto payoutDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerPayoutRequestBuilder(payoutDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -618,17 +618,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerPayout", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinanceControllerPayout201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinanceControllerPayout201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -670,21 +665,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * List the caller&#39;s payouts
+   * Returns the publisher&#39;s 100 most recent payout requests, newest first, with status, method, destination and provider reference.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return List&lt;FinPayout&gt;
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerPayouts() throws ApiException {
-    financeControllerPayoutsWithHttpInfo();
+  public List<FinPayout> financeControllerPayouts() throws ApiException {
+    ApiResponse<List<FinPayout>> localVarResponse = financeControllerPayoutsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List the caller&#39;s payouts
+   * Returns the publisher&#39;s 100 most recent payout requests, newest first, with status, method, destination and provider reference.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;List&lt;FinPayout&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerPayoutsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<FinPayout>> financeControllerPayoutsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerPayoutsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -697,17 +694,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerPayouts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<FinPayout>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<FinPayout>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -739,31 +731,33 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Receive PayPal order webhooks
+   * Called by PayPal. Verifies the PayPal-Transmission-* headers via PayPal&#39;s verify-webhook-signature API before any crediting (400 if unverifiable or PayPal is not configured). CHECKOUT.ORDER.APPROVED captures the order and credits the matching deposit; PAYMENT.CAPTURE.COMPLETED credits directly. Crediting is idempotent; other events are ignored.  Auth: public, no credentials required.
    * @param paypalTransmissionId  (required)
    * @param paypalTransmissionTime  (required)
    * @param paypalCertUrl  (required)
    * @param paypalAuthAlgo  (required)
    * @param paypalTransmissionSig  (required)
+   * @return FinanceControllerPaypalWebhook201Response
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerPaypalWebhook(String paypalTransmissionId, String paypalTransmissionTime, String paypalCertUrl, String paypalAuthAlgo, String paypalTransmissionSig) throws ApiException {
-    financeControllerPaypalWebhookWithHttpInfo(paypalTransmissionId, paypalTransmissionTime, paypalCertUrl, paypalAuthAlgo, paypalTransmissionSig);
+  public FinanceControllerPaypalWebhook201Response financeControllerPaypalWebhook(String paypalTransmissionId, String paypalTransmissionTime, String paypalCertUrl, String paypalAuthAlgo, String paypalTransmissionSig) throws ApiException {
+    ApiResponse<FinanceControllerPaypalWebhook201Response> localVarResponse = financeControllerPaypalWebhookWithHttpInfo(paypalTransmissionId, paypalTransmissionTime, paypalCertUrl, paypalAuthAlgo, paypalTransmissionSig);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Receive PayPal order webhooks
+   * Called by PayPal. Verifies the PayPal-Transmission-* headers via PayPal&#39;s verify-webhook-signature API before any crediting (400 if unverifiable or PayPal is not configured). CHECKOUT.ORDER.APPROVED captures the order and credits the matching deposit; PAYMENT.CAPTURE.COMPLETED credits directly. Crediting is idempotent; other events are ignored.  Auth: public, no credentials required.
    * @param paypalTransmissionId  (required)
    * @param paypalTransmissionTime  (required)
    * @param paypalCertUrl  (required)
    * @param paypalAuthAlgo  (required)
    * @param paypalTransmissionSig  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;FinanceControllerPaypalWebhook201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerPaypalWebhookWithHttpInfo(String paypalTransmissionId, String paypalTransmissionTime, String paypalCertUrl, String paypalAuthAlgo, String paypalTransmissionSig) throws ApiException {
+  public ApiResponse<FinanceControllerPaypalWebhook201Response> financeControllerPaypalWebhookWithHttpInfo(String paypalTransmissionId, String paypalTransmissionTime, String paypalCertUrl, String paypalAuthAlgo, String paypalTransmissionSig) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerPaypalWebhookRequestBuilder(paypalTransmissionId, paypalTransmissionTime, paypalCertUrl, paypalAuthAlgo, paypalTransmissionSig);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -776,17 +770,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerPaypalWebhook", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinanceControllerPaypalWebhook201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinanceControllerPaypalWebhook201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -853,23 +842,25 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Receive Stripe payment webhooks
+   * Called by Stripe, not by API clients. Verifies the &#x60;stripe-signature&#x60; header against the raw body (400 on failure or if Stripe is not configured). On checkout.session.completed (paid) or payment_intent.succeeded it resolves the deposit from metadata or provider_ref and credits it to the ledger idempotently; other event types are acknowledged and ignored.  Auth: public, no credentials required.
    * @param stripeSignature  (required)
+   * @return FinanceControllerStripeWebhook201Response
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerStripeWebhook(String stripeSignature) throws ApiException {
-    financeControllerStripeWebhookWithHttpInfo(stripeSignature);
+  public FinanceControllerStripeWebhook201Response financeControllerStripeWebhook(String stripeSignature) throws ApiException {
+    ApiResponse<FinanceControllerStripeWebhook201Response> localVarResponse = financeControllerStripeWebhookWithHttpInfo(stripeSignature);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Receive Stripe payment webhooks
+   * Called by Stripe, not by API clients. Verifies the &#x60;stripe-signature&#x60; header against the raw body (400 on failure or if Stripe is not configured). On checkout.session.completed (paid) or payment_intent.succeeded it resolves the deposit from metadata or provider_ref and credits it to the ledger idempotently; other event types are acknowledged and ignored.  Auth: public, no credentials required.
    * @param stripeSignature  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;FinanceControllerStripeWebhook201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerStripeWebhookWithHttpInfo(String stripeSignature) throws ApiException {
+  public ApiResponse<FinanceControllerStripeWebhook201Response> financeControllerStripeWebhookWithHttpInfo(String stripeSignature) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerStripeWebhookRequestBuilder(stripeSignature);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -882,17 +873,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerStripeWebhook", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinanceControllerStripeWebhook201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinanceControllerStripeWebhook201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -931,23 +917,25 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Submit or replace the tax form
+   * Upserts the publisher&#39;s tax form. Body: &#x60;formType&#x60; (w9|w8ben), &#x60;legalName&#x60;, optional &#x60;taxClassification&#x60;, &#x60;taxId&#x60; (SSN/EIN/TIN, encrypted at rest; only the last 4 digits are kept in clear), &#x60;address&#x60;, 2-letter &#x60;country&#x60; and &#x60;certified&#x60; (must be true). Status resets to &#39;submitted&#39;. Returns the masked view.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param taxFormDto  (required)
+   * @return FinTaxForm
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerSubmitTaxForm(TaxFormDto taxFormDto) throws ApiException {
-    financeControllerSubmitTaxFormWithHttpInfo(taxFormDto);
+  public FinTaxForm financeControllerSubmitTaxForm(TaxFormDto taxFormDto) throws ApiException {
+    ApiResponse<FinTaxForm> localVarResponse = financeControllerSubmitTaxFormWithHttpInfo(taxFormDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Submit or replace the tax form
+   * Upserts the publisher&#39;s tax form. Body: &#x60;formType&#x60; (w9|w8ben), &#x60;legalName&#x60;, optional &#x60;taxClassification&#x60;, &#x60;taxId&#x60; (SSN/EIN/TIN, encrypted at rest; only the last 4 digits are kept in clear), &#x60;address&#x60;, 2-letter &#x60;country&#x60; and &#x60;certified&#x60; (must be true). Status resets to &#39;submitted&#39;. Returns the masked view.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param taxFormDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;FinTaxForm&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerSubmitTaxFormWithHttpInfo(TaxFormDto taxFormDto) throws ApiException {
+  public ApiResponse<FinTaxForm> financeControllerSubmitTaxFormWithHttpInfo(TaxFormDto taxFormDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerSubmitTaxFormRequestBuilder(taxFormDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -960,17 +948,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerSubmitTaxForm", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinTaxForm>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinTaxForm>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1012,21 +995,23 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Get the caller&#39;s tax form (masked)
+   * Returns the publisher&#39;s W-9 / W-8BEN on file with the tax id masked to its last 4 digits, or &#x60;{ onFile: false }&#x60; if none has been submitted.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return FinTaxForm
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerTaxForm() throws ApiException {
-    financeControllerTaxFormWithHttpInfo();
+  public FinTaxForm financeControllerTaxForm() throws ApiException {
+    ApiResponse<FinTaxForm> localVarResponse = financeControllerTaxFormWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the caller&#39;s tax form (masked)
+   * Returns the publisher&#39;s W-9 / W-8BEN on file with the tax id masked to its last 4 digits, or &#x60;{ onFile: false }&#x60; if none has been submitted.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;FinTaxForm&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerTaxFormWithHttpInfo() throws ApiException {
+  public ApiResponse<FinTaxForm> financeControllerTaxFormWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerTaxFormRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1039,17 +1024,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerTaxForm", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinTaxForm>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinTaxForm>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1081,23 +1061,25 @@ public class FinanceApi {
   }
 
   /**
-   * 
-   * 
+   * Register or update the caller&#39;s token rate
+   * Creates or updates a currency code (2-12 uppercase alphanumerics) owned by the caller. Body: &#x60;code&#x60;, &#x60;name&#x60;, and either &#x60;usdMicro&#x60; (micro-USD per unit) or &#x60;rateUrl&#x60; (a price API polled to keep the rate current, SSRF-guarded) with optional &#x60;rateJsonPath&#x60; (dot-path to the price). When rateUrl is given it is fetched once to seed the rate. Fails with 400 if the code belongs to another account or no positive rate can be determined.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param currencyDto  (required)
+   * @return FinCurrencyRate
    * @throws ApiException if fails to make API call
    */
-  public void financeControllerUpsertCurrency(CurrencyDto currencyDto) throws ApiException {
-    financeControllerUpsertCurrencyWithHttpInfo(currencyDto);
+  public FinCurrencyRate financeControllerUpsertCurrency(CurrencyDto currencyDto) throws ApiException {
+    ApiResponse<FinCurrencyRate> localVarResponse = financeControllerUpsertCurrencyWithHttpInfo(currencyDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Register or update the caller&#39;s token rate
+   * Creates or updates a currency code (2-12 uppercase alphanumerics) owned by the caller. Body: &#x60;code&#x60;, &#x60;name&#x60;, and either &#x60;usdMicro&#x60; (micro-USD per unit) or &#x60;rateUrl&#x60; (a price API polled to keep the rate current, SSRF-guarded) with optional &#x60;rateJsonPath&#x60; (dot-path to the price). When rateUrl is given it is fetched once to seed the rate. Fails with 400 if the code belongs to another account or no positive rate can be determined.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param currencyDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;FinCurrencyRate&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> financeControllerUpsertCurrencyWithHttpInfo(CurrencyDto currencyDto) throws ApiException {
+  public ApiResponse<FinCurrencyRate> financeControllerUpsertCurrencyWithHttpInfo(CurrencyDto currencyDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = financeControllerUpsertCurrencyRequestBuilder(currencyDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1110,17 +1092,12 @@ public class FinanceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("financeControllerUpsertCurrency", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<FinCurrencyRate>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<FinCurrencyRate>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -17,6 +17,19 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AudiencePixel;
+import com.adviverse.api.models.PixelControllerAttribution200Response;
+import com.adviverse.api.models.PixelControllerCliLinkCode201Response;
+import com.adviverse.api.models.PixelControllerCliLinkExchange201Response;
+import com.adviverse.api.models.PixelControllerDeletePixel200Response;
+import com.adviverse.api.models.PixelControllerEvents200ResponseInner;
+import com.adviverse.api.models.PixelControllerInsights200Response;
+import com.adviverse.api.models.PixelControllerProducts200ResponseInner;
+import com.adviverse.api.models.PixelControllerSetRealtime201Response;
+import com.adviverse.api.models.PixelControllerTrack201Response;
+import com.adviverse.api.models.PixelControllerTrackCoding201Response;
+import com.adviverse.api.models.PixelControllerTrait201Response;
+import com.adviverse.api.models.PixelControllerTraitLookup200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,25 +94,27 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Closed-loop attribution by traffic source
+   * Breaks the funnel down by last-touch source (UTM source, else the referring host, else \&quot;direct\&quot;), medium and campaign over the last &#x60;days&#x60; (default 30, max 180): visitors, checkouts, purchases, abandoned checkouts, lost deals, revenue and lost value. Also returns account totals, lost-deal reasons and a first-touch source breakdown. Self-referrals are folded into \&quot;direct\&quot;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
+   * @return PixelControllerAttribution200Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerAttribution(String days, String pixelId) throws ApiException {
-    pixelControllerAttributionWithHttpInfo(days, pixelId);
+  public PixelControllerAttribution200Response pixelControllerAttribution(String days, String pixelId) throws ApiException {
+    ApiResponse<PixelControllerAttribution200Response> localVarResponse = pixelControllerAttributionWithHttpInfo(days, pixelId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Closed-loop attribution by traffic source
+   * Breaks the funnel down by last-touch source (UTM source, else the referring host, else \&quot;direct\&quot;), medium and campaign over the last &#x60;days&#x60; (default 30, max 180): visitors, checkouts, purchases, abandoned checkouts, lost deals, revenue and lost value. Also returns account totals, lost-deal reasons and a first-touch source breakdown. Self-referrals are folded into \&quot;direct\&quot;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PixelControllerAttribution200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerAttributionWithHttpInfo(String days, String pixelId) throws ApiException {
+  public ApiResponse<PixelControllerAttribution200Response> pixelControllerAttributionWithHttpInfo(String days, String pixelId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerAttributionRequestBuilder(days, pixelId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -112,17 +127,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerAttribution", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerAttribution200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerAttribution200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -179,21 +189,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Generate a one-time CLI link code
+   * Creates a single-use code, valid for 10 minutes, that a terminal client exchanges at /v1/track/link for the SHA-256 hash of the account email. This links CLI ad requests to the account identity without the raw email ever leaving the server. Returns 404 if the account has no email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return PixelControllerCliLinkCode201Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerCliLinkCode() throws ApiException {
-    pixelControllerCliLinkCodeWithHttpInfo();
+  public PixelControllerCliLinkCode201Response pixelControllerCliLinkCode() throws ApiException {
+    ApiResponse<PixelControllerCliLinkCode201Response> localVarResponse = pixelControllerCliLinkCodeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Generate a one-time CLI link code
+   * Creates a single-use code, valid for 10 minutes, that a terminal client exchanges at /v1/track/link for the SHA-256 hash of the account email. This links CLI ad requests to the account identity without the raw email ever leaving the server. Returns 404 if the account has no email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;PixelControllerCliLinkCode201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerCliLinkCodeWithHttpInfo() throws ApiException {
+  public ApiResponse<PixelControllerCliLinkCode201Response> pixelControllerCliLinkCodeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerCliLinkCodeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -206,17 +218,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerCliLinkCode", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerCliLinkCode201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerCliLinkCode201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -248,21 +255,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Exchange a CLI link code for an email hash
+   * Public. Trades the &#x60;code&#x60; issued by /v1/advertiser/cli-link-code for the account&#39;s email hash (&#x60;em&#x60;), which the CLI then sends on ad requests. Codes are single-use and deleted on exchange; unknown or expired codes return &#x60;{ok:false}&#x60;.  Auth: public, no credentials required.
+   * @return PixelControllerCliLinkExchange201Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerCliLinkExchange() throws ApiException {
-    pixelControllerCliLinkExchangeWithHttpInfo();
+  public PixelControllerCliLinkExchange201Response pixelControllerCliLinkExchange() throws ApiException {
+    ApiResponse<PixelControllerCliLinkExchange201Response> localVarResponse = pixelControllerCliLinkExchangeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Exchange a CLI link code for an email hash
+   * Public. Trades the &#x60;code&#x60; issued by /v1/advertiser/cli-link-code for the account&#39;s email hash (&#x60;em&#x60;), which the CLI then sends on ad requests. Codes are single-use and deleted on exchange; unknown or expired codes return &#x60;{ok:false}&#x60;.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;PixelControllerCliLinkExchange201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerCliLinkExchangeWithHttpInfo() throws ApiException {
+  public ApiResponse<PixelControllerCliLinkExchange201Response> pixelControllerCliLinkExchangeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerCliLinkExchangeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -275,17 +284,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerCliLinkExchange", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerCliLinkExchange201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerCliLinkExchange201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -317,21 +321,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Create a pixel
+   * Creates an additional pixel under the account (agencies typically run one per client). Optional body field &#x60;name&#x60; (trimmed, max 80 chars, defaults to \&quot;Default pixel\&quot;). Returns the new pixel with its install snippet.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AudiencePixel
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerCreatePixel() throws ApiException {
-    pixelControllerCreatePixelWithHttpInfo();
+  public AudiencePixel pixelControllerCreatePixel() throws ApiException {
+    ApiResponse<AudiencePixel> localVarResponse = pixelControllerCreatePixelWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Create a pixel
+   * Creates an additional pixel under the account (agencies typically run one per client). Optional body field &#x60;name&#x60; (trimmed, max 80 chars, defaults to \&quot;Default pixel\&quot;). Returns the new pixel with its install snippet.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AudiencePixel&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerCreatePixelWithHttpInfo() throws ApiException {
+  public ApiResponse<AudiencePixel> pixelControllerCreatePixelWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerCreatePixelRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -344,17 +350,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerCreatePixel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AudiencePixel>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AudiencePixel>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -386,23 +387,25 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a pixel
+   * Deletes the pixel &#x60;id&#x60; if it belongs to the account. An account always keeps at least one pixel, so deleting the last one fails with 400. Deleting an id the account does not own is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return PixelControllerDeletePixel200Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerDeletePixel(String id) throws ApiException {
-    pixelControllerDeletePixelWithHttpInfo(id);
+  public PixelControllerDeletePixel200Response pixelControllerDeletePixel(String id) throws ApiException {
+    ApiResponse<PixelControllerDeletePixel200Response> localVarResponse = pixelControllerDeletePixelWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a pixel
+   * Deletes the pixel &#x60;id&#x60; if it belongs to the account. An account always keeps at least one pixel, so deleting the last one fails with 400. Deleting an id the account does not own is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PixelControllerDeletePixel200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerDeletePixelWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PixelControllerDeletePixel200Response> pixelControllerDeletePixelWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerDeletePixelRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -415,17 +418,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerDeletePixel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerDeletePixel200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerDeletePixel200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -462,25 +460,27 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Per-event activity totals
+   * Aggregates pixel events from ClickHouse over the last &#x60;days&#x60; (default 30, clamped to 1-180), optionally filtered to &#x60;pixelId&#x60;. Returns one row per event name with event count, unique users and summed value, ordered by count.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
+   * @return List&lt;PixelControllerEvents200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerEvents(String days, String pixelId) throws ApiException {
-    pixelControllerEventsWithHttpInfo(days, pixelId);
+  public List<PixelControllerEvents200ResponseInner> pixelControllerEvents(String days, String pixelId) throws ApiException {
+    ApiResponse<List<PixelControllerEvents200ResponseInner>> localVarResponse = pixelControllerEventsWithHttpInfo(days, pixelId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Per-event activity totals
+   * Aggregates pixel events from ClickHouse over the last &#x60;days&#x60; (default 30, clamped to 1-180), optionally filtered to &#x60;pixelId&#x60;. Returns one row per event name with event count, unique users and summed value, ordered by count.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;PixelControllerEvents200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerEventsWithHttpInfo(String days, String pixelId) throws ApiException {
+  public ApiResponse<List<PixelControllerEvents200ResponseInner>> pixelControllerEventsWithHttpInfo(String days, String pixelId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerEventsRequestBuilder(days, pixelId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -493,17 +493,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerEvents", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<PixelControllerEvents200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<PixelControllerEvents200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -560,23 +555,25 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Get one pixel and its install snippet
+   * Returns the pixel named by the &#x60;pixelId&#x60; query param, or the account&#39;s primary pixel when omitted (created if the account has none). The response includes the pixel.js library URL, the base snippet to paste sitewide and the list of standard event names. Returns 404 when &#x60;pixelId&#x60; is not owned by the account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param pixelId  (required)
+   * @return AudiencePixel
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerGetPixel(String pixelId) throws ApiException {
-    pixelControllerGetPixelWithHttpInfo(pixelId);
+  public AudiencePixel pixelControllerGetPixel(String pixelId) throws ApiException {
+    ApiResponse<AudiencePixel> localVarResponse = pixelControllerGetPixelWithHttpInfo(pixelId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get one pixel and its install snippet
+   * Returns the pixel named by the &#x60;pixelId&#x60; query param, or the account&#39;s primary pixel when omitted (created if the account has none). The response includes the pixel.js library URL, the base snippet to paste sitewide and the list of standard event names. Returns 404 when &#x60;pixelId&#x60; is not owned by the account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param pixelId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AudiencePixel&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerGetPixelWithHttpInfo(String pixelId) throws ApiException {
+  public ApiResponse<AudiencePixel> pixelControllerGetPixelWithHttpInfo(String pixelId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerGetPixelRequestBuilder(pixelId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -589,17 +586,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerGetPixel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AudiencePixel>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AudiencePixel>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -650,25 +642,27 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Pixel funnel, ROAS summary and daily trend
+   * Builds the Pixel dashboard view over the last &#x60;days&#x60; (default 30, max 180), optionally scoped to &#x60;pixelId&#x60;: unique users per funnel stage, a summary of events, attributed conversions, revenue, ad spend and ROAS, and a daily events/conversions/revenue series. ROAS is 0 when there is no spend.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
+   * @return PixelControllerInsights200Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerInsights(String days, String pixelId) throws ApiException {
-    pixelControllerInsightsWithHttpInfo(days, pixelId);
+  public PixelControllerInsights200Response pixelControllerInsights(String days, String pixelId) throws ApiException {
+    ApiResponse<PixelControllerInsights200Response> localVarResponse = pixelControllerInsightsWithHttpInfo(days, pixelId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Pixel funnel, ROAS summary and daily trend
+   * Builds the Pixel dashboard view over the last &#x60;days&#x60; (default 30, max 180), optionally scoped to &#x60;pixelId&#x60;: unique users per funnel stage, a summary of events, attributed conversions, revenue, ad spend and ROAS, and a daily events/conversions/revenue series. ROAS is 0 when there is no spend.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PixelControllerInsights200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerInsightsWithHttpInfo(String days, String pixelId) throws ApiException {
+  public ApiResponse<PixelControllerInsights200Response> pixelControllerInsightsWithHttpInfo(String days, String pixelId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerInsightsRequestBuilder(days, pixelId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -681,17 +675,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerInsights", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerInsights200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerInsights200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -748,8 +737,8 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Serve the pixel JavaScript library
+   * Returns the pixel.js library that the base snippet loads asynchronously; it drains the &#x60;adq(...)&#x60; command queue and posts events to /v1/track/event. Served as JavaScript with a one-hour public cache.  Auth: public, no credentials required.
    * @throws ApiException if fails to make API call
    */
   public void pixelControllerLibrary() throws ApiException {
@@ -757,8 +746,8 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Serve the pixel JavaScript library
+   * Returns the pixel.js library that the base snippet loads asynchronously; it drains the &#x60;adq(...)&#x60; command queue and posts events to /v1/track/event. Served as JavaScript with a one-hour public cache.  Auth: public, no credentials required.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -817,21 +806,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * List the account&#39;s pixels
+   * Returns every pixel owned by the account, oldest first so the primary pixel stays on top. If the account has no pixel yet, a default one is created and returned. Team members scoped to specific pixels only see the pixels assigned to them.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;AudiencePixel&gt;
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerListPixels() throws ApiException {
-    pixelControllerListPixelsWithHttpInfo();
+  public List<AudiencePixel> pixelControllerListPixels() throws ApiException {
+    ApiResponse<List<AudiencePixel>> localVarResponse = pixelControllerListPixelsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List the account&#39;s pixels
+   * Returns every pixel owned by the account, oldest first so the primary pixel stays on top. If the account has no pixel yet, a default one is created and returned. Team members scoped to specific pixels only see the pixels assigned to them.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;AudiencePixel&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerListPixelsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AudiencePixel>> pixelControllerListPixelsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerListPixelsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -844,17 +835,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerListPixels", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AudiencePixel>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AudiencePixel>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -886,25 +872,27 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Product-level analytics
+   * Explodes the &#x60;content_ids&#x60; carried on pixel events and returns, per product id, unique users who viewed, added to cart, purchased or were lost, plus purchase revenue and lost value. Window is the last &#x60;days&#x60; (default 30, max 180), optional &#x60;pixelId&#x60; filter, limited to 200 products.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
+   * @return List&lt;PixelControllerProducts200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerProducts(String days, String pixelId) throws ApiException {
-    pixelControllerProductsWithHttpInfo(days, pixelId);
+  public List<PixelControllerProducts200ResponseInner> pixelControllerProducts(String days, String pixelId) throws ApiException {
+    ApiResponse<List<PixelControllerProducts200ResponseInner>> localVarResponse = pixelControllerProductsWithHttpInfo(days, pixelId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Product-level analytics
+   * Explodes the &#x60;content_ids&#x60; carried on pixel events and returns, per product id, unique users who viewed, added to cart, purchased or were lost, plus purchase revenue and lost value. Window is the last &#x60;days&#x60; (default 30, max 180), optional &#x60;pixelId&#x60; filter, limited to 200 products.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param days  (required)
    * @param pixelId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;PixelControllerProducts200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerProductsWithHttpInfo(String days, String pixelId) throws ApiException {
+  public ApiResponse<List<PixelControllerProducts200ResponseInner>> pixelControllerProductsWithHttpInfo(String days, String pixelId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerProductsRequestBuilder(days, pixelId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -917,17 +905,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerProducts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<PixelControllerProducts200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<PixelControllerProducts200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -984,21 +967,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Toggle real-time audiences for a pixel
+   * Turns real-time, action-based audience membership on or off (&#x60;enabled&#x60;) for &#x60;pixelId&#x60; (or the primary pixel). When on, each consented event and trait update is evaluated against the account&#39;s rule audiences by a background worker right after ingestion. Returns 404 for a pixel the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return PixelControllerSetRealtime201Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerSetRealtime() throws ApiException {
-    pixelControllerSetRealtimeWithHttpInfo();
+  public PixelControllerSetRealtime201Response pixelControllerSetRealtime() throws ApiException {
+    ApiResponse<PixelControllerSetRealtime201Response> localVarResponse = pixelControllerSetRealtimeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Toggle real-time audiences for a pixel
+   * Turns real-time, action-based audience membership on or off (&#x60;enabled&#x60;) for &#x60;pixelId&#x60; (or the primary pixel). When on, each consented event and trait update is evaluated against the account&#39;s rule audiences by a background worker right after ingestion. Returns 404 for a pixel the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;PixelControllerSetRealtime201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerSetRealtimeWithHttpInfo() throws ApiException {
+  public ApiResponse<PixelControllerSetRealtime201Response> pixelControllerSetRealtimeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerSetRealtimeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1011,17 +996,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerSetRealtime", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerSetRealtime201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerSetRealtime201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1053,21 +1033,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Ingest a pixel event
+   * Called by pixel.js. Body carries &#x60;pixelId&#x60;, &#x60;event&#x60; (default PageView), optional &#x60;eventId&#x60; (deduplicated per account for 7 days), &#x60;url&#x60;, &#x60;referrer&#x60;, &#x60;params&#x60; (value, currency, content_ids, order_id...), UTM touch data, hashed &#x60;am&#x60; identifiers and consent flags. Events from hosts outside the pixel&#39;s allowed domains are rejected; without consent (GPC or consent:false) the event is stored for aggregate analytics only, with no identity linkage. Conversion events carrying an &#x60;adclid&#x60; are attributed to the clicked ad. Never throws: failures return &#x60;{status:\&quot;error\&quot;}&#x60; and the request sets the first-party uid cookie.  Auth: public, no credentials required.
+   * @return PixelControllerTrack201Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerTrack() throws ApiException {
-    pixelControllerTrackWithHttpInfo();
+  public PixelControllerTrack201Response pixelControllerTrack() throws ApiException {
+    ApiResponse<PixelControllerTrack201Response> localVarResponse = pixelControllerTrackWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Ingest a pixel event
+   * Called by pixel.js. Body carries &#x60;pixelId&#x60;, &#x60;event&#x60; (default PageView), optional &#x60;eventId&#x60; (deduplicated per account for 7 days), &#x60;url&#x60;, &#x60;referrer&#x60;, &#x60;params&#x60; (value, currency, content_ids, order_id...), UTM touch data, hashed &#x60;am&#x60; identifiers and consent flags. Events from hosts outside the pixel&#39;s allowed domains are rejected; without consent (GPC or consent:false) the event is stored for aggregate analytics only, with no identity linkage. Conversion events carrying an &#x60;adclid&#x60; are attributed to the clicked ad. Never throws: failures return &#x60;{status:\&quot;error\&quot;}&#x60; and the request sets the first-party uid cookie.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;PixelControllerTrack201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerTrackWithHttpInfo() throws ApiException {
+  public ApiResponse<PixelControllerTrack201Response> pixelControllerTrackWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerTrackRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1080,17 +1062,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerTrack", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerTrack201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerTrack201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1122,21 +1099,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Record terminal coding-context keywords
+   * Public beacon for CLI/IDE clients. Body: &#x60;kw&#x60; (up to 20 keywords), &#x60;client&#x60;, and &#x60;em&#x60; (a SHA-256 email hash) or &#x60;uid&#x60;. Keywords are logged under a reserved network account keyed to the same email-derived canonical id the ad engine targets, so they feed developer interest segments. A valid &#x60;em&#x60; also writes the cross-surface identity link. Returns &#x60;skipped&#x60; when there are no keywords; never throws.  Auth: public, no credentials required.
+   * @return PixelControllerTrackCoding201Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerTrackCoding() throws ApiException {
-    pixelControllerTrackCodingWithHttpInfo();
+  public PixelControllerTrackCoding201Response pixelControllerTrackCoding() throws ApiException {
+    ApiResponse<PixelControllerTrackCoding201Response> localVarResponse = pixelControllerTrackCodingWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Record terminal coding-context keywords
+   * Public beacon for CLI/IDE clients. Body: &#x60;kw&#x60; (up to 20 keywords), &#x60;client&#x60;, and &#x60;em&#x60; (a SHA-256 email hash) or &#x60;uid&#x60;. Keywords are logged under a reserved network account keyed to the same email-derived canonical id the ad engine targets, so they feed developer interest segments. A valid &#x60;em&#x60; also writes the cross-surface identity link. Returns &#x60;skipped&#x60; when there are no keywords; never throws.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;PixelControllerTrackCoding201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerTrackCodingWithHttpInfo() throws ApiException {
+  public ApiResponse<PixelControllerTrackCoding201Response> pixelControllerTrackCodingWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerTrackCodingRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1149,17 +1128,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerTrackCoding", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerTrackCoding201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerTrackCoding201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1191,8 +1165,8 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Ingest a pixel event via image beacon
+   * The noscript / image fallback for /v1/track/event. Query params &#x60;pixel_id&#x60;, &#x60;event&#x60;, &#x60;event_id&#x60;, &#x60;url&#x60; and &#x60;adclid&#x60; are read, and the full query string is stored as event params. Always responds with a 1x1 transparent GIF, even on failure.  Auth: public, no credentials required.
    * @throws ApiException if fails to make API call
    */
   public void pixelControllerTrackGet() throws ApiException {
@@ -1200,8 +1174,8 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Ingest a pixel event via image beacon
+   * The noscript / image fallback for /v1/track/event. Query params &#x60;pixel_id&#x60;, &#x60;event&#x60;, &#x60;event_id&#x60;, &#x60;url&#x60; and &#x60;adclid&#x60; are read, and the full query string is stored as event params. Always responds with a 1x1 transparent GIF, even on failure.  Auth: public, no credentials required.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -1260,21 +1234,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Set user traits for the visitor
+   * Stores CDP profile traits (&#x60;traits&#x60; object) for the caller&#39;s uid, resolved to a canonical id using optional hashed &#x60;am&#x60; identifiers. Traits require consent, so GPC or consent:false skips the write. When the pixel has real-time audiences enabled, trait-based rule audiences are re-evaluated. Fail-soft: errors (including an unknown pixel) return &#x60;{status:\&quot;error\&quot;}&#x60;.  Auth: public, no credentials required.
+   * @return PixelControllerTrait201Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerTrait() throws ApiException {
-    pixelControllerTraitWithHttpInfo();
+  public PixelControllerTrait201Response pixelControllerTrait() throws ApiException {
+    ApiResponse<PixelControllerTrait201Response> localVarResponse = pixelControllerTraitWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Set user traits for the visitor
+   * Stores CDP profile traits (&#x60;traits&#x60; object) for the caller&#39;s uid, resolved to a canonical id using optional hashed &#x60;am&#x60; identifiers. Traits require consent, so GPC or consent:false skips the write. When the pixel has real-time audiences enabled, trait-based rule audiences are re-evaluated. Fail-soft: errors (including an unknown pixel) return &#x60;{status:\&quot;error\&quot;}&#x60;.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;PixelControllerTrait201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerTraitWithHttpInfo() throws ApiException {
+  public ApiResponse<PixelControllerTrait201Response> pixelControllerTraitWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerTraitRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1287,17 +1263,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerTrait", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerTrait201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerTrait201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1329,25 +1300,27 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Look up a user&#39;s CDP traits
+   * Resolves the &#x60;user&#x60; query value (a canonical &#x60;id_...&#x60;, a cookie uid, a SHA-256 email/phone hash, or a raw email which is hashed server-side) to a canonical id through the identity map and returns its stored traits. With &#x60;pixelId&#x60;, only traits set by that pixel are shown. Unknown identifiers return an empty canonical and no traits rather than an error.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param user  (required)
    * @param pixelId  (required)
+   * @return PixelControllerTraitLookup200Response
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerTraitLookup(String user, String pixelId) throws ApiException {
-    pixelControllerTraitLookupWithHttpInfo(user, pixelId);
+  public PixelControllerTraitLookup200Response pixelControllerTraitLookup(String user, String pixelId) throws ApiException {
+    ApiResponse<PixelControllerTraitLookup200Response> localVarResponse = pixelControllerTraitLookupWithHttpInfo(user, pixelId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Look up a user&#39;s CDP traits
+   * Resolves the &#x60;user&#x60; query value (a canonical &#x60;id_...&#x60;, a cookie uid, a SHA-256 email/phone hash, or a raw email which is hashed server-side) to a canonical id through the identity map and returns its stored traits. With &#x60;pixelId&#x60;, only traits set by that pixel are shown. Unknown identifiers return an empty canonical and no traits rather than an error.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param user  (required)
    * @param pixelId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PixelControllerTraitLookup200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerTraitLookupWithHttpInfo(String user, String pixelId) throws ApiException {
+  public ApiResponse<PixelControllerTraitLookup200Response> pixelControllerTraitLookupWithHttpInfo(String user, String pixelId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerTraitLookupRequestBuilder(user, pixelId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1360,17 +1333,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerTraitLookup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerTraitLookup200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerTraitLookup200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1427,21 +1395,23 @@ public class PixelApi {
   }
 
   /**
-   * 
-   * 
+   * Update pixel settings
+   * Patches &#x60;name&#x60; (max 80 chars), &#x60;defaultConsent&#x60; (whether events without an explicit consent signal are treated as consented) and &#x60;allowedDomains&#x60; for &#x60;pixelId&#x60; (or the primary pixel). Domains are normalized to bare lowercase hosts, deduplicated and capped at 50; once set, events fired from other hosts are rejected. Omitted fields are left unchanged; returns the updated pixel, or 404 if not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AudiencePixel
    * @throws ApiException if fails to make API call
    */
-  public void pixelControllerUpdateSettings() throws ApiException {
-    pixelControllerUpdateSettingsWithHttpInfo();
+  public AudiencePixel pixelControllerUpdateSettings() throws ApiException {
+    ApiResponse<AudiencePixel> localVarResponse = pixelControllerUpdateSettingsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Update pixel settings
+   * Patches &#x60;name&#x60; (max 80 chars), &#x60;defaultConsent&#x60; (whether events without an explicit consent signal are treated as consented) and &#x60;allowedDomains&#x60; for &#x60;pixelId&#x60; (or the primary pixel). Domains are normalized to bare lowercase hosts, deduplicated and capped at 50; once set, events fired from other hosts are rejected. Omitted fields are left unchanged; returns the updated pixel, or 404 if not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AudiencePixel&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> pixelControllerUpdateSettingsWithHttpInfo() throws ApiException {
+  public ApiResponse<AudiencePixel> pixelControllerUpdateSettingsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = pixelControllerUpdateSettingsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1454,17 +1424,12 @@ public class PixelApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("pixelControllerUpdateSettings", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AudiencePixel>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AudiencePixel>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -17,6 +17,8 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.SkadnetworkControllerHealth200Response;
+import com.adviverse.api.models.SkadnetworkControllerPostback200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +83,23 @@ public class SkadnetworkApi {
   }
 
   /**
-   * 
-   * 
+   * Check the SKAdNetwork postback endpoint
+   * Public liveness check for the registered postback URL.  Auth: public, no credentials required.
+   * @return SkadnetworkControllerHealth200Response
    * @throws ApiException if fails to make API call
    */
-  public void skadnetworkControllerHealth() throws ApiException {
-    skadnetworkControllerHealthWithHttpInfo();
+  public SkadnetworkControllerHealth200Response skadnetworkControllerHealth() throws ApiException {
+    ApiResponse<SkadnetworkControllerHealth200Response> localVarResponse = skadnetworkControllerHealthWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Check the SKAdNetwork postback endpoint
+   * Public liveness check for the registered postback URL.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;SkadnetworkControllerHealth200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> skadnetworkControllerHealthWithHttpInfo() throws ApiException {
+  public ApiResponse<SkadnetworkControllerHealth200Response> skadnetworkControllerHealthWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = skadnetworkControllerHealthRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +112,12 @@ public class SkadnetworkApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("skadnetworkControllerHealth", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SkadnetworkControllerHealth200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SkadnetworkControllerHealth200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -150,21 +149,23 @@ public class SkadnetworkApi {
   }
 
   /**
-   * 
-   * 
+   * Receive an Apple SKAdNetwork install postback
+   * Public, rate-limited endpoint Apple POSTs signed install postbacks to. Every postback is stored once per &#x60;transaction-id&#x60;; the signature is verified, the campaign resolved from &#x60;source-identifier&#x60;/&#x60;campaign-id&#x60; (and &#x60;app-id&#x60;), and won, verified postbacks are emitted as conversions. Always answers 200 so Apple does not retry; the outcome is in &#x60;status&#x60;: attributed, duplicate, invalid_signature, verified_unmatched, verified_lost, wrong_network, unsupported, bad_request or error.  Auth: public, no credentials required.
+   * @return SkadnetworkControllerPostback200Response
    * @throws ApiException if fails to make API call
    */
-  public void skadnetworkControllerPostback() throws ApiException {
-    skadnetworkControllerPostbackWithHttpInfo();
+  public SkadnetworkControllerPostback200Response skadnetworkControllerPostback() throws ApiException {
+    ApiResponse<SkadnetworkControllerPostback200Response> localVarResponse = skadnetworkControllerPostbackWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Receive an Apple SKAdNetwork install postback
+   * Public, rate-limited endpoint Apple POSTs signed install postbacks to. Every postback is stored once per &#x60;transaction-id&#x60;; the signature is verified, the campaign resolved from &#x60;source-identifier&#x60;/&#x60;campaign-id&#x60; (and &#x60;app-id&#x60;), and won, verified postbacks are emitted as conversions. Always answers 200 so Apple does not retry; the outcome is in &#x60;status&#x60;: attributed, duplicate, invalid_signature, verified_unmatched, verified_lost, wrong_network, unsupported, bad_request or error.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;SkadnetworkControllerPostback200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> skadnetworkControllerPostbackWithHttpInfo() throws ApiException {
+  public ApiResponse<SkadnetworkControllerPostback200Response> skadnetworkControllerPostbackWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = skadnetworkControllerPostbackRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -177,17 +178,12 @@ public class SkadnetworkApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("skadnetworkControllerPostback", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SkadnetworkControllerPostback200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SkadnetworkControllerPostback200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

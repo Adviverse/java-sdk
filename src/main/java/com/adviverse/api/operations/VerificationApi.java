@@ -18,6 +18,8 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.PutSettingsDto;
+import com.adviverse.api.models.RewVerificationSettings;
+import com.adviverse.api.models.VerificationControllerCategories200ResponseInner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,21 +84,23 @@ public class VerificationApi {
   }
 
   /**
-   * 
-   * 
+   * List brand-safety categories
+   * Returns the static brand-safety category catalog (ids such as &#x60;adult&#x60;, &#x60;violence&#x60;, &#x60;hate&#x60;) accepted in verification settings.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return List&lt;VerificationControllerCategories200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void verificationControllerCategories() throws ApiException {
-    verificationControllerCategoriesWithHttpInfo();
+  public List<VerificationControllerCategories200ResponseInner> verificationControllerCategories() throws ApiException {
+    ApiResponse<List<VerificationControllerCategories200ResponseInner>> localVarResponse = verificationControllerCategoriesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List brand-safety categories
+   * Returns the static brand-safety category catalog (ids such as &#x60;adult&#x60;, &#x60;violence&#x60;, &#x60;hate&#x60;) accepted in verification settings.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;List&lt;VerificationControllerCategories200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> verificationControllerCategoriesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<VerificationControllerCategories200ResponseInner>> verificationControllerCategoriesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = verificationControllerCategoriesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -109,17 +113,12 @@ public class VerificationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("verificationControllerCategories", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<VerificationControllerCategories200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<VerificationControllerCategories200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -151,21 +150,23 @@ public class VerificationApi {
   }
 
   /**
-   * 
-   * 
+   * Get your verification and brand-safety settings
+   * Returns your measurement vendor, viewability target, blocked brand-safety categories, blocked domains and keywords, falling back to the global defaults when you have not saved settings. The vendor API key is never returned, only &#x60;apiKeySet&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return RewVerificationSettings
    * @throws ApiException if fails to make API call
    */
-  public void verificationControllerGetSettings() throws ApiException {
-    verificationControllerGetSettingsWithHttpInfo();
+  public RewVerificationSettings verificationControllerGetSettings() throws ApiException {
+    ApiResponse<RewVerificationSettings> localVarResponse = verificationControllerGetSettingsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get your verification and brand-safety settings
+   * Returns your measurement vendor, viewability target, blocked brand-safety categories, blocked domains and keywords, falling back to the global defaults when you have not saved settings. The vendor API key is never returned, only &#x60;apiKeySet&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;RewVerificationSettings&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> verificationControllerGetSettingsWithHttpInfo() throws ApiException {
+  public ApiResponse<RewVerificationSettings> verificationControllerGetSettingsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = verificationControllerGetSettingsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -178,17 +179,12 @@ public class VerificationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("verificationControllerGetSettings", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewVerificationSettings>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewVerificationSettings>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -220,23 +216,25 @@ public class VerificationApi {
   }
 
   /**
-   * 
-   * 
+   * Save your verification and brand-safety settings
+   * Replaces your settings: &#x60;vendor&#x60; (none, ias, doubleverify, moat; default none), &#x60;measurementEnabled&#x60;, &#x60;viewabilityTarget&#x60; (0-1, default 0.7), &#x60;brandSafetyCategories&#x60; (unknown ids dropped), &#x60;blockedDomains&#x60; (normalized to bare hosts) and &#x60;blockedKeywords&#x60; (lowercased tokens), all enforced at serve time. &#x60;apiKey&#x60; is encrypted at rest; omit it to keep the stored key, send an empty string to clear it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param putSettingsDto  (required)
+   * @return RewVerificationSettings
    * @throws ApiException if fails to make API call
    */
-  public void verificationControllerPutSettings(PutSettingsDto putSettingsDto) throws ApiException {
-    verificationControllerPutSettingsWithHttpInfo(putSettingsDto);
+  public RewVerificationSettings verificationControllerPutSettings(PutSettingsDto putSettingsDto) throws ApiException {
+    ApiResponse<RewVerificationSettings> localVarResponse = verificationControllerPutSettingsWithHttpInfo(putSettingsDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Save your verification and brand-safety settings
+   * Replaces your settings: &#x60;vendor&#x60; (none, ias, doubleverify, moat; default none), &#x60;measurementEnabled&#x60;, &#x60;viewabilityTarget&#x60; (0-1, default 0.7), &#x60;brandSafetyCategories&#x60; (unknown ids dropped), &#x60;blockedDomains&#x60; (normalized to bare hosts) and &#x60;blockedKeywords&#x60; (lowercased tokens), all enforced at serve time. &#x60;apiKey&#x60; is encrypted at rest; omit it to keep the stored key, send an empty string to clear it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param putSettingsDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewVerificationSettings&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> verificationControllerPutSettingsWithHttpInfo(PutSettingsDto putSettingsDto) throws ApiException {
+  public ApiResponse<RewVerificationSettings> verificationControllerPutSettingsWithHttpInfo(PutSettingsDto putSettingsDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = verificationControllerPutSettingsRequestBuilder(putSettingsDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -249,17 +247,12 @@ public class VerificationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("verificationControllerPutSettings", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewVerificationSettings>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewVerificationSettings>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

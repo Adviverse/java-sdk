@@ -18,6 +18,11 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import java.math.BigDecimal;
+import com.adviverse.api.models.InsightsControllerBidSimulator200Response;
+import com.adviverse.api.models.InsightsControllerCompetitiveness200Response;
+import com.adviverse.api.models.InsightsControllerCreativePerformance200Response;
+import com.adviverse.api.models.InsightsControllerPacing200Response;
+import com.adviverse.api.models.InsightsControllerShadingSavings200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,27 +87,29 @@ public class AdvertiserInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Simulate win rate, reach and spend across bids
+   * For the required &#x60;format&#x60; and optional &#x60;geo&#x60;, takes about 10 candidate bids spanning the advertiser&#39;s recent clearing-price range, plus the caller&#39;s own &#x60;bid&#x60; if given. Each bid gets an estimated win rate from the empirical CDF of the advertiser&#39;s last-30-day clearing prices, and projected impressions and spend per day. Prices are per impression (CPM &#x3D; price x 1000). With no auction history for the slice, &#x60;points&#x60; is empty and &#x60;note&#x60; explains why.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param format  (required)
    * @param geo  (optional)
    * @param bid  (optional)
+   * @return InsightsControllerBidSimulator200Response
    * @throws ApiException if fails to make API call
    */
-  public void insightsControllerBidSimulator(String format, String geo, BigDecimal bid) throws ApiException {
-    insightsControllerBidSimulatorWithHttpInfo(format, geo, bid);
+  public InsightsControllerBidSimulator200Response insightsControllerBidSimulator(String format, String geo, BigDecimal bid) throws ApiException {
+    ApiResponse<InsightsControllerBidSimulator200Response> localVarResponse = insightsControllerBidSimulatorWithHttpInfo(format, geo, bid);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Simulate win rate, reach and spend across bids
+   * For the required &#x60;format&#x60; and optional &#x60;geo&#x60;, takes about 10 candidate bids spanning the advertiser&#39;s recent clearing-price range, plus the caller&#39;s own &#x60;bid&#x60; if given. Each bid gets an estimated win rate from the empirical CDF of the advertiser&#39;s last-30-day clearing prices, and projected impressions and spend per day. Prices are per impression (CPM &#x3D; price x 1000). With no auction history for the slice, &#x60;points&#x60; is empty and &#x60;note&#x60; explains why.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param format  (required)
    * @param geo  (optional)
    * @param bid  (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;InsightsControllerBidSimulator200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> insightsControllerBidSimulatorWithHttpInfo(String format, String geo, BigDecimal bid) throws ApiException {
+  public ApiResponse<InsightsControllerBidSimulator200Response> insightsControllerBidSimulatorWithHttpInfo(String format, String geo, BigDecimal bid) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = insightsControllerBidSimulatorRequestBuilder(format, geo, bid);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -115,17 +122,12 @@ public class AdvertiserInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("insightsControllerBidSimulator", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<InsightsControllerBidSimulator200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<InsightsControllerBidSimulator200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -180,25 +182,27 @@ public class AdvertiserInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Score how competitive a targeting slice is
+   * Reads the market-wide clearing-price distribution over the last 30 days for &#x60;format&#x60; (required) and optional &#x60;geo&#x60;, and returns p50, p90, the sample size and a low/moderate/high score based on the price spread. The score is \&quot;low\&quot; when there is no data. Uses market data only, not the caller&#39;s own history.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param format  (required)
    * @param geo  (optional)
+   * @return InsightsControllerCompetitiveness200Response
    * @throws ApiException if fails to make API call
    */
-  public void insightsControllerCompetitiveness(String format, String geo) throws ApiException {
-    insightsControllerCompetitivenessWithHttpInfo(format, geo);
+  public InsightsControllerCompetitiveness200Response insightsControllerCompetitiveness(String format, String geo) throws ApiException {
+    ApiResponse<InsightsControllerCompetitiveness200Response> localVarResponse = insightsControllerCompetitivenessWithHttpInfo(format, geo);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Score how competitive a targeting slice is
+   * Reads the market-wide clearing-price distribution over the last 30 days for &#x60;format&#x60; (required) and optional &#x60;geo&#x60;, and returns p50, p90, the sample size and a low/moderate/high score based on the price spread. The score is \&quot;low\&quot; when there is no data. Uses market data only, not the caller&#39;s own history.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param format  (required)
    * @param geo  (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;InsightsControllerCompetitiveness200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> insightsControllerCompetitivenessWithHttpInfo(String format, String geo) throws ApiException {
+  public ApiResponse<InsightsControllerCompetitiveness200Response> insightsControllerCompetitivenessWithHttpInfo(String format, String geo) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = insightsControllerCompetitivenessRequestBuilder(format, geo);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -211,17 +215,12 @@ public class AdvertiserInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("insightsControllerCompetitiveness", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<InsightsControllerCompetitiveness200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<InsightsControllerCompetitiveness200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -274,23 +273,25 @@ public class AdvertiserInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Per-creative performance for a campaign
+   * Rolls up the last 30 days of valid impressions and spend, clicks and click-attributed conversions by creative for &#x60;campaignId&#x60; (required). Creative names come from Postgres. Rows include CTR and CVR as percentages and eCPM, sorted by spend. A campaign the advertiser does not own returns an empty list, not an error.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
+   * @return InsightsControllerCreativePerformance200Response
    * @throws ApiException if fails to make API call
    */
-  public void insightsControllerCreativePerformance(String campaignId) throws ApiException {
-    insightsControllerCreativePerformanceWithHttpInfo(campaignId);
+  public InsightsControllerCreativePerformance200Response insightsControllerCreativePerformance(String campaignId) throws ApiException {
+    ApiResponse<InsightsControllerCreativePerformance200Response> localVarResponse = insightsControllerCreativePerformanceWithHttpInfo(campaignId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Per-creative performance for a campaign
+   * Rolls up the last 30 days of valid impressions and spend, clicks and click-attributed conversions by creative for &#x60;campaignId&#x60; (required). Creative names come from Postgres. Rows include CTR and CVR as percentages and eCPM, sorted by spend. A campaign the advertiser does not own returns an empty list, not an error.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;InsightsControllerCreativePerformance200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> insightsControllerCreativePerformanceWithHttpInfo(String campaignId) throws ApiException {
+  public ApiResponse<InsightsControllerCreativePerformance200Response> insightsControllerCreativePerformanceWithHttpInfo(String campaignId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = insightsControllerCreativePerformanceRequestBuilder(campaignId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -303,17 +304,12 @@ public class AdvertiserInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("insightsControllerCreativePerformance", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<InsightsControllerCreativePerformance200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<InsightsControllerCreativePerformance200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -364,21 +360,23 @@ public class AdvertiserInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Delivery pacing per campaign
+   * For each of the advertiser&#39;s campaigns, compares the percentage of the delivery goal reached with the percentage of the flight that has elapsed, and flags whether the campaign is on pace. Reuses the billing-reports pacing calculation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return InsightsControllerPacing200Response
    * @throws ApiException if fails to make API call
    */
-  public void insightsControllerPacing() throws ApiException {
-    insightsControllerPacingWithHttpInfo();
+  public InsightsControllerPacing200Response insightsControllerPacing() throws ApiException {
+    ApiResponse<InsightsControllerPacing200Response> localVarResponse = insightsControllerPacingWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Delivery pacing per campaign
+   * For each of the advertiser&#39;s campaigns, compares the percentage of the delivery goal reached with the percentage of the flight that has elapsed, and flags whether the campaign is on pace. Reuses the billing-reports pacing calculation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;InsightsControllerPacing200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> insightsControllerPacingWithHttpInfo() throws ApiException {
+  public ApiResponse<InsightsControllerPacing200Response> insightsControllerPacingWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = insightsControllerPacingRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -391,17 +389,12 @@ public class AdvertiserInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("insightsControllerPacing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<InsightsControllerPacing200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<InsightsControllerPacing200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -433,23 +426,25 @@ public class AdvertiserInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Estimate savings from bid shading
+   * Combines the bid-shading factors the engine publishes for this advertiser with its last-30-day spend (optionally only &#x60;campaignId&#x60;) to estimate overpay avoided: roughly spend x (1/avgFactor - 1), with the factor floored at 0.5. If shading is not active for the advertiser yet, all values are zero and a note says so. The figures are directional estimates.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (optional)
+   * @return InsightsControllerShadingSavings200Response
    * @throws ApiException if fails to make API call
    */
-  public void insightsControllerShadingSavings(String campaignId) throws ApiException {
-    insightsControllerShadingSavingsWithHttpInfo(campaignId);
+  public InsightsControllerShadingSavings200Response insightsControllerShadingSavings(String campaignId) throws ApiException {
+    ApiResponse<InsightsControllerShadingSavings200Response> localVarResponse = insightsControllerShadingSavingsWithHttpInfo(campaignId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Estimate savings from bid shading
+   * Combines the bid-shading factors the engine publishes for this advertiser with its last-30-day spend (optionally only &#x60;campaignId&#x60;) to estimate overpay avoided: roughly spend x (1/avgFactor - 1), with the factor floored at 0.5. If shading is not active for the advertiser yet, all values are zero and a note says so. The figures are directional estimates.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;InsightsControllerShadingSavings200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> insightsControllerShadingSavingsWithHttpInfo(String campaignId) throws ApiException {
+  public ApiResponse<InsightsControllerShadingSavings200Response> insightsControllerShadingSavingsWithHttpInfo(String campaignId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = insightsControllerShadingSavingsRequestBuilder(campaignId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -462,17 +457,12 @@ public class AdvertiserInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("insightsControllerShadingSavings", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<InsightsControllerShadingSavings200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<InsightsControllerShadingSavings200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

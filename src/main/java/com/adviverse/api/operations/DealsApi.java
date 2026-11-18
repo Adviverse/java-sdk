@@ -18,6 +18,11 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.CreateDealDto;
+import com.adviverse.api.models.Deal;
+import com.adviverse.api.models.DealsControllerClaim201Response;
+import com.adviverse.api.models.DealsControllerLookupAdvertiser200Response;
+import com.adviverse.api.models.DealsControllerPreviewClaim200Response;
+import com.adviverse.api.models.DealsControllerStatus201Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,23 +87,25 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * Accept a deal offered to you
+   * The targeted advertiser accepts the deal, which becomes &#x60;active&#x60; and is published to the engine index; the publisher is emailed. Returns 403 if the caller is not the deal&#39;s advertiser and 404 if the deal is unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param id  (required)
+   * @return DealsControllerClaim201Response
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerAccept(String id) throws ApiException {
-    dealsControllerAcceptWithHttpInfo(id);
+  public DealsControllerClaim201Response dealsControllerAccept(String id) throws ApiException {
+    ApiResponse<DealsControllerClaim201Response> localVarResponse = dealsControllerAcceptWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Accept a deal offered to you
+   * The targeted advertiser accepts the deal, which becomes &#x60;active&#x60; and is published to the engine index; the publisher is emailed. Returns 403 if the caller is not the deal&#39;s advertiser and 404 if the deal is unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;DealsControllerClaim201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerAcceptWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<DealsControllerClaim201Response> dealsControllerAcceptWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerAcceptRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -111,17 +118,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerAccept", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<DealsControllerClaim201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<DealsControllerClaim201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -158,23 +160,25 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * Claim an open deal
+   * The caller becomes the deal&#39;s advertiser; the deal goes &#x60;active&#x60;, the claim token is cleared and the publisher is emailed. Returns 400 if the deal already has an advertiser or the caller is its publisher, and 404 for an unknown token.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param token  (required)
+   * @return DealsControllerClaim201Response
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerClaim(String token) throws ApiException {
-    dealsControllerClaimWithHttpInfo(token);
+  public DealsControllerClaim201Response dealsControllerClaim(String token) throws ApiException {
+    ApiResponse<DealsControllerClaim201Response> localVarResponse = dealsControllerClaimWithHttpInfo(token);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Claim an open deal
+   * The caller becomes the deal&#39;s advertiser; the deal goes &#x60;active&#x60;, the claim token is cleared and the publisher is emailed. Returns 400 if the deal already has an advertiser or the caller is its publisher, and 404 for an unknown token.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param token  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;DealsControllerClaim201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerClaimWithHttpInfo(String token) throws ApiException {
+  public ApiResponse<DealsControllerClaim201Response> dealsControllerClaimWithHttpInfo(String token) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerClaimRequestBuilder(token);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -187,17 +191,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerClaim", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<DealsControllerClaim201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<DealsControllerClaim201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -234,23 +233,25 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * Create a deal
+   * Creates a &#x60;pending&#x60; deal with &#x60;name&#x60; (required), &#x60;dealType&#x60; (&#x60;pmp&#x60; default, &#x60;preferred&#x60;, &#x60;guaranteed&#x60;), &#x60;floorCpm&#x60;, &#x60;currency&#x60; (USD), optional &#x60;placementId&#x60; and &#x60;startsAt&#x60;/&#x60;endsAt&#x60;. Fields are also accepted in snake_case. With &#x60;advertiserId&#x60; (must be an advertiser account) the advertiser is emailed an invite; without it the deal is open and gets a &#x60;claim_token&#x60; to share. The placement must belong to the creating publisher (403); its owner becomes the deal&#39;s publisher. Active deals are republished to the engine index.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param createDealDto  (required)
+   * @return Deal
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerCreate(CreateDealDto createDealDto) throws ApiException {
-    dealsControllerCreateWithHttpInfo(createDealDto);
+  public Deal dealsControllerCreate(CreateDealDto createDealDto) throws ApiException {
+    ApiResponse<Deal> localVarResponse = dealsControllerCreateWithHttpInfo(createDealDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a deal
+   * Creates a &#x60;pending&#x60; deal with &#x60;name&#x60; (required), &#x60;dealType&#x60; (&#x60;pmp&#x60; default, &#x60;preferred&#x60;, &#x60;guaranteed&#x60;), &#x60;floorCpm&#x60;, &#x60;currency&#x60; (USD), optional &#x60;placementId&#x60; and &#x60;startsAt&#x60;/&#x60;endsAt&#x60;. Fields are also accepted in snake_case. With &#x60;advertiserId&#x60; (must be an advertiser account) the advertiser is emailed an invite; without it the deal is open and gets a &#x60;claim_token&#x60; to share. The placement must belong to the creating publisher (403); its owner becomes the deal&#39;s publisher. Active deals are republished to the engine index.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param createDealDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;Deal&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerCreateWithHttpInfo(CreateDealDto createDealDto) throws ApiException {
+  public ApiResponse<Deal> dealsControllerCreateWithHttpInfo(CreateDealDto createDealDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerCreateRequestBuilder(createDealDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -263,17 +264,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerCreate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<Deal>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<Deal>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -315,21 +311,23 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * List deals
+   * Lists private-marketplace deals for the caller. Accounts can act on both sides, so &#x60;role&#x3D;publisher&#x60; returns deals the account sells and &#x60;role&#x3D;advertiser&#x60; returns deals offered to it. Without &#x60;role&#x60; the account type decides. Admins see all deals (capped at 500 when unpaginated). Supports optional &#x60;limit&#x60;/&#x60;offset&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return List&lt;Deal&gt;
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerList() throws ApiException {
-    dealsControllerListWithHttpInfo();
+  public List<Deal> dealsControllerList() throws ApiException {
+    ApiResponse<List<Deal>> localVarResponse = dealsControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List deals
+   * Lists private-marketplace deals for the caller. Accounts can act on both sides, so &#x60;role&#x3D;publisher&#x60; returns deals the account sells and &#x60;role&#x3D;advertiser&#x60; returns deals offered to it. Without &#x60;role&#x60; the account type decides. Admins see all deals (capped at 500 when unpaginated). Supports optional &#x60;limit&#x60;/&#x60;offset&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;List&lt;Deal&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<Deal>> dealsControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -342,17 +340,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<Deal>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<Deal>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -384,23 +377,25 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * Find an advertiser by email
+   * Resolves an advertiser account by exact, case-insensitive &#x60;email&#x60; so a publisher can target a deal without knowing the account id. Exact match only, to avoid account enumeration. Returns 400 without an email and 404 when no advertiser matches.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param email  (required)
+   * @return DealsControllerLookupAdvertiser200Response
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerLookupAdvertiser(String email) throws ApiException {
-    dealsControllerLookupAdvertiserWithHttpInfo(email);
+  public DealsControllerLookupAdvertiser200Response dealsControllerLookupAdvertiser(String email) throws ApiException {
+    ApiResponse<DealsControllerLookupAdvertiser200Response> localVarResponse = dealsControllerLookupAdvertiserWithHttpInfo(email);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Find an advertiser by email
+   * Resolves an advertiser account by exact, case-insensitive &#x60;email&#x60; so a publisher can target a deal without knowing the account id. Exact match only, to avoid account enumeration. Returns 400 without an email and 404 when no advertiser matches.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param email  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;DealsControllerLookupAdvertiser200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerLookupAdvertiserWithHttpInfo(String email) throws ApiException {
+  public ApiResponse<DealsControllerLookupAdvertiser200Response> dealsControllerLookupAdvertiserWithHttpInfo(String email) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerLookupAdvertiserRequestBuilder(email);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -413,17 +408,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerLookupAdvertiser", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<DealsControllerLookupAdvertiser200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<DealsControllerLookupAdvertiser200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -474,23 +464,25 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * Preview an open deal from its claim link
+   * Returns the deal behind a claim token (code, name, type, floor, currency, status and publisher company name) plus &#x60;claimable&#x60;, which is true while no advertiser is attached. 404 when the token is unknown or already used.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param token  (required)
+   * @return DealsControllerPreviewClaim200Response
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerPreviewClaim(String token) throws ApiException {
-    dealsControllerPreviewClaimWithHttpInfo(token);
+  public DealsControllerPreviewClaim200Response dealsControllerPreviewClaim(String token) throws ApiException {
+    ApiResponse<DealsControllerPreviewClaim200Response> localVarResponse = dealsControllerPreviewClaimWithHttpInfo(token);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Preview an open deal from its claim link
+   * Returns the deal behind a claim token (code, name, type, floor, currency, status and publisher company name) plus &#x60;claimable&#x60;, which is true while no advertiser is attached. 404 when the token is unknown or already used.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param token  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;DealsControllerPreviewClaim200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerPreviewClaimWithHttpInfo(String token) throws ApiException {
+  public ApiResponse<DealsControllerPreviewClaim200Response> dealsControllerPreviewClaimWithHttpInfo(String token) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerPreviewClaimRequestBuilder(token);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -503,17 +495,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerPreviewClaim", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<DealsControllerPreviewClaim200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<DealsControllerPreviewClaim200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -550,23 +537,25 @@ public class DealsApi {
   }
 
   /**
-   * 
-   * 
+   * Change a deal&#39;s status
+   * Sets &#x60;status&#x60; to &#x60;active&#x60;, &#x60;paused&#x60;, &#x60;pending&#x60; or &#x60;expired&#x60;. Only the deal&#39;s publisher or an admin may do this (403 otherwise). The engine&#39;s active-deal index is republished, so pausing takes effect for serving right away.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param id  (required)
+   * @return DealsControllerStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void dealsControllerStatus(String id) throws ApiException {
-    dealsControllerStatusWithHttpInfo(id);
+  public DealsControllerStatus201Response dealsControllerStatus(String id) throws ApiException {
+    ApiResponse<DealsControllerStatus201Response> localVarResponse = dealsControllerStatusWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Change a deal&#39;s status
+   * Sets &#x60;status&#x60; to &#x60;active&#x60;, &#x60;paused&#x60;, &#x60;pending&#x60; or &#x60;expired&#x60;. Only the deal&#39;s publisher or an admin may do this (403 otherwise). The engine&#39;s active-deal index is republished, so pausing takes effect for serving right away.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;DealsControllerStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> dealsControllerStatusWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<DealsControllerStatus201Response> dealsControllerStatusWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = dealsControllerStatusRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -579,17 +568,12 @@ public class DealsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("dealsControllerStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<DealsControllerStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<DealsControllerStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

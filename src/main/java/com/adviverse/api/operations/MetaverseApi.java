@@ -19,8 +19,20 @@ import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.ClaimSurfaceDto;
 import com.adviverse.api.models.CreateWorldDto;
+import com.adviverse.api.models.MetaverseControllerAdminWorlds200ResponseInner;
+import com.adviverse.api.models.MetaverseControllerCreateWorld201Response;
+import com.adviverse.api.models.MetaverseControllerList200ResponseInner;
+import com.adviverse.api.models.MetaverseControllerScoreNow201Response;
+import com.adviverse.api.models.MetaverseControllerSetWorldTrust201Response;
+import com.adviverse.api.models.MetaverseControllerTrustScores200ResponseInner;
+import com.adviverse.api.models.ScreensControllerPairInit201Response;
+import com.adviverse.api.models.ScreensControllerPairStatus200Response;
+import com.adviverse.api.models.ScreensControllerSetStatus201Response;
 import com.adviverse.api.models.SetSurfaceStatusDto;
 import com.adviverse.api.models.SetWorldTrustDto;
+import com.adviverse.api.models.SupSurface;
+import com.adviverse.api.models.SupSurfaceReport;
+import com.adviverse.api.models.SupWorld;
 import com.adviverse.api.models.SurfacePairInitDto;
 import com.adviverse.api.models.UpdateSurfaceDto;
 
@@ -87,21 +99,23 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * List all world integrations
+   * Admin view of up to 1000 world integrations across all accounts, with the operator&#39;s email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return List&lt;MetaverseControllerAdminWorlds200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerAdminWorlds() throws ApiException {
-    metaverseControllerAdminWorldsWithHttpInfo();
+  public List<MetaverseControllerAdminWorlds200ResponseInner> metaverseControllerAdminWorlds() throws ApiException {
+    ApiResponse<List<MetaverseControllerAdminWorlds200ResponseInner>> localVarResponse = metaverseControllerAdminWorldsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List all world integrations
+   * Admin view of up to 1000 world integrations across all accounts, with the operator&#39;s email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;List&lt;MetaverseControllerAdminWorlds200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerAdminWorldsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<MetaverseControllerAdminWorlds200ResponseInner>> metaverseControllerAdminWorldsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerAdminWorldsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -114,17 +128,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerAdminWorlds", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<MetaverseControllerAdminWorlds200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<MetaverseControllerAdminWorlds200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -156,25 +165,27 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Get metaverse proof-of-view for your campaigns
+   * Same report as the publisher view, scoped to surface events on your campaigns between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param from  (required)
    * @param to  (required)
+   * @return SupSurfaceReport
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerAdvertiserViews(String from, String to) throws ApiException {
-    metaverseControllerAdvertiserViewsWithHttpInfo(from, to);
+  public SupSurfaceReport metaverseControllerAdvertiserViews(String from, String to) throws ApiException {
+    ApiResponse<SupSurfaceReport> localVarResponse = metaverseControllerAdvertiserViewsWithHttpInfo(from, to);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get metaverse proof-of-view for your campaigns
+   * Same report as the publisher view, scoped to surface events on your campaigns between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param from  (required)
    * @param to  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupSurfaceReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerAdvertiserViewsWithHttpInfo(String from, String to) throws ApiException {
+  public ApiResponse<SupSurfaceReport> metaverseControllerAdvertiserViewsWithHttpInfo(String from, String to) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerAdvertiserViewsRequestBuilder(from, to);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -187,17 +198,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerAdvertiserViews", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupSurfaceReport>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupSurfaceReport>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -254,23 +260,25 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Claim a metaverse surface by its pairing code
+   * Attaches the pending surface showing &#x60;code&#x60; to your account and starts serving: creates a &#x60;surface&#x60; placement (signed with the world&#39;s attestation key) under a per-world property that inherits the world&#39;s trust tier. Optional spatial details: &#x60;shopId&#x60;, &#x60;world&#x60;, &#x60;surfaceType&#x60;, &#x60;posX/Y/Z&#x60;, &#x60;widthM&#x60;, &#x60;heightM&#x60;, &#x60;floorCpm&#x60;, &#x60;audienceMultiplier&#x60; (default 1), &#x60;maxDistanceM&#x60;. 404 if no surface is waiting for that code.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param claimSurfaceDto  (required)
+   * @return SupSurface
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerClaim(ClaimSurfaceDto claimSurfaceDto) throws ApiException {
-    metaverseControllerClaimWithHttpInfo(claimSurfaceDto);
+  public SupSurface metaverseControllerClaim(ClaimSurfaceDto claimSurfaceDto) throws ApiException {
+    ApiResponse<SupSurface> localVarResponse = metaverseControllerClaimWithHttpInfo(claimSurfaceDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Claim a metaverse surface by its pairing code
+   * Attaches the pending surface showing &#x60;code&#x60; to your account and starts serving: creates a &#x60;surface&#x60; placement (signed with the world&#39;s attestation key) under a per-world property that inherits the world&#39;s trust tier. Optional spatial details: &#x60;shopId&#x60;, &#x60;world&#x60;, &#x60;surfaceType&#x60;, &#x60;posX/Y/Z&#x60;, &#x60;widthM&#x60;, &#x60;heightM&#x60;, &#x60;floorCpm&#x60;, &#x60;audienceMultiplier&#x60; (default 1), &#x60;maxDistanceM&#x60;. 404 if no surface is waiting for that code.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param claimSurfaceDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupSurface&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerClaimWithHttpInfo(ClaimSurfaceDto claimSurfaceDto) throws ApiException {
+  public ApiResponse<SupSurface> metaverseControllerClaimWithHttpInfo(ClaimSurfaceDto claimSurfaceDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerClaimRequestBuilder(claimSurfaceDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -283,17 +291,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerClaim", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupSurface>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupSurface>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -335,23 +338,25 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Register a metaverse world integration
+   * Creates a world integration for a metaverse operator from &#x60;name&#x60; (required) and optional &#x60;networkId&#x60;. New worlds start &#x60;unverified&#x60; (their surfaces serve CPA-only until trusted). The response includes &#x60;signing_secret&#x60;, which the world&#39;s server uses to attest proofs of view; it is returned only here. 400 if name is empty.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param createWorldDto  (required)
+   * @return MetaverseControllerCreateWorld201Response
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerCreateWorld(CreateWorldDto createWorldDto) throws ApiException {
-    metaverseControllerCreateWorldWithHttpInfo(createWorldDto);
+  public MetaverseControllerCreateWorld201Response metaverseControllerCreateWorld(CreateWorldDto createWorldDto) throws ApiException {
+    ApiResponse<MetaverseControllerCreateWorld201Response> localVarResponse = metaverseControllerCreateWorldWithHttpInfo(createWorldDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Register a metaverse world integration
+   * Creates a world integration for a metaverse operator from &#x60;name&#x60; (required) and optional &#x60;networkId&#x60;. New worlds start &#x60;unverified&#x60; (their surfaces serve CPA-only until trusted). The response includes &#x60;signing_secret&#x60;, which the world&#39;s server uses to attest proofs of view; it is returned only here. 400 if name is empty.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param createWorldDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;MetaverseControllerCreateWorld201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerCreateWorldWithHttpInfo(CreateWorldDto createWorldDto) throws ApiException {
+  public ApiResponse<MetaverseControllerCreateWorld201Response> metaverseControllerCreateWorldWithHttpInfo(CreateWorldDto createWorldDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerCreateWorldRequestBuilder(createWorldDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -364,17 +369,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerCreateWorld", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<MetaverseControllerCreateWorld201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<MetaverseControllerCreateWorld201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -416,23 +416,25 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Get a metaverse surface
+   * Returns one of your surfaces with its serving tag. 404 if not found, 403 if another account owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
+   * @return SupSurface
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerGet(String id) throws ApiException {
-    metaverseControllerGetWithHttpInfo(id);
+  public SupSurface metaverseControllerGet(String id) throws ApiException {
+    ApiResponse<SupSurface> localVarResponse = metaverseControllerGetWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a metaverse surface
+   * Returns one of your surfaces with its serving tag. 404 if not found, 403 if another account owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupSurface&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerGetWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SupSurface> metaverseControllerGetWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerGetRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -445,17 +447,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupSurface>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupSurface>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -492,21 +489,23 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * List your metaverse surfaces
+   * Returns your surfaces, newest first, with &#x60;online&#x60; (heartbeat within 5 minutes) and the latest heartbeat time.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return List&lt;MetaverseControllerList200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerList() throws ApiException {
-    metaverseControllerListWithHttpInfo();
+  public List<MetaverseControllerList200ResponseInner> metaverseControllerList() throws ApiException {
+    ApiResponse<List<MetaverseControllerList200ResponseInner>> localVarResponse = metaverseControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your metaverse surfaces
+   * Returns your surfaces, newest first, with &#x60;online&#x60; (heartbeat within 5 minutes) and the latest heartbeat time.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;List&lt;MetaverseControllerList200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<MetaverseControllerList200ResponseInner>> metaverseControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -519,17 +518,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<MetaverseControllerList200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<MetaverseControllerList200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -561,21 +555,23 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * List your world integrations
+   * Returns the caller&#39;s world integrations (without signing secrets), newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return List&lt;SupWorld&gt;
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerListWorlds() throws ApiException {
-    metaverseControllerListWorldsWithHttpInfo();
+  public List<SupWorld> metaverseControllerListWorlds() throws ApiException {
+    ApiResponse<List<SupWorld>> localVarResponse = metaverseControllerListWorldsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your world integrations
+   * Returns the caller&#39;s world integrations (without signing secrets), newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;List&lt;SupWorld&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerListWorldsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<SupWorld>> metaverseControllerListWorldsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerListWorldsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -588,17 +584,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerListWorlds", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<SupWorld>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<SupWorld>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -630,23 +621,25 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Start pairing a metaverse ad surface
+   * Public, rate-limited. A world client calls this with &#x60;worldId&#x60; (must be an active world) and optional &#x60;surfaceType&#x60; (screen, poster, portal; default screen). Returns a pairing code to show in-world and a poll token. 404 for an unknown world.  Auth: public, no credentials required.
    * @param surfacePairInitDto  (required)
+   * @return ScreensControllerPairInit201Response
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerPairInit(SurfacePairInitDto surfacePairInitDto) throws ApiException {
-    metaverseControllerPairInitWithHttpInfo(surfacePairInitDto);
+  public ScreensControllerPairInit201Response metaverseControllerPairInit(SurfacePairInitDto surfacePairInitDto) throws ApiException {
+    ApiResponse<ScreensControllerPairInit201Response> localVarResponse = metaverseControllerPairInitWithHttpInfo(surfacePairInitDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start pairing a metaverse ad surface
+   * Public, rate-limited. A world client calls this with &#x60;worldId&#x60; (must be an active world) and optional &#x60;surfaceType&#x60; (screen, poster, portal; default screen). Returns a pairing code to show in-world and a poll token. 404 for an unknown world.  Auth: public, no credentials required.
    * @param surfacePairInitDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ScreensControllerPairInit201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerPairInitWithHttpInfo(SurfacePairInitDto surfacePairInitDto) throws ApiException {
+  public ApiResponse<ScreensControllerPairInit201Response> metaverseControllerPairInitWithHttpInfo(SurfacePairInitDto surfacePairInitDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerPairInitRequestBuilder(surfacePairInitDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -659,17 +652,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerPairInit", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerPairInit201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerPairInit201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -711,23 +699,25 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Poll a metaverse surface&#39;s pairing status
+   * Public, rate-limited. Poll with &#x60;?pollToken&#x3D;&#x60; until a shop owner claims the code, then receive the serving &#x60;tag&#x60;. 404 for an unknown token.  Auth: public, no credentials required.
    * @param pollToken  (required)
+   * @return ScreensControllerPairStatus200Response
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerPairStatus(String pollToken) throws ApiException {
-    metaverseControllerPairStatusWithHttpInfo(pollToken);
+  public ScreensControllerPairStatus200Response metaverseControllerPairStatus(String pollToken) throws ApiException {
+    ApiResponse<ScreensControllerPairStatus200Response> localVarResponse = metaverseControllerPairStatusWithHttpInfo(pollToken);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Poll a metaverse surface&#39;s pairing status
+   * Public, rate-limited. Poll with &#x60;?pollToken&#x3D;&#x60; until a shop owner claims the code, then receive the serving &#x60;tag&#x60;. 404 for an unknown token.  Auth: public, no credentials required.
    * @param pollToken  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ScreensControllerPairStatus200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerPairStatusWithHttpInfo(String pollToken) throws ApiException {
+  public ApiResponse<ScreensControllerPairStatus200Response> metaverseControllerPairStatusWithHttpInfo(String pollToken) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerPairStatusRequestBuilder(pollToken);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -740,17 +730,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerPairStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerPairStatus200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerPairStatus200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -801,25 +786,27 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Get your metaverse proof-of-view report
+   * Summarizes and lists (up to 2000) surface events on your surfaces between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days): views, valid views, portal enters and completes, spend, and distinct surfaces.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param from  (required)
    * @param to  (required)
+   * @return SupSurfaceReport
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerPublisherViews(String from, String to) throws ApiException {
-    metaverseControllerPublisherViewsWithHttpInfo(from, to);
+  public SupSurfaceReport metaverseControllerPublisherViews(String from, String to) throws ApiException {
+    ApiResponse<SupSurfaceReport> localVarResponse = metaverseControllerPublisherViewsWithHttpInfo(from, to);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get your metaverse proof-of-view report
+   * Summarizes and lists (up to 2000) surface events on your surfaces between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days): views, valid views, portal enters and completes, spend, and distinct surfaces.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param from  (required)
    * @param to  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupSurfaceReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerPublisherViewsWithHttpInfo(String from, String to) throws ApiException {
+  public ApiResponse<SupSurfaceReport> metaverseControllerPublisherViewsWithHttpInfo(String from, String to) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerPublisherViewsRequestBuilder(from, to);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -832,17 +819,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerPublisherViews", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupSurfaceReport>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupSurfaceReport>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -899,21 +881,23 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Run world trust scoring now
+   * Scores every active world&#39;s last 7 days of surface traffic immediately (normally a scheduled job), stores the snapshots, and promotes or demotes worlds whose computed tier differs from their current one.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return MetaverseControllerScoreNow201Response
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerScoreNow() throws ApiException {
-    metaverseControllerScoreNowWithHttpInfo();
+  public MetaverseControllerScoreNow201Response metaverseControllerScoreNow() throws ApiException {
+    ApiResponse<MetaverseControllerScoreNow201Response> localVarResponse = metaverseControllerScoreNowWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Run world trust scoring now
+   * Scores every active world&#39;s last 7 days of surface traffic immediately (normally a scheduled job), stores the snapshots, and promotes or demotes worlds whose computed tier differs from their current one.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;MetaverseControllerScoreNow201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerScoreNowWithHttpInfo() throws ApiException {
+  public ApiResponse<MetaverseControllerScoreNow201Response> metaverseControllerScoreNowWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerScoreNowRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -926,17 +910,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerScoreNow", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<MetaverseControllerScoreNow201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<MetaverseControllerScoreNow201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -968,25 +947,27 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Pause or activate a metaverse surface
+   * Sets &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;) on the surface and its placement and republishes the index. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param setSurfaceStatusDto  (required)
+   * @return ScreensControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerSetStatus(String id, SetSurfaceStatusDto setSurfaceStatusDto) throws ApiException {
-    metaverseControllerSetStatusWithHttpInfo(id, setSurfaceStatusDto);
+  public ScreensControllerSetStatus201Response metaverseControllerSetStatus(String id, SetSurfaceStatusDto setSurfaceStatusDto) throws ApiException {
+    ApiResponse<ScreensControllerSetStatus201Response> localVarResponse = metaverseControllerSetStatusWithHttpInfo(id, setSurfaceStatusDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Pause or activate a metaverse surface
+   * Sets &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;) on the surface and its placement and republishes the index. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param setSurfaceStatusDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ScreensControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerSetStatusWithHttpInfo(String id, SetSurfaceStatusDto setSurfaceStatusDto) throws ApiException {
+  public ApiResponse<ScreensControllerSetStatus201Response> metaverseControllerSetStatusWithHttpInfo(String id, SetSurfaceStatusDto setSurfaceStatusDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerSetStatusRequestBuilder(id, setSurfaceStatusDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -999,17 +980,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerSetStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1056,25 +1032,27 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Set a world&#39;s trust tier
+   * Sets &#x60;trust&#x60; to &#x60;trusted&#x60; (surfaces may sell CPM) or &#x60;unverified&#x60; (CPA-only), cascades it to the world&#39;s surface properties, and republishes the index. 404 if the world does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param setWorldTrustDto  (required)
+   * @return MetaverseControllerSetWorldTrust201Response
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerSetWorldTrust(String id, SetWorldTrustDto setWorldTrustDto) throws ApiException {
-    metaverseControllerSetWorldTrustWithHttpInfo(id, setWorldTrustDto);
+  public MetaverseControllerSetWorldTrust201Response metaverseControllerSetWorldTrust(String id, SetWorldTrustDto setWorldTrustDto) throws ApiException {
+    ApiResponse<MetaverseControllerSetWorldTrust201Response> localVarResponse = metaverseControllerSetWorldTrustWithHttpInfo(id, setWorldTrustDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set a world&#39;s trust tier
+   * Sets &#x60;trust&#x60; to &#x60;trusted&#x60; (surfaces may sell CPM) or &#x60;unverified&#x60; (CPA-only), cascades it to the world&#39;s surface properties, and republishes the index. 404 if the world does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param setWorldTrustDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;MetaverseControllerSetWorldTrust201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerSetWorldTrustWithHttpInfo(String id, SetWorldTrustDto setWorldTrustDto) throws ApiException {
+  public ApiResponse<MetaverseControllerSetWorldTrust201Response> metaverseControllerSetWorldTrustWithHttpInfo(String id, SetWorldTrustDto setWorldTrustDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerSetWorldTrustRequestBuilder(id, setWorldTrustDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1087,17 +1065,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerSetWorldTrust", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<MetaverseControllerSetWorldTrust201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<MetaverseControllerSetWorldTrust201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1144,21 +1117,23 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * List world trust scores
+   * Admin view of the latest automatic trust-score snapshot per world (7-day view volume, valid and attested rates, unique-user ratio, dwell-time variation, the tier the scorer chose, and its factors).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return List&lt;MetaverseControllerTrustScores200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerTrustScores() throws ApiException {
-    metaverseControllerTrustScoresWithHttpInfo();
+  public List<MetaverseControllerTrustScores200ResponseInner> metaverseControllerTrustScores() throws ApiException {
+    ApiResponse<List<MetaverseControllerTrustScores200ResponseInner>> localVarResponse = metaverseControllerTrustScoresWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List world trust scores
+   * Admin view of the latest automatic trust-score snapshot per world (7-day view volume, valid and attested rates, unique-user ratio, dwell-time variation, the tier the scorer chose, and its factors).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;List&lt;MetaverseControllerTrustScores200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerTrustScoresWithHttpInfo() throws ApiException {
+  public ApiResponse<List<MetaverseControllerTrustScores200ResponseInner>> metaverseControllerTrustScoresWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerTrustScoresRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1171,17 +1146,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerTrustScores", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<MetaverseControllerTrustScores200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<MetaverseControllerTrustScores200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1213,25 +1183,27 @@ public class MetaverseApi {
   }
 
   /**
-   * 
-   * 
+   * Update a metaverse surface
+   * Edits &#x60;surfaceType&#x60;, &#x60;floorCpm&#x60;, &#x60;audienceMultiplier&#x60; and &#x60;maxDistanceM&#x60; on a paired surface (synced into its placement settings) and republishes the index. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param updateSurfaceDto  (required)
+   * @return SupSurface
    * @throws ApiException if fails to make API call
    */
-  public void metaverseControllerUpdate(String id, UpdateSurfaceDto updateSurfaceDto) throws ApiException {
-    metaverseControllerUpdateWithHttpInfo(id, updateSurfaceDto);
+  public SupSurface metaverseControllerUpdate(String id, UpdateSurfaceDto updateSurfaceDto) throws ApiException {
+    ApiResponse<SupSurface> localVarResponse = metaverseControllerUpdateWithHttpInfo(id, updateSurfaceDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a metaverse surface
+   * Edits &#x60;surfaceType&#x60;, &#x60;floorCpm&#x60;, &#x60;audienceMultiplier&#x60; and &#x60;maxDistanceM&#x60; on a paired surface (synced into its placement settings) and republishes the index. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param updateSurfaceDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupSurface&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> metaverseControllerUpdateWithHttpInfo(String id, UpdateSurfaceDto updateSurfaceDto) throws ApiException {
+  public ApiResponse<SupSurface> metaverseControllerUpdateWithHttpInfo(String id, UpdateSurfaceDto updateSurfaceDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = metaverseControllerUpdateRequestBuilder(id, updateSurfaceDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1244,17 +1216,12 @@ public class MetaverseApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("metaverseControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupSurface>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupSurface>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -18,6 +18,12 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.AddBlockDto;
+import com.adviverse.api.models.AdminControllerAccounts200ResponseInner;
+import com.adviverse.api.models.AdminControllerConfig200ResponseInner;
+import com.adviverse.api.models.AdminControllerProcessPayout201Response;
+import com.adviverse.api.models.AdminControllerQuality200ResponseInner;
+import com.adviverse.api.models.AdminControllerRescan201Response;
+import com.adviverse.api.models.AdminControllerSetStatus201Response;
 import com.adviverse.api.models.ModerationDecisionDto;
 import com.adviverse.api.models.SetAccountStatusDto;
 import com.adviverse.api.models.SetConfigDto;
@@ -85,23 +91,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Search accounts
+   * Returns up to 200 non-deleted accounts, newest first. &#x60;q&#x60; filters by case-insensitive substring match on email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param q  (required)
+   * @return List&lt;AdminControllerAccounts200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerAccounts(String q) throws ApiException {
-    adminControllerAccountsWithHttpInfo(q);
+  public List<AdminControllerAccounts200ResponseInner> adminControllerAccounts(String q) throws ApiException {
+    ApiResponse<List<AdminControllerAccounts200ResponseInner>> localVarResponse = adminControllerAccountsWithHttpInfo(q);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Search accounts
+   * Returns up to 200 non-deleted accounts, newest first. &#x60;q&#x60; filters by case-insensitive substring match on email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param q  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;AdminControllerAccounts200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerAccountsWithHttpInfo(String q) throws ApiException {
+  public ApiResponse<List<AdminControllerAccounts200ResponseInner>> adminControllerAccountsWithHttpInfo(String q) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerAccountsRequestBuilder(q);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -114,17 +122,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerAccounts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdminControllerAccounts200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdminControllerAccounts200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -175,23 +178,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Add a fraud blocklist entry
+   * Adds a &#x60;kind&#x60; (&#x60;ip&#x60;, &#x60;domain&#x60;, &#x60;asn&#x60;, &#x60;device&#x60;, &#x60;user_agent&#x60;, &#x60;country&#x60;, &#x60;subnet&#x60;) / &#x60;value&#x60; pair with an optional &#x60;reason&#x60;. Duplicates of an existing kind/value are ignored. The addition is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param addBlockDto  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerAddBlock(AddBlockDto addBlockDto) throws ApiException {
-    adminControllerAddBlockWithHttpInfo(addBlockDto);
+  public AdminControllerSetStatus201Response adminControllerAddBlock(AddBlockDto addBlockDto) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerAddBlockWithHttpInfo(addBlockDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Add a fraud blocklist entry
+   * Adds a &#x60;kind&#x60; (&#x60;ip&#x60;, &#x60;domain&#x60;, &#x60;asn&#x60;, &#x60;device&#x60;, &#x60;user_agent&#x60;, &#x60;country&#x60;, &#x60;subnet&#x60;) / &#x60;value&#x60; pair with an optional &#x60;reason&#x60;. Duplicates of an existing kind/value are ignored. The addition is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param addBlockDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerAddBlockWithHttpInfo(AddBlockDto addBlockDto) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> adminControllerAddBlockWithHttpInfo(AddBlockDto addBlockDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerAddBlockRequestBuilder(addBlockDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -204,17 +209,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerAddBlock", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -256,8 +256,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Read the admin audit log
+   * Returns the 500 most recent &#x60;audit_log&#x60; rows (actor, action, target type/id, before/after JSON, timestamp). Includes account status changes, moderation decisions, blocks and config changes.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @throws ApiException if fails to make API call
    */
   public void adminControllerAudits() throws ApiException {
@@ -265,8 +265,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Read the admin audit log
+   * Returns the 500 most recent &#x60;audit_log&#x60; rows (actor, action, target type/id, before/after JSON, timestamp). Includes account status changes, moderation decisions, blocks and config changes.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -325,8 +325,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List fraud blocklist entries
+   * Returns the 500 most recent &#x60;block_lists&#x60; rows (kind, value, reason, creator, timestamps).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @throws ApiException if fails to make API call
    */
   public void adminControllerBlocklist() throws ApiException {
@@ -334,8 +334,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List fraud blocklist entries
+   * Returns the 500 most recent &#x60;block_lists&#x60; rows (kind, value, reason, creator, timestamps).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -394,21 +394,23 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List platform config and feature flags
+   * Returns all &#x60;platform_config&#x60; key/value pairs, ordered by key. Values are arbitrary JSON.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return List&lt;AdminControllerConfig200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerConfig() throws ApiException {
-    adminControllerConfigWithHttpInfo();
+  public List<AdminControllerConfig200ResponseInner> adminControllerConfig() throws ApiException {
+    ApiResponse<List<AdminControllerConfig200ResponseInner>> localVarResponse = adminControllerConfigWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List platform config and feature flags
+   * Returns all &#x60;platform_config&#x60; key/value pairs, ordered by key. Values are arbitrary JSON.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;List&lt;AdminControllerConfig200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerConfigWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdminControllerConfig200ResponseInner>> adminControllerConfigWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerConfigRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -421,17 +423,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdminControllerConfig200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdminControllerConfig200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -463,23 +460,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Confirm a manual deposit
+   * Marks a manual deposit received and credits the advertiser ledger. &#x60;ref&#x60; is the bank/provider reference (defaults to &#x60;manual:&lt;id&gt;&#x60;). Idempotent: &#x60;ok&#x60; is true only when a new credit was posted. A deposit tied to an agency invoice also marks that invoice paid.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerConfirmDeposit(String id) throws ApiException {
-    adminControllerConfirmDepositWithHttpInfo(id);
+  public AdminControllerSetStatus201Response adminControllerConfirmDeposit(String id) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerConfirmDepositWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Confirm a manual deposit
+   * Marks a manual deposit received and credits the advertiser ledger. &#x60;ref&#x60; is the bank/provider reference (defaults to &#x60;manual:&lt;id&gt;&#x60;). Idempotent: &#x60;ok&#x60; is true only when a new credit was posted. A deposit tied to an agency invoice also marks that invoice paid.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerConfirmDepositWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> adminControllerConfirmDepositWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerConfirmDepositRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -492,17 +491,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerConfirmDeposit", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -539,23 +533,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Confirm a manual payout
+   * For manual (wire) payouts left in &#x60;processing&#x60;: after ops sends the bank transfer, &#x60;paid: true&#x60; (default) settles it and releases the held funds, and &#x60;paid: false&#x60; marks it failed and returns them. Returns 404 for an unknown payout and 400 if it is not awaiting confirmation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerConfirmPayout(String id) throws ApiException {
-    adminControllerConfirmPayoutWithHttpInfo(id);
+  public AdminControllerSetStatus201Response adminControllerConfirmPayout(String id) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerConfirmPayoutWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Confirm a manual payout
+   * For manual (wire) payouts left in &#x60;processing&#x60;: after ops sends the bank transfer, &#x60;paid: true&#x60; (default) settles it and releases the held funds, and &#x60;paid: false&#x60; marks it failed and returns them. Returns 404 for an unknown payout and 400 if it is not awaiting confirmation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerConfirmPayoutWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> adminControllerConfirmPayoutWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerConfirmPayoutRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -568,17 +564,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerConfirmPayout", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -615,25 +606,27 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Approve or reject a moderation item
+   * Applies &#x60;decision&#x60; (&#x60;approved&#x60; or &#x60;rejected&#x60;) with optional &#x60;notes&#x60; to a queue item. This updates the target: the creative&#39;s moderation status, the campaign or sponsored-product campaign&#39;s status (&#x60;active&#x60; or &#x60;rejected&#x60;), or the property&#39;s status. The decision is audit-logged and the serving index is republished, so approved items can serve within seconds. 404 for an unknown item.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param moderationDecisionDto  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerDecide(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
-    adminControllerDecideWithHttpInfo(id, moderationDecisionDto);
+  public AdminControllerSetStatus201Response adminControllerDecide(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerDecideWithHttpInfo(id, moderationDecisionDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Approve or reject a moderation item
+   * Applies &#x60;decision&#x60; (&#x60;approved&#x60; or &#x60;rejected&#x60;) with optional &#x60;notes&#x60; to a queue item. This updates the target: the creative&#39;s moderation status, the campaign or sponsored-product campaign&#39;s status (&#x60;active&#x60; or &#x60;rejected&#x60;), or the property&#39;s status. The decision is audit-logged and the serving index is republished, so approved items can serve within seconds. 404 for an unknown item.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param moderationDecisionDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerDecideWithHttpInfo(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> adminControllerDecideWithHttpInfo(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerDecideRequestBuilder(id, moderationDecisionDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -646,17 +639,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerDecide", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -703,8 +691,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List manual deposits awaiting confirmation
+   * Returns up to 500 &#x60;pending&#x60; deposits on the manual &#x60;wire&#x60; and &#x60;paxum&#x60; rails, oldest first (all &#x60;deposits&#x60; columns).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @throws ApiException if fails to make API call
    */
   public void adminControllerPendingDeposits() throws ApiException {
@@ -712,8 +700,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List manual deposits awaiting confirmation
+   * Returns up to 500 &#x60;pending&#x60; deposits on the manual &#x60;wire&#x60; and &#x60;paxum&#x60; rails, oldest first (all &#x60;deposits&#x60; columns).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -772,8 +760,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List payouts awaiting processing
+   * Returns publisher payouts in &#x60;requested&#x60; or &#x60;on_hold&#x60; status, oldest request first (all &#x60;payouts&#x60; columns).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @throws ApiException if fails to make API call
    */
   public void adminControllerPendingPayouts() throws ApiException {
@@ -781,8 +769,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List payouts awaiting processing
+   * Returns publisher payouts in &#x60;requested&#x60; or &#x60;on_hold&#x60; status, oldest request first (all &#x60;payouts&#x60; columns).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -841,23 +829,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Process a requested payout
+   * Claims a &#x60;requested&#x60; payout atomically (so double-triggers call the provider once) and sends it through the payout rail for its method. If paid, the held funds are released from the ledger; if failed, the hold returns to available balance; manual rails such as wire stay &#x60;processing&#x60; until confirmed. Returns 400 if the payout is not in &#x60;requested&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AdminControllerProcessPayout201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerProcessPayout(String id) throws ApiException {
-    adminControllerProcessPayoutWithHttpInfo(id);
+  public AdminControllerProcessPayout201Response adminControllerProcessPayout(String id) throws ApiException {
+    ApiResponse<AdminControllerProcessPayout201Response> localVarResponse = adminControllerProcessPayoutWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Process a requested payout
+   * Claims a &#x60;requested&#x60; payout atomically (so double-triggers call the provider once) and sends it through the payout rail for its method. If paid, the held funds are released from the ledger; if failed, the hold returns to available balance; manual rails such as wire stay &#x60;processing&#x60; until confirmed. Returns 400 if the payout is not in &#x60;requested&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerProcessPayout201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerProcessPayoutWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdminControllerProcessPayout201Response> adminControllerProcessPayoutWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerProcessPayoutRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -870,17 +860,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerProcessPayout", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerProcessPayout201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerProcessPayout201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -917,21 +902,23 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List placement quality scores
+   * Returns the 200 most recent quality-score windows per placement with the property domain, IVT rate, fill rate and composite score.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return List&lt;AdminControllerQuality200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerQuality() throws ApiException {
-    adminControllerQualityWithHttpInfo();
+  public List<AdminControllerQuality200ResponseInner> adminControllerQuality() throws ApiException {
+    ApiResponse<List<AdminControllerQuality200ResponseInner>> localVarResponse = adminControllerQualityWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List placement quality scores
+   * Returns the 200 most recent quality-score windows per placement with the property domain, IVT rate, fill rate and composite score.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;List&lt;AdminControllerQuality200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerQualityWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdminControllerQuality200ResponseInner>> adminControllerQualityWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerQualityRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -944,17 +931,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerQuality", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdminControllerQuality200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdminControllerQuality200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -986,8 +968,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List the pending moderation queue
+   * Returns pending moderation items, oldest first, optionally filtered by &#x60;type&#x60; (entity type such as &#x60;creative&#x60;, &#x60;campaign&#x60;, &#x60;promote_campaign&#x60;, &#x60;property&#x60;). Creative items are joined with what a reviewer needs to see the ad: type, asset and landing URLs, title, screenshot, VAST/VPAID URLs, duration and companions.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param type  (required)
    * @throws ApiException if fails to make API call
    */
@@ -996,8 +978,8 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * List the pending moderation queue
+   * Returns pending moderation items, oldest first, optionally filtered by &#x60;type&#x60; (entity type such as &#x60;creative&#x60;, &#x60;campaign&#x60;, &#x60;promote_campaign&#x60;, &#x60;property&#x60;). Creative items are joined with what a reviewer needs to see the ad: type, asset and landing URLs, title, screenshot, VAST/VPAID URLs, duration and companions.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param type  (required)
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
@@ -1076,23 +1058,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Re-scan a creative for cloaking
+   * Recaptures the landing-page screenshot, then fetches the landing URL with a browser and a bot user agent and compares the responses. Repeated divergence adds cloaking strikes and, at the threshold, flags the creative and re-queues it for moderation. A matching fetch clears strikes and a prior cloaking flag. Fetch errors fail open (not flagged). The result is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param creativeId  (required)
+   * @return AdminControllerRescan201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerRescan(String creativeId) throws ApiException {
-    adminControllerRescanWithHttpInfo(creativeId);
+  public AdminControllerRescan201Response adminControllerRescan(String creativeId) throws ApiException {
+    ApiResponse<AdminControllerRescan201Response> localVarResponse = adminControllerRescanWithHttpInfo(creativeId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Re-scan a creative for cloaking
+   * Recaptures the landing-page screenshot, then fetches the landing URL with a browser and a bot user agent and compares the responses. Repeated divergence adds cloaking strikes and, at the threshold, flags the creative and re-queues it for moderation. A matching fetch clears strikes and a prior cloaking flag. Fetch errors fail open (not flagged). The result is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param creativeId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerRescan201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerRescanWithHttpInfo(String creativeId) throws ApiException {
+  public ApiResponse<AdminControllerRescan201Response> adminControllerRescanWithHttpInfo(String creativeId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerRescanRequestBuilder(creativeId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1105,17 +1089,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerRescan", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerRescan201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerRescan201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1152,23 +1131,25 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Set a platform config value
+   * Creates or replaces the config entry &#x60;key&#x60; (1-200 chars) with &#x60;value&#x60; (any JSON). The change is recorded with the admin as updater and audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param setConfigDto  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerSetConfig(SetConfigDto setConfigDto) throws ApiException {
-    adminControllerSetConfigWithHttpInfo(setConfigDto);
+  public AdminControllerSetStatus201Response adminControllerSetConfig(SetConfigDto setConfigDto) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerSetConfigWithHttpInfo(setConfigDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set a platform config value
+   * Creates or replaces the config entry &#x60;key&#x60; (1-200 chars) with &#x60;value&#x60; (any JSON). The change is recorded with the admin as updater and audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param setConfigDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerSetConfigWithHttpInfo(SetConfigDto setConfigDto) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> adminControllerSetConfigWithHttpInfo(SetConfigDto setConfigDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerSetConfigRequestBuilder(setConfigDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1181,17 +1162,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerSetConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1233,25 +1209,27 @@ public class AdminApi {
   }
 
   /**
-   * 
-   * 
+   * Set an account&#39;s status
+   * Sets an account&#39;s &#x60;status&#x60; to &#x60;active&#x60;, &#x60;pending&#x60;, &#x60;suspended&#x60;, &#x60;banned&#x60; or &#x60;closed&#x60;. The previous and new status are written to the audit log. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param setAccountStatusDto  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void adminControllerSetStatus(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
-    adminControllerSetStatusWithHttpInfo(id, setAccountStatusDto);
+  public AdminControllerSetStatus201Response adminControllerSetStatus(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerSetStatusWithHttpInfo(id, setAccountStatusDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set an account&#39;s status
+   * Sets an account&#39;s &#x60;status&#x60; to &#x60;active&#x60;, &#x60;pending&#x60;, &#x60;suspended&#x60;, &#x60;banned&#x60; or &#x60;closed&#x60;. The previous and new status are written to the audit log. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param setAccountStatusDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> adminControllerSetStatusWithHttpInfo(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> adminControllerSetStatusWithHttpInfo(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerSetStatusRequestBuilder(id, setAccountStatusDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1264,17 +1242,12 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerSetStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -17,6 +17,9 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.ReferralsControllerAffiliateOverview200Response;
+import com.adviverse.api.models.ReferralsControllerJoinAffiliate200Response;
+import com.adviverse.api.models.ReferralsControllerOverview200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +84,155 @@ public class ReferralsApi {
   }
 
   /**
-   * 
-   * 
+   * Get Refer &amp; earn (affiliate) overview
+   * Returns the account&#39;s Refer &amp; earn partner status from Referalli. Before joining it returns &#x60;joined: false&#x60; with the program terms and summary. After joining it adds the partner code, &#x60;?via&#x3D;&#x60; signup link, clicks, signups, pending reviews and converted customers. &#x60;commissions&#x60; (pending and settled, in USD, net of reversals) come from local records.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReferralsControllerAffiliateOverview200Response
    * @throws ApiException if fails to make API call
    */
-  public void referralsControllerOverview() throws ApiException {
-    referralsControllerOverviewWithHttpInfo();
+  public ReferralsControllerAffiliateOverview200Response referralsControllerAffiliateOverview() throws ApiException {
+    ApiResponse<ReferralsControllerAffiliateOverview200Response> localVarResponse = referralsControllerAffiliateOverviewWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get Refer &amp; earn (affiliate) overview
+   * Returns the account&#39;s Refer &amp; earn partner status from Referalli. Before joining it returns &#x60;joined: false&#x60; with the program terms and summary. After joining it adds the partner code, &#x60;?via&#x3D;&#x60; signup link, clicks, signups, pending reviews and converted customers. &#x60;commissions&#x60; (pending and settled, in USD, net of reversals) come from local records.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReferralsControllerAffiliateOverview200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> referralsControllerOverviewWithHttpInfo() throws ApiException {
+  public ApiResponse<ReferralsControllerAffiliateOverview200Response> referralsControllerAffiliateOverviewWithHttpInfo() throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = referralsControllerAffiliateOverviewRequestBuilder();
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("referralsControllerAffiliateOverview", localVarResponse);
+        }
+        return new ApiResponse<ReferralsControllerAffiliateOverview200Response>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReferralsControllerAffiliateOverview200Response>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder referralsControllerAffiliateOverviewRequestBuilder() throws ApiException {
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/referrals/affiliate";
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Join Refer &amp; earn
+   * Enrolls the account as a Referalli partner keyed on its account id and email, then returns the same body as the affiliate overview. Idempotent (calls are deduplicated per account). Returns 400 &#x60;email_taken&#x60; if the email is already a partner elsewhere, or &#x60;join_failed&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReferralsControllerJoinAffiliate200Response
+   * @throws ApiException if fails to make API call
+   */
+  public ReferralsControllerJoinAffiliate200Response referralsControllerJoinAffiliate() throws ApiException {
+    ApiResponse<ReferralsControllerJoinAffiliate200Response> localVarResponse = referralsControllerJoinAffiliateWithHttpInfo();
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Join Refer &amp; earn
+   * Enrolls the account as a Referalli partner keyed on its account id and email, then returns the same body as the affiliate overview. Idempotent (calls are deduplicated per account). Returns 400 &#x60;email_taken&#x60; if the email is already a partner elsewhere, or &#x60;join_failed&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReferralsControllerJoinAffiliate200Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ReferralsControllerJoinAffiliate200Response> referralsControllerJoinAffiliateWithHttpInfo() throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = referralsControllerJoinAffiliateRequestBuilder();
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("referralsControllerJoinAffiliate", localVarResponse);
+        }
+        return new ApiResponse<ReferralsControllerJoinAffiliate200Response>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReferralsControllerJoinAffiliate200Response>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder referralsControllerJoinAffiliateRequestBuilder() throws ApiException {
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/referrals/affiliate/join";
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Get referral program overview
+   * Returns the account&#39;s referral code and signup link (&#x60;/signup?ref&#x3D;&lt;code&gt;&#x60;), and every account it referred with that account&#39;s status, join date and the referral earnings credited to the caller from it (summed from &#x60;referral&#x60; ledger entries).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReferralsControllerOverview200Response
+   * @throws ApiException if fails to make API call
+   */
+  public ReferralsControllerOverview200Response referralsControllerOverview() throws ApiException {
+    ApiResponse<ReferralsControllerOverview200Response> localVarResponse = referralsControllerOverviewWithHttpInfo();
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Get referral program overview
+   * Returns the account&#39;s referral code and signup link (&#x60;/signup?ref&#x3D;&lt;code&gt;&#x60;), and every account it referred with that account&#39;s status, join date and the referral earnings credited to the caller from it (summed from &#x60;referral&#x60; ledger entries).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReferralsControllerOverview200Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<ReferralsControllerOverview200Response> referralsControllerOverviewWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = referralsControllerOverviewRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +245,12 @@ public class ReferralsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("referralsControllerOverview", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReferralsControllerOverview200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReferralsControllerOverview200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -17,6 +17,9 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.ComboControllerCreateCombo201Response;
+import com.adviverse.api.models.ComboControllerListCombos200Response;
+import com.adviverse.api.models.ComboControllerListPresets200Response;
 import com.adviverse.api.models.CreateComboDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,25 +85,27 @@ public class ComboApi {
   }
 
   /**
-   * 
-   * 
+   * Provision a combo of placements on a property
+   * Creates several placements at once under one generated &#x60;comboId&#x60; and returns a single combined embed snippet to paste before &#x60;&lt;/body&gt;&#x60;. Send either &#x60;presetKey&#x60; or a custom &#x60;units&#x60; array (formats banner, native, popunder, social_bar, interstitial, in_page_push, direct_link), plus optional &#x60;namePrefix&#x60; and shared floor/rev-share/auction/house settings applied to every unit. Adds a warning if the property already has a popunder. 400 for an unknown preset or a non-combinable format; 404/403 if the property is missing or not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param propertyId  (required)
    * @param createComboDto  (required)
+   * @return ComboControllerCreateCombo201Response
    * @throws ApiException if fails to make API call
    */
-  public void comboControllerCreateCombo(String propertyId, CreateComboDto createComboDto) throws ApiException {
-    comboControllerCreateComboWithHttpInfo(propertyId, createComboDto);
+  public ComboControllerCreateCombo201Response comboControllerCreateCombo(String propertyId, CreateComboDto createComboDto) throws ApiException {
+    ApiResponse<ComboControllerCreateCombo201Response> localVarResponse = comboControllerCreateComboWithHttpInfo(propertyId, createComboDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Provision a combo of placements on a property
+   * Creates several placements at once under one generated &#x60;comboId&#x60; and returns a single combined embed snippet to paste before &#x60;&lt;/body&gt;&#x60;. Send either &#x60;presetKey&#x60; or a custom &#x60;units&#x60; array (formats banner, native, popunder, social_bar, interstitial, in_page_push, direct_link), plus optional &#x60;namePrefix&#x60; and shared floor/rev-share/auction/house settings applied to every unit. Adds a warning if the property already has a popunder. 400 for an unknown preset or a non-combinable format; 404/403 if the property is missing or not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param propertyId  (required)
    * @param createComboDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComboControllerCreateCombo201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> comboControllerCreateComboWithHttpInfo(String propertyId, CreateComboDto createComboDto) throws ApiException {
+  public ApiResponse<ComboControllerCreateCombo201Response> comboControllerCreateComboWithHttpInfo(String propertyId, CreateComboDto createComboDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = comboControllerCreateComboRequestBuilder(propertyId, createComboDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -113,17 +118,12 @@ public class ComboApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("comboControllerCreateCombo", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComboControllerCreateCombo201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComboControllerCreateCombo201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -170,23 +170,25 @@ public class ComboApi {
   }
 
   /**
-   * 
-   * 
+   * List combos on a property
+   * Groups the property&#39;s live placements by &#x60;combo_id&#x60; (ungrouped placements are omitted) and rebuilds each group&#39;s combined snippet. 404/403 if the property is missing or not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param propertyId  (required)
+   * @return ComboControllerListCombos200Response
    * @throws ApiException if fails to make API call
    */
-  public void comboControllerListCombos(String propertyId) throws ApiException {
-    comboControllerListCombosWithHttpInfo(propertyId);
+  public ComboControllerListCombos200Response comboControllerListCombos(String propertyId) throws ApiException {
+    ApiResponse<ComboControllerListCombos200Response> localVarResponse = comboControllerListCombosWithHttpInfo(propertyId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List combos on a property
+   * Groups the property&#39;s live placements by &#x60;combo_id&#x60; (ungrouped placements are omitted) and rebuilds each group&#39;s combined snippet. 404/403 if the property is missing or not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param propertyId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComboControllerListCombos200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> comboControllerListCombosWithHttpInfo(String propertyId) throws ApiException {
+  public ApiResponse<ComboControllerListCombos200Response> comboControllerListCombosWithHttpInfo(String propertyId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = comboControllerListCombosRequestBuilder(propertyId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -199,17 +201,12 @@ public class ComboApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("comboControllerListCombos", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComboControllerListCombos200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComboControllerListCombos200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -246,21 +243,23 @@ public class ComboApi {
   }
 
   /**
-   * 
-   * 
+   * List combo layout presets
+   * Returns the static catalog of combo presets (&#x60;standard_combo&#x60;, &#x60;leaderboard_pop&#x60;, &#x60;social_push&#x60;, &#x60;sticky_interstitial&#x60;, &#x60;full_monetization&#x60;), each with the placement units it provisions. Preset keys are stable.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ComboControllerListPresets200Response
    * @throws ApiException if fails to make API call
    */
-  public void comboControllerListPresets() throws ApiException {
-    comboControllerListPresetsWithHttpInfo();
+  public ComboControllerListPresets200Response comboControllerListPresets() throws ApiException {
+    ApiResponse<ComboControllerListPresets200Response> localVarResponse = comboControllerListPresetsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List combo layout presets
+   * Returns the static catalog of combo presets (&#x60;standard_combo&#x60;, &#x60;leaderboard_pop&#x60;, &#x60;social_push&#x60;, &#x60;sticky_interstitial&#x60;, &#x60;full_monetization&#x60;), each with the placement units it provisions. Preset keys are stable.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;ComboControllerListPresets200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> comboControllerListPresetsWithHttpInfo() throws ApiException {
+  public ApiResponse<ComboControllerListPresets200Response> comboControllerListPresetsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = comboControllerListPresetsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -273,17 +272,12 @@ public class ComboApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("comboControllerListPresets", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComboControllerListPresets200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComboControllerListPresets200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

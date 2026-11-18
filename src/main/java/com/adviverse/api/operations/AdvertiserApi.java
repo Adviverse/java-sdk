@@ -18,6 +18,45 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.AddComponentDto;
+import com.adviverse.api.models.AdvAudience;
+import com.adviverse.api.models.AdvAudienceDestination;
+import com.adviverse.api.models.AdvCampaign;
+import com.adviverse.api.models.AdvCampaignCreative;
+import com.adviverse.api.models.AdvCampaignDetail;
+import com.adviverse.api.models.AdvCampaignGroup;
+import com.adviverse.api.models.AdvCampaignGroupWithAdSets;
+import com.adviverse.api.models.AdvCatalogFeed;
+import com.adviverse.api.models.AdvCatalogItem;
+import com.adviverse.api.models.AdvConversionConfig;
+import com.adviverse.api.models.AdvCreative;
+import com.adviverse.api.models.AdvCreativeAssignment;
+import com.adviverse.api.models.AdvCreativeComponent;
+import com.adviverse.api.models.AdvDeleted;
+import com.adviverse.api.models.AdvLibraryCreative;
+import com.adviverse.api.models.AdvProductFeed;
+import com.adviverse.api.models.AdvPromoteCampaign;
+import com.adviverse.api.models.AdvStatusResult;
+import com.adviverse.api.models.AdvTargeting;
+import com.adviverse.api.models.AdvertiserControllerAddAudienceMembers201Response;
+import com.adviverse.api.models.AdvertiserControllerAddComponent201Response;
+import com.adviverse.api.models.AdvertiserControllerAttachCreative201Response;
+import com.adviverse.api.models.AdvertiserControllerAudiencePixel200Response;
+import com.adviverse.api.models.AdvertiserControllerAudienceSuggestions200Response;
+import com.adviverse.api.models.AdvertiserControllerCreateAudience201Response;
+import com.adviverse.api.models.AdvertiserControllerDetachCreative201Response;
+import com.adviverse.api.models.AdvertiserControllerEstimateAudience201Response;
+import com.adviverse.api.models.AdvertiserControllerFetchFeed201Response;
+import com.adviverse.api.models.AdvertiserControllerListFeedProducts200Response;
+import com.adviverse.api.models.AdvertiserControllerLookalikeAudience201Response;
+import com.adviverse.api.models.AdvertiserControllerModeledLookalike201Response;
+import com.adviverse.api.models.AdvertiserControllerModeledLookalikePreview200Response;
+import com.adviverse.api.models.AdvertiserControllerReach201Response;
+import com.adviverse.api.models.AdvertiserControllerSetDco200Response;
+import com.adviverse.api.models.AdvertiserControllerSyncDestination201Response;
+import com.adviverse.api.models.AdvertiserControllerTranscodeCreative201Response;
+import com.adviverse.api.models.AdvertiserControllerUploadCreative201Response;
+import com.adviverse.api.models.AdvertiserControllerUploadPlayable201Response;
+import com.adviverse.api.models.AdvertiserControllerUpsertCatalog201Response;
 import com.adviverse.api.models.AttachCreativeDto;
 import com.adviverse.api.models.AudienceMembersDto;
 import com.adviverse.api.models.BulkUpsertCatalogDto;
@@ -102,25 +141,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Add hashed members to an audience
+   * Adds the strings in &#x60;hashes&#x60; (user id hashes) to the audience&#39;s member set; empty or non-string entries are skipped. Returns the number of accepted entries and the resulting set size. Responds 404/403 when the audience is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param audienceMembersDto  (required)
+   * @return AdvertiserControllerAddAudienceMembers201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerAddAudienceMembers(String id, AudienceMembersDto audienceMembersDto) throws ApiException {
-    advertiserControllerAddAudienceMembersWithHttpInfo(id, audienceMembersDto);
+  public AdvertiserControllerAddAudienceMembers201Response advertiserControllerAddAudienceMembers(String id, AudienceMembersDto audienceMembersDto) throws ApiException {
+    ApiResponse<AdvertiserControllerAddAudienceMembers201Response> localVarResponse = advertiserControllerAddAudienceMembersWithHttpInfo(id, audienceMembersDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Add hashed members to an audience
+   * Adds the strings in &#x60;hashes&#x60; (user id hashes) to the audience&#39;s member set; empty or non-string entries are skipped. Returns the number of accepted entries and the resulting set size. Responds 404/403 when the audience is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param audienceMembersDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerAddAudienceMembers201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerAddAudienceMembersWithHttpInfo(String id, AudienceMembersDto audienceMembersDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerAddAudienceMembers201Response> advertiserControllerAddAudienceMembersWithHttpInfo(String id, AudienceMembersDto audienceMembersDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerAddAudienceMembersRequestBuilder(id, audienceMembersDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -133,17 +174,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerAddAudienceMembers", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerAddAudienceMembers201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerAddAudienceMembers201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -190,25 +226,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Add a DCO component to a creative&#39;s pool
+   * Adds one &#x60;{ slot, value }&#x60; component to the component pool of the creative&#39;s campaign. &#x60;slot&#x60; is headline, body, image, cta, logo or bg_color; &#x60;value&#x60; must be non-empty and image/logo values are SSRF-checked (400). The creative must be owned and authored under a campaign (404 otherwise). Republishes the serving index.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param addComponentDto  (required)
+   * @return AdvertiserControllerAddComponent201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerAddComponent(String id, AddComponentDto addComponentDto) throws ApiException {
-    advertiserControllerAddComponentWithHttpInfo(id, addComponentDto);
+  public AdvertiserControllerAddComponent201Response advertiserControllerAddComponent(String id, AddComponentDto addComponentDto) throws ApiException {
+    ApiResponse<AdvertiserControllerAddComponent201Response> localVarResponse = advertiserControllerAddComponentWithHttpInfo(id, addComponentDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Add a DCO component to a creative&#39;s pool
+   * Adds one &#x60;{ slot, value }&#x60; component to the component pool of the creative&#39;s campaign. &#x60;slot&#x60; is headline, body, image, cta, logo or bg_color; &#x60;value&#x60; must be non-empty and image/logo values are SSRF-checked (400). The creative must be owned and authored under a campaign (404 otherwise). Republishes the serving index.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param addComponentDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerAddComponent201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerAddComponentWithHttpInfo(String id, AddComponentDto addComponentDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerAddComponent201Response> advertiserControllerAddComponentWithHttpInfo(String id, AddComponentDto addComponentDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerAddComponentRequestBuilder(id, addComponentDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -221,17 +259,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerAddComponent", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerAddComponent201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerAddComponent201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -278,25 +311,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Attach a library creative to a campaign
+   * Links the creative to &#x60;campaignId&#x60; with an optional rotation &#x60;weight&#x60; (minimum 1, default 1). Attaching again updates the weight and re-enables the link. Both the creative (404) and campaign (404/403) must be owned. Republishes the serving index.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param attachCreativeDto  (required)
+   * @return AdvertiserControllerAttachCreative201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerAttachCreative(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
-    advertiserControllerAttachCreativeWithHttpInfo(id, attachCreativeDto);
+  public AdvertiserControllerAttachCreative201Response advertiserControllerAttachCreative(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
+    ApiResponse<AdvertiserControllerAttachCreative201Response> localVarResponse = advertiserControllerAttachCreativeWithHttpInfo(id, attachCreativeDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Attach a library creative to a campaign
+   * Links the creative to &#x60;campaignId&#x60; with an optional rotation &#x60;weight&#x60; (minimum 1, default 1). Attaching again updates the weight and re-enables the link. Both the creative (404) and campaign (404/403) must be owned. Republishes the serving index.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param attachCreativeDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerAttachCreative201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerAttachCreativeWithHttpInfo(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerAttachCreative201Response> advertiserControllerAttachCreativeWithHttpInfo(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerAttachCreativeRequestBuilder(id, attachCreativeDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -309,17 +344,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerAttachCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerAttachCreative201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerAttachCreative201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -366,23 +396,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Get the retargeting pixel snippet for an audience
+   * Returns the tracking URL plus ready-to-paste &#x60;&lt;img&gt;&#x60; and &#x60;&lt;script&gt;&#x60; snippets that add the visiting user to this audience via /v1/track/audience. Replace the USER_ID placeholder (the script uses window.ADNET_UID). 404/403 when the audience is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvertiserControllerAudiencePixel200Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerAudiencePixel(String id) throws ApiException {
-    advertiserControllerAudiencePixelWithHttpInfo(id);
+  public AdvertiserControllerAudiencePixel200Response advertiserControllerAudiencePixel(String id) throws ApiException {
+    ApiResponse<AdvertiserControllerAudiencePixel200Response> localVarResponse = advertiserControllerAudiencePixelWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the retargeting pixel snippet for an audience
+   * Returns the tracking URL plus ready-to-paste &#x60;&lt;img&gt;&#x60; and &#x60;&lt;script&gt;&#x60; snippets that add the visiting user to this audience via /v1/track/audience. Replace the USER_ID placeholder (the script uses window.ADNET_UID). 404/403 when the audience is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerAudiencePixel200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerAudiencePixelWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvertiserControllerAudiencePixel200Response> advertiserControllerAudiencePixelWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerAudiencePixelRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -395,17 +427,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerAudiencePixel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerAudiencePixel200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerAudiencePixel200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -442,23 +469,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Suggest audiences from pixel activity
+   * Inspects the account&#39;s pixel events over the last &#x60;days&#x60; (1-180, default 30) and returns ready-to-create rule audiences such as all visitors, engaged visitors, cart and checkout abandoners, purchasers, high-value buyers, unconverted leads and viewers of the top 5 products. Each suggestion has a &#x60;rule&#x60; to pass to POST /audiences and an &#x60;estReach&#x60; upper bound. &#x60;eventInventory&#x60; maps each event name to its distinct users.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param days  (required)
+   * @return AdvertiserControllerAudienceSuggestions200Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerAudienceSuggestions(String days) throws ApiException {
-    advertiserControllerAudienceSuggestionsWithHttpInfo(days);
+  public AdvertiserControllerAudienceSuggestions200Response advertiserControllerAudienceSuggestions(String days) throws ApiException {
+    ApiResponse<AdvertiserControllerAudienceSuggestions200Response> localVarResponse = advertiserControllerAudienceSuggestionsWithHttpInfo(days);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Suggest audiences from pixel activity
+   * Inspects the account&#39;s pixel events over the last &#x60;days&#x60; (1-180, default 30) and returns ready-to-create rule audiences such as all visitors, engaged visitors, cart and checkout abandoners, purchasers, high-value buyers, unconverted leads and viewers of the top 5 products. Each suggestion has a &#x60;rule&#x60; to pass to POST /audiences and an &#x60;estReach&#x60; upper bound. &#x60;eventInventory&#x60; maps each event name to its distinct users.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param days  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerAudienceSuggestions200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerAudienceSuggestionsWithHttpInfo(String days) throws ApiException {
+  public ApiResponse<AdvertiserControllerAudienceSuggestions200Response> advertiserControllerAudienceSuggestionsWithHttpInfo(String days) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerAudienceSuggestionsRequestBuilder(days);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -471,17 +500,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerAudienceSuggestions", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerAudienceSuggestions200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerAudienceSuggestions200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -532,23 +556,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create a campaign (ad set)
+   * Creates a campaign in &#x60;draft&#x60; status together with its targeting row and, if &#x60;conversion&#x60; is given, a conversion config. Key body fields: &#x60;name&#x60;, &#x60;format&#x60;, &#x60;pricingModel&#x60;, &#x60;bidAmount&#x60;, budgets, &#x60;pacing&#x60;, schedule, &#x60;targeting&#x60;, &#x60;bidStrategy&#x60;/&#x60;targetCpa&#x60;/&#x60;targetRoas&#x60;, &#x60;houseAd&#x60;, &#x60;priorityTier&#x60;, &#x60;groupId&#x60;. The currency is always taken from the advertiser&#39;s account (a client-sent &#x60;currency&#x60; is ignored), &#x60;terminal&#x60; format is forced to CPM, and &#x60;groupId&#x60; is silently dropped unless the advertiser owns that group. A house ad with no placement whitelist is confined to the owner&#39;s own active placements. Submit the draft for review to start serving.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createCampaignDto  (required)
+   * @return AdvCampaign
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreate(CreateCampaignDto createCampaignDto) throws ApiException {
-    advertiserControllerCreateWithHttpInfo(createCampaignDto);
+  public AdvCampaign advertiserControllerCreate(CreateCampaignDto createCampaignDto) throws ApiException {
+    ApiResponse<AdvCampaign> localVarResponse = advertiserControllerCreateWithHttpInfo(createCampaignDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a campaign (ad set)
+   * Creates a campaign in &#x60;draft&#x60; status together with its targeting row and, if &#x60;conversion&#x60; is given, a conversion config. Key body fields: &#x60;name&#x60;, &#x60;format&#x60;, &#x60;pricingModel&#x60;, &#x60;bidAmount&#x60;, budgets, &#x60;pacing&#x60;, schedule, &#x60;targeting&#x60;, &#x60;bidStrategy&#x60;/&#x60;targetCpa&#x60;/&#x60;targetRoas&#x60;, &#x60;houseAd&#x60;, &#x60;priorityTier&#x60;, &#x60;groupId&#x60;. The currency is always taken from the advertiser&#39;s account (a client-sent &#x60;currency&#x60; is ignored), &#x60;terminal&#x60; format is forced to CPM, and &#x60;groupId&#x60; is silently dropped unless the advertiser owns that group. A house ad with no placement whitelist is confined to the owner&#39;s own active placements. Submit the draft for review to start serving.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createCampaignDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCampaign&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreateWithHttpInfo(CreateCampaignDto createCampaignDto) throws ApiException {
+  public ApiResponse<AdvCampaign> advertiserControllerCreateWithHttpInfo(CreateCampaignDto createCampaignDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreateRequestBuilder(createCampaignDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -561,17 +587,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCampaign>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCampaign>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -613,23 +634,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create an audience
+   * Creates an audience. Passing a &#x60;rule&#x60; makes it an event-rule audience (type &#x60;rule&#x60;) built from pixel events: the rule is bounds-checked (400), membership is resolved immediately in the background, and the resolver keeps it fresh. Without a rule, &#x60;type&#x60; selects uploaded, lookalike or retargeting (the default). &#x60;pixelId&#x60; scopes the audience to one pixel.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createAudienceDto  (required)
+   * @return AdvertiserControllerCreateAudience201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreateAudience(CreateAudienceDto createAudienceDto) throws ApiException {
-    advertiserControllerCreateAudienceWithHttpInfo(createAudienceDto);
+  public AdvertiserControllerCreateAudience201Response advertiserControllerCreateAudience(CreateAudienceDto createAudienceDto) throws ApiException {
+    ApiResponse<AdvertiserControllerCreateAudience201Response> localVarResponse = advertiserControllerCreateAudienceWithHttpInfo(createAudienceDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create an audience
+   * Creates an audience. Passing a &#x60;rule&#x60; makes it an event-rule audience (type &#x60;rule&#x60;) built from pixel events: the rule is bounds-checked (400), membership is resolved immediately in the background, and the resolver keeps it fresh. Without a rule, &#x60;type&#x60; selects uploaded, lookalike or retargeting (the default). &#x60;pixelId&#x60; scopes the audience to one pixel.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createAudienceDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerCreateAudience201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreateAudienceWithHttpInfo(CreateAudienceDto createAudienceDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerCreateAudience201Response> advertiserControllerCreateAudienceWithHttpInfo(CreateAudienceDto createAudienceDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreateAudienceRequestBuilder(createAudienceDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -642,17 +665,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreateAudience", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerCreateAudience201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerCreateAudience201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -694,23 +712,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create a creative
+   * Creates a creative in the library; pass &#x60;campaignId&#x60; to also author it directly under a campaign (404/403 if that campaign is not owned). Every URL field is SSRF-checked (400 for internal destinations) and video/VAST fields are validated (&#x60;duration&#x60; 1-600, &#x60;skipOffsetSec&#x60;, https &#x60;vastTagUrl&#x60;/&#x60;vpaidUrl&#x60;, &#x60;companions&#x60;); &#x60;carouselItems&#x60; is capped at 20. Marketplace creatives start &#x60;pending&#x60; and enter moderation; creatives under a house-ad campaign are approved immediately. A malware scan always runs, video assets are queued for HLS transcoding, and a VAST tag without &#x60;duration&#x60; is probed in the background.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createCreativeDto  (required)
+   * @return AdvCreative
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreateCreative(CreateCreativeDto createCreativeDto) throws ApiException {
-    advertiserControllerCreateCreativeWithHttpInfo(createCreativeDto);
+  public AdvCreative advertiserControllerCreateCreative(CreateCreativeDto createCreativeDto) throws ApiException {
+    ApiResponse<AdvCreative> localVarResponse = advertiserControllerCreateCreativeWithHttpInfo(createCreativeDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a creative
+   * Creates a creative in the library; pass &#x60;campaignId&#x60; to also author it directly under a campaign (404/403 if that campaign is not owned). Every URL field is SSRF-checked (400 for internal destinations) and video/VAST fields are validated (&#x60;duration&#x60; 1-600, &#x60;skipOffsetSec&#x60;, https &#x60;vastTagUrl&#x60;/&#x60;vpaidUrl&#x60;, &#x60;companions&#x60;); &#x60;carouselItems&#x60; is capped at 20. Marketplace creatives start &#x60;pending&#x60; and enter moderation; creatives under a house-ad campaign are approved immediately. A malware scan always runs, video assets are queued for HLS transcoding, and a VAST tag without &#x60;duration&#x60; is probed in the background.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createCreativeDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCreative&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreateCreativeWithHttpInfo(CreateCreativeDto createCreativeDto) throws ApiException {
+  public ApiResponse<AdvCreative> advertiserControllerCreateCreativeWithHttpInfo(CreateCreativeDto createCreativeDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreateCreativeRequestBuilder(createCreativeDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -723,17 +743,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreateCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCreative>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCreative>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -775,25 +790,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Add a sync destination to an audience
+   * Creates a destination of &#x60;type&#x60; webhook (default; HMAC-signed, SSRF-guarded HTTPS push), meta_custom_audience or google_customer_match, with adapter settings and credentials in &#x60;config&#x60;. Responds 404 when the audience is not owned. Active destinations are synced on a schedule; PII destinations receive only hashed email/phone, never raw PII.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param createDestinationDto  (required)
+   * @return AdvertiserControllerCreateAudience201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreateDestination(String id, CreateDestinationDto createDestinationDto) throws ApiException {
-    advertiserControllerCreateDestinationWithHttpInfo(id, createDestinationDto);
+  public AdvertiserControllerCreateAudience201Response advertiserControllerCreateDestination(String id, CreateDestinationDto createDestinationDto) throws ApiException {
+    ApiResponse<AdvertiserControllerCreateAudience201Response> localVarResponse = advertiserControllerCreateDestinationWithHttpInfo(id, createDestinationDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Add a sync destination to an audience
+   * Creates a destination of &#x60;type&#x60; webhook (default; HMAC-signed, SSRF-guarded HTTPS push), meta_custom_audience or google_customer_match, with adapter settings and credentials in &#x60;config&#x60;. Responds 404 when the audience is not owned. Active destinations are synced on a schedule; PII destinations receive only hashed email/phone, never raw PII.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param createDestinationDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerCreateAudience201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreateDestinationWithHttpInfo(String id, CreateDestinationDto createDestinationDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerCreateAudience201Response> advertiserControllerCreateDestinationWithHttpInfo(String id, CreateDestinationDto createDestinationDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreateDestinationRequestBuilder(id, createDestinationDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -806,17 +823,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreateDestination", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerCreateAudience201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerCreateAudience201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -863,23 +875,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Register a product feed
+   * Registers a product feed for dynamic product ads. Body: &#x60;name&#x60;, &#x60;url&#x60; (http/https), &#x60;format&#x60; (csv, xml or google_merchant) and optional &#x60;scheduleCron&#x60;. Responds 400 for a missing name, a non-http URL or an unknown format. The feed is not fetched until a fetch is triggered or the scheduler runs.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createFeedDto  (required)
+   * @return AdvProductFeed
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreateFeed(CreateFeedDto createFeedDto) throws ApiException {
-    advertiserControllerCreateFeedWithHttpInfo(createFeedDto);
+  public AdvProductFeed advertiserControllerCreateFeed(CreateFeedDto createFeedDto) throws ApiException {
+    ApiResponse<AdvProductFeed> localVarResponse = advertiserControllerCreateFeedWithHttpInfo(createFeedDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Register a product feed
+   * Registers a product feed for dynamic product ads. Body: &#x60;name&#x60;, &#x60;url&#x60; (http/https), &#x60;format&#x60; (csv, xml or google_merchant) and optional &#x60;scheduleCron&#x60;. Responds 400 for a missing name, a non-http URL or an unknown format. The feed is not fetched until a fetch is triggered or the scheduler runs.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createFeedDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvProductFeed&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreateFeedWithHttpInfo(CreateFeedDto createFeedDto) throws ApiException {
+  public ApiResponse<AdvProductFeed> advertiserControllerCreateFeedWithHttpInfo(CreateFeedDto createFeedDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreateFeedRequestBuilder(createFeedDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -892,17 +906,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreateFeed", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvProductFeed>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvProductFeed>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -944,23 +953,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create a campaign group
+   * Creates a campaign group with &#x60;name&#x60; and an optional &#x60;objective&#x60;. New groups start with status &#x60;active&#x60;. Ad sets are attached to a group by passing &#x60;groupId&#x60; when creating a campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignGroupDto  (required)
+   * @return AdvCampaignGroup
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreateGroup(CampaignGroupDto campaignGroupDto) throws ApiException {
-    advertiserControllerCreateGroupWithHttpInfo(campaignGroupDto);
+  public AdvCampaignGroup advertiserControllerCreateGroup(CampaignGroupDto campaignGroupDto) throws ApiException {
+    ApiResponse<AdvCampaignGroup> localVarResponse = advertiserControllerCreateGroupWithHttpInfo(campaignGroupDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a campaign group
+   * Creates a campaign group with &#x60;name&#x60; and an optional &#x60;objective&#x60;. New groups start with status &#x60;active&#x60;. Ad sets are attached to a group by passing &#x60;groupId&#x60; when creating a campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignGroupDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCampaignGroup&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreateGroupWithHttpInfo(CampaignGroupDto campaignGroupDto) throws ApiException {
+  public ApiResponse<AdvCampaignGroup> advertiserControllerCreateGroupWithHttpInfo(CampaignGroupDto campaignGroupDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreateGroupRequestBuilder(campaignGroupDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -973,17 +984,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreateGroup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCampaignGroup>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCampaignGroup>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1025,23 +1031,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create a sponsored-product promote campaign
+   * Creates a draft campaign that promotes catalog items. &#x60;itemSelector&#x60; must be exactly one of &#x60;{ item_ids }&#x60;, &#x60;{ keywords }&#x60; or &#x60;{ all: true }&#x60;. &#x60;pricingModel&#x60; is cpc (default) or cpa; cpc and flat cpa need &#x60;bidAmount&#x60; &gt; 0, while cpa with &#x60;cpaMode: percent&#x60; needs &#x60;cpaPercent&#x60; in (0, 1]. Also accepts budgets, &#x60;pacing&#x60; (even|asap), &#x60;minOrderValue&#x60; (CPA fraud floor), &#x60;currency&#x60;, schedule and &#x60;targeting&#x60;. Validation failures return 400. The created row is returned with NUMERIC columns as strings.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createPromoteCampaignDto  (required)
+   * @return AdvPromoteCampaign
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreatePromote(CreatePromoteCampaignDto createPromoteCampaignDto) throws ApiException {
-    advertiserControllerCreatePromoteWithHttpInfo(createPromoteCampaignDto);
+  public AdvPromoteCampaign advertiserControllerCreatePromote(CreatePromoteCampaignDto createPromoteCampaignDto) throws ApiException {
+    ApiResponse<AdvPromoteCampaign> localVarResponse = advertiserControllerCreatePromoteWithHttpInfo(createPromoteCampaignDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a sponsored-product promote campaign
+   * Creates a draft campaign that promotes catalog items. &#x60;itemSelector&#x60; must be exactly one of &#x60;{ item_ids }&#x60;, &#x60;{ keywords }&#x60; or &#x60;{ all: true }&#x60;. &#x60;pricingModel&#x60; is cpc (default) or cpa; cpc and flat cpa need &#x60;bidAmount&#x60; &gt; 0, while cpa with &#x60;cpaMode: percent&#x60; needs &#x60;cpaPercent&#x60; in (0, 1]. Also accepts budgets, &#x60;pacing&#x60; (even|asap), &#x60;minOrderValue&#x60; (CPA fraud floor), &#x60;currency&#x60;, schedule and &#x60;targeting&#x60;. Validation failures return 400. The created row is returned with NUMERIC columns as strings.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createPromoteCampaignDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvPromoteCampaign&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreatePromoteWithHttpInfo(CreatePromoteCampaignDto createPromoteCampaignDto) throws ApiException {
+  public ApiResponse<AdvPromoteCampaign> advertiserControllerCreatePromoteWithHttpInfo(CreatePromoteCampaignDto createPromoteCampaignDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreatePromoteRequestBuilder(createPromoteCampaignDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1054,17 +1062,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreatePromote", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvPromoteCampaign>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvPromoteCampaign>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1106,23 +1109,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List campaigns a creative is attached to
+   * Returns the non-deleted campaigns this library creative is attached to, with the attachment &#x60;weight&#x60; and &#x60;enabled&#x60; flag. Creatives authored directly under a campaign without an attachment do not appear. 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return List&lt;AdvCreativeAssignment&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerCreativeAssignments(String id) throws ApiException {
-    advertiserControllerCreativeAssignmentsWithHttpInfo(id);
+  public List<AdvCreativeAssignment> advertiserControllerCreativeAssignments(String id) throws ApiException {
+    ApiResponse<List<AdvCreativeAssignment>> localVarResponse = advertiserControllerCreativeAssignmentsWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List campaigns a creative is attached to
+   * Returns the non-deleted campaigns this library creative is attached to, with the attachment &#x60;weight&#x60; and &#x60;enabled&#x60; flag. Creatives authored directly under a campaign without an attachment do not appear. 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;AdvCreativeAssignment&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerCreativeAssignmentsWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<List<AdvCreativeAssignment>> advertiserControllerCreativeAssignmentsWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerCreativeAssignmentsRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1135,17 +1140,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerCreativeAssignments", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCreativeAssignment>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCreativeAssignment>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1182,25 +1182,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Detach a library creative from a campaign
+   * Removes the link between the creative and &#x60;campaignId&#x60; and republishes the serving index. Succeeds even if no link existed. 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param attachCreativeDto  (required)
+   * @return AdvertiserControllerDetachCreative201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerDetachCreative(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
-    advertiserControllerDetachCreativeWithHttpInfo(id, attachCreativeDto);
+  public AdvertiserControllerDetachCreative201Response advertiserControllerDetachCreative(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
+    ApiResponse<AdvertiserControllerDetachCreative201Response> localVarResponse = advertiserControllerDetachCreativeWithHttpInfo(id, attachCreativeDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Detach a library creative from a campaign
+   * Removes the link between the creative and &#x60;campaignId&#x60; and republishes the serving index. Succeeds even if no link existed. 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param attachCreativeDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerDetachCreative201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerDetachCreativeWithHttpInfo(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerDetachCreative201Response> advertiserControllerDetachCreativeWithHttpInfo(String id, AttachCreativeDto attachCreativeDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerDetachCreativeRequestBuilder(id, attachCreativeDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1213,17 +1215,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerDetachCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerDetachCreative201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerDetachCreative201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1270,23 +1267,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Estimate the size of an audience rule
+   * Counts the distinct users matching &#x60;rule&#x60; (optionally limited to &#x60;pixelId&#x60;) without creating an audience. The rule is bounds-checked (400). A query failure returns 0. Rate-limited to 20 calls per throttle window because each call runs a ClickHouse aggregation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createAudienceDto  (required)
+   * @return AdvertiserControllerEstimateAudience201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerEstimateAudience(CreateAudienceDto createAudienceDto) throws ApiException {
-    advertiserControllerEstimateAudienceWithHttpInfo(createAudienceDto);
+  public AdvertiserControllerEstimateAudience201Response advertiserControllerEstimateAudience(CreateAudienceDto createAudienceDto) throws ApiException {
+    ApiResponse<AdvertiserControllerEstimateAudience201Response> localVarResponse = advertiserControllerEstimateAudienceWithHttpInfo(createAudienceDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Estimate the size of an audience rule
+   * Counts the distinct users matching &#x60;rule&#x60; (optionally limited to &#x60;pixelId&#x60;) without creating an audience. The rule is bounds-checked (400). A query failure returns 0. Rate-limited to 20 calls per throttle window because each call runs a ClickHouse aggregation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createAudienceDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerEstimateAudience201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerEstimateAudienceWithHttpInfo(CreateAudienceDto createAudienceDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerEstimateAudience201Response> advertiserControllerEstimateAudienceWithHttpInfo(CreateAudienceDto createAudienceDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerEstimateAudienceRequestBuilder(createAudienceDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1299,17 +1298,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerEstimateAudience", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerEstimateAudience201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerEstimateAudience201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1351,23 +1345,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Fetch a product feed now
+   * Downloads (SSRF-guarded) and parses the feed immediately and upserts its products, returning the parsed and upserted counts. Rate-limited to 5 calls per throttle window. Responds 404 when the feed does not exist and 403 when it belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvertiserControllerFetchFeed201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerFetchFeed(String id) throws ApiException {
-    advertiserControllerFetchFeedWithHttpInfo(id);
+  public AdvertiserControllerFetchFeed201Response advertiserControllerFetchFeed(String id) throws ApiException {
+    ApiResponse<AdvertiserControllerFetchFeed201Response> localVarResponse = advertiserControllerFetchFeedWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Fetch a product feed now
+   * Downloads (SSRF-guarded) and parses the feed immediately and upserts its products, returning the parsed and upserted counts. Rate-limited to 5 calls per throttle window. Responds 404 when the feed does not exist and 403 when it belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerFetchFeed201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerFetchFeedWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvertiserControllerFetchFeed201Response> advertiserControllerFetchFeedWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerFetchFeedRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1380,17 +1376,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerFetchFeed", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerFetchFeed201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerFetchFeed201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1427,23 +1418,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Get a campaign with targeting and creatives
+   * Returns the campaign row plus its raw &#x60;targeting&#x60; row and the creatives authored directly under it (library-attached creatives are listed by GET /campaigns/{id}/creatives). Responds 404 when the campaign does not exist or is deleted, and 403 when it belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvCampaignDetail
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerGet(String id) throws ApiException {
-    advertiserControllerGetWithHttpInfo(id);
+  public AdvCampaignDetail advertiserControllerGet(String id) throws ApiException {
+    ApiResponse<AdvCampaignDetail> localVarResponse = advertiserControllerGetWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a campaign with targeting and creatives
+   * Returns the campaign row plus its raw &#x60;targeting&#x60; row and the creatives authored directly under it (library-attached creatives are listed by GET /campaigns/{id}/creatives). Responds 404 when the campaign does not exist or is deleted, and 403 when it belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCampaignDetail&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerGetWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvCampaignDetail> advertiserControllerGetWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerGetRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1456,17 +1449,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCampaignDetail>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCampaignDetail>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1503,23 +1491,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Get a campaign&#39;s conversion config
+   * Returns the conversion-tracking config for the campaign (event type, payout, postback URL, dedupe and attribution windows, CPA mode). The body is empty (null) when none has been set. Responds 404 when the campaign is missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvConversionConfig
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerGetConversionConfig(String id) throws ApiException {
-    advertiserControllerGetConversionConfigWithHttpInfo(id);
+  public AdvConversionConfig advertiserControllerGetConversionConfig(String id) throws ApiException {
+    ApiResponse<AdvConversionConfig> localVarResponse = advertiserControllerGetConversionConfigWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a campaign&#39;s conversion config
+   * Returns the conversion-tracking config for the campaign (event type, payout, postback URL, dedupe and attribution windows, CPA mode). The body is empty (null) when none has been set. Responds 404 when the campaign is missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvConversionConfig&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerGetConversionConfigWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvConversionConfig> advertiserControllerGetConversionConfigWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerGetConversionConfigRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1532,17 +1522,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerGetConversionConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvConversionConfig>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvConversionConfig>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1579,23 +1564,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Get a creative
+   * Returns one creative owned by the advertiser. Responds 404 when it does not exist, is deleted, or belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvCreative
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerGetCreative(String id) throws ApiException {
-    advertiserControllerGetCreativeWithHttpInfo(id);
+  public AdvCreative advertiserControllerGetCreative(String id) throws ApiException {
+    ApiResponse<AdvCreative> localVarResponse = advertiserControllerGetCreativeWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a creative
+   * Returns one creative owned by the advertiser. Responds 404 when it does not exist, is deleted, or belongs to another advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCreative&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerGetCreativeWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvCreative> advertiserControllerGetCreativeWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerGetCreativeRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1608,17 +1595,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerGetCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCreative>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCreative>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1655,23 +1637,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Get a campaign group
+   * Returns one campaign group row. Responds 404 when the group does not exist, is deleted, or belongs to another advertiser. Ad sets are not nested here; the list endpoint includes them.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvCampaignGroup
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerGetGroup(String id) throws ApiException {
-    advertiserControllerGetGroupWithHttpInfo(id);
+  public AdvCampaignGroup advertiserControllerGetGroup(String id) throws ApiException {
+    ApiResponse<AdvCampaignGroup> localVarResponse = advertiserControllerGetGroupWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a campaign group
+   * Returns one campaign group row. Responds 404 when the group does not exist, is deleted, or belongs to another advertiser. Ad sets are not nested here; the list endpoint includes them.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCampaignGroup&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerGetGroupWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvCampaignGroup> advertiserControllerGetGroupWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerGetGroupRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1684,17 +1668,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerGetGroup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCampaignGroup>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCampaignGroup>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1731,23 +1710,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Get campaign targeting
+   * Returns the campaign&#39;s targeting normalized to the camelCase shape accepted by create/update. Absent fields come back as empty arrays (or null for &#x60;osVersionMin&#x60; and &#x60;frequencyCap&#x60;). &#x60;dayparting&#x60; is a 168-element array indexed weekday*24+hour (Sunday&#x3D;0); empty means all hours. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvTargeting
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerGetTargeting(String id) throws ApiException {
-    advertiserControllerGetTargetingWithHttpInfo(id);
+  public AdvTargeting advertiserControllerGetTargeting(String id) throws ApiException {
+    ApiResponse<AdvTargeting> localVarResponse = advertiserControllerGetTargetingWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get campaign targeting
+   * Returns the campaign&#39;s targeting normalized to the camelCase shape accepted by create/update. Absent fields come back as empty arrays (or null for &#x60;osVersionMin&#x60; and &#x60;frequencyCap&#x60;). &#x60;dayparting&#x60; is a 168-element array indexed weekday*24+hour (Sunday&#x3D;0); empty means all hours. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvTargeting&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerGetTargetingWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvTargeting> advertiserControllerGetTargetingWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerGetTargetingRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1760,17 +1741,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerGetTargeting", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvTargeting>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvTargeting>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1807,21 +1783,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List campaigns (ad sets)
+   * Returns the advertiser&#39;s non-deleted &#x60;campaigns&#x60; rows (the UI \&quot;Ad set\&quot;, the real targeting and serving unit), newest first. Pagination is opt-in: pass &#x60;limit&#x60; (clamped to 1-500) and &#x60;offset&#x60;; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvCampaign&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerList() throws ApiException {
-    advertiserControllerListWithHttpInfo();
+  public List<AdvCampaign> advertiserControllerList() throws ApiException {
+    ApiResponse<List<AdvCampaign>> localVarResponse = advertiserControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List campaigns (ad sets)
+   * Returns the advertiser&#39;s non-deleted &#x60;campaigns&#x60; rows (the UI \&quot;Ad set\&quot;, the real targeting and serving unit), newest first. Pagination is opt-in: pass &#x60;limit&#x60; (clamped to 1-500) and &#x60;offset&#x60;; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvCampaign&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvCampaign>> advertiserControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1834,17 +1812,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCampaign>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCampaign>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1876,21 +1849,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List the creative library
+   * Returns every non-deleted creative owned by the advertiser, independent of campaigns, with &#x60;campaign_count&#x60; (number of library attachments). Used by Creative Studio.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvLibraryCreative&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListAllCreatives() throws ApiException {
-    advertiserControllerListAllCreativesWithHttpInfo();
+  public List<AdvLibraryCreative> advertiserControllerListAllCreatives() throws ApiException {
+    ApiResponse<List<AdvLibraryCreative>> localVarResponse = advertiserControllerListAllCreativesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List the creative library
+   * Returns every non-deleted creative owned by the advertiser, independent of campaigns, with &#x60;campaign_count&#x60; (number of library attachments). Used by Creative Studio.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvLibraryCreative&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListAllCreativesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvLibraryCreative>> advertiserControllerListAllCreativesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListAllCreativesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1903,17 +1878,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListAllCreatives", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvLibraryCreative>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvLibraryCreative>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1945,21 +1915,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List audiences
+   * Returns the account&#39;s audiences, newest first, with the live member count read from the serving set. A team member scoped to specific pixels only sees audiences tied to those pixels.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvAudience&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListAudiences() throws ApiException {
-    advertiserControllerListAudiencesWithHttpInfo();
+  public List<AdvAudience> advertiserControllerListAudiences() throws ApiException {
+    ApiResponse<List<AdvAudience>> localVarResponse = advertiserControllerListAudiencesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List audiences
+   * Returns the account&#39;s audiences, newest first, with the live member count read from the serving set. A team member scoped to specific pixels only sees audiences tied to those pixels.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvAudience&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListAudiencesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvAudience>> advertiserControllerListAudiencesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListAudiencesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1972,17 +1944,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListAudiences", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvAudience>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvAudience>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2014,21 +1981,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List marketplace catalog items
+   * Returns the advertiser&#39;s non-deleted catalog items, most recently updated first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvCatalogItem&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListCatalog() throws ApiException {
-    advertiserControllerListCatalogWithHttpInfo();
+  public List<AdvCatalogItem> advertiserControllerListCatalog() throws ApiException {
+    ApiResponse<List<AdvCatalogItem>> localVarResponse = advertiserControllerListCatalogWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List marketplace catalog items
+   * Returns the advertiser&#39;s non-deleted catalog items, most recently updated first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvCatalogItem&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListCatalogWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvCatalogItem>> advertiserControllerListCatalogWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListCatalogRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2041,17 +2010,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListCatalog", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCatalogItem>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCatalogItem>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2083,21 +2047,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List scheduled catalog feeds
+   * Returns the advertiser&#39;s non-deleted catalog feeds, newest first, with the last sync time and last error.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvCatalogFeed&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListCatalogFeeds() throws ApiException {
-    advertiserControllerListCatalogFeedsWithHttpInfo();
+  public List<AdvCatalogFeed> advertiserControllerListCatalogFeeds() throws ApiException {
+    ApiResponse<List<AdvCatalogFeed>> localVarResponse = advertiserControllerListCatalogFeedsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List scheduled catalog feeds
+   * Returns the advertiser&#39;s non-deleted catalog feeds, newest first, with the last sync time and last error.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvCatalogFeed&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListCatalogFeedsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvCatalogFeed>> advertiserControllerListCatalogFeedsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListCatalogFeedsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2110,17 +2076,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListCatalogFeeds", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCatalogFeed>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCatalogFeed>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2152,23 +2113,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List DCO components for a creative
+   * Returns the components in the creative&#39;s campaign pool plus account-wide components (no campaign), ordered by slot. Each row includes bandit impressions/clicks and the derived &#x60;ctr&#x60; (0 with no impressions). 404 when the creative is not owned or has no campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return List&lt;AdvCreativeComponent&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListComponents(String id) throws ApiException {
-    advertiserControllerListComponentsWithHttpInfo(id);
+  public List<AdvCreativeComponent> advertiserControllerListComponents(String id) throws ApiException {
+    ApiResponse<List<AdvCreativeComponent>> localVarResponse = advertiserControllerListComponentsWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List DCO components for a creative
+   * Returns the components in the creative&#39;s campaign pool plus account-wide components (no campaign), ordered by slot. Each row includes bandit impressions/clicks and the derived &#x60;ctr&#x60; (0 with no impressions). 404 when the creative is not owned or has no campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;AdvCreativeComponent&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListComponentsWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<List<AdvCreativeComponent>> advertiserControllerListComponentsWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListComponentsRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2181,17 +2144,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListComponents", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCreativeComponent>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCreativeComponent>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2228,23 +2186,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List creatives serving a campaign
+   * Returns creatives authored directly under the campaign plus library creatives attached to it, newest first. Each row adds &#x60;effective_weight&#x60; (attachment weight, else the creative weight) and &#x60;attached&#x60;. Returns an empty list for a campaign the advertiser does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return List&lt;AdvCampaignCreative&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListCreatives(String id) throws ApiException {
-    advertiserControllerListCreativesWithHttpInfo(id);
+  public List<AdvCampaignCreative> advertiserControllerListCreatives(String id) throws ApiException {
+    ApiResponse<List<AdvCampaignCreative>> localVarResponse = advertiserControllerListCreativesWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List creatives serving a campaign
+   * Returns creatives authored directly under the campaign plus library creatives attached to it, newest first. Each row adds &#x60;effective_weight&#x60; (attachment weight, else the creative weight) and &#x60;attached&#x60;. Returns an empty list for a campaign the advertiser does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;AdvCampaignCreative&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListCreativesWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<List<AdvCampaignCreative>> advertiserControllerListCreativesWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListCreativesRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2257,17 +2217,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListCreatives", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCampaignCreative>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCampaignCreative>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2304,23 +2259,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List sync destinations for an audience
+   * Returns the destinations that push this audience&#39;s members to external systems, newest first. Secrets and tokens in &#x60;config&#x60; are redacted. Returns an empty list for an audience the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return List&lt;AdvAudienceDestination&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListDestinations(String id) throws ApiException {
-    advertiserControllerListDestinationsWithHttpInfo(id);
+  public List<AdvAudienceDestination> advertiserControllerListDestinations(String id) throws ApiException {
+    ApiResponse<List<AdvAudienceDestination>> localVarResponse = advertiserControllerListDestinationsWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List sync destinations for an audience
+   * Returns the destinations that push this audience&#39;s members to external systems, newest first. Secrets and tokens in &#x60;config&#x60; are redacted. Returns an empty list for an audience the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;AdvAudienceDestination&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListDestinationsWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<List<AdvAudienceDestination>> advertiserControllerListDestinationsWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListDestinationsRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2333,17 +2290,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListDestinations", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvAudienceDestination>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvAudienceDestination>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2380,27 +2332,29 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List products parsed from a feed
+   * Returns products from the feed, most recently updated first. Query &#x60;limit&#x60; (1-500, default 50) and &#x60;offset&#x60; (default 0). Responds 404/403 when the feed is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param limit  (required)
    * @param offset  (required)
+   * @return AdvertiserControllerListFeedProducts200Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListFeedProducts(String id, String limit, String offset) throws ApiException {
-    advertiserControllerListFeedProductsWithHttpInfo(id, limit, offset);
+  public AdvertiserControllerListFeedProducts200Response advertiserControllerListFeedProducts(String id, String limit, String offset) throws ApiException {
+    ApiResponse<AdvertiserControllerListFeedProducts200Response> localVarResponse = advertiserControllerListFeedProductsWithHttpInfo(id, limit, offset);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List products parsed from a feed
+   * Returns products from the feed, most recently updated first. Query &#x60;limit&#x60; (1-500, default 50) and &#x60;offset&#x60; (default 0). Responds 404/403 when the feed is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param limit  (required)
    * @param offset  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerListFeedProducts200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListFeedProductsWithHttpInfo(String id, String limit, String offset) throws ApiException {
+  public ApiResponse<AdvertiserControllerListFeedProducts200Response> advertiserControllerListFeedProductsWithHttpInfo(String id, String limit, String offset) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListFeedProductsRequestBuilder(id, limit, offset);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2413,17 +2367,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListFeedProducts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerListFeedProducts200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerListFeedProducts200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2485,21 +2434,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List product feeds
+   * Returns the advertiser&#39;s non-deleted product feeds, newest first, with their fetch schedule, last fetch time and status.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvProductFeed&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListFeeds() throws ApiException {
-    advertiserControllerListFeedsWithHttpInfo();
+  public List<AdvProductFeed> advertiserControllerListFeeds() throws ApiException {
+    ApiResponse<List<AdvProductFeed>> localVarResponse = advertiserControllerListFeedsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List product feeds
+   * Returns the advertiser&#39;s non-deleted product feeds, newest first, with their fetch schedule, last fetch time and status.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvProductFeed&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListFeedsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvProductFeed>> advertiserControllerListFeedsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListFeedsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2512,17 +2463,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListFeeds", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvProductFeed>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvProductFeed>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2554,21 +2500,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List campaign groups with their ad sets
+   * Returns every non-deleted campaign group (the UI \&quot;Campaign\&quot;) owned by the advertiser, newest first. Each group carries a spend rollup (&#x60;spent_total&#x60;, summed over its live ad sets) and an &#x60;adSets&#x60; array with a compact summary of each ad set (&#x60;campaigns&#x60; row) under it. Ad sets with no group are not included here; use GET /v1/advertiser/campaigns for those.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvCampaignGroupWithAdSets&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListGroups() throws ApiException {
-    advertiserControllerListGroupsWithHttpInfo();
+  public List<AdvCampaignGroupWithAdSets> advertiserControllerListGroups() throws ApiException {
+    ApiResponse<List<AdvCampaignGroupWithAdSets>> localVarResponse = advertiserControllerListGroupsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List campaign groups with their ad sets
+   * Returns every non-deleted campaign group (the UI \&quot;Campaign\&quot;) owned by the advertiser, newest first. Each group carries a spend rollup (&#x60;spent_total&#x60;, summed over its live ad sets) and an &#x60;adSets&#x60; array with a compact summary of each ad set (&#x60;campaigns&#x60; row) under it. Ad sets with no group are not included here; use GET /v1/advertiser/campaigns for those.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvCampaignGroupWithAdSets&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListGroupsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvCampaignGroupWithAdSets>> advertiserControllerListGroupsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListGroupsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2581,17 +2529,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListGroups", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvCampaignGroupWithAdSets>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvCampaignGroupWithAdSets>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2623,21 +2566,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * List sponsored-product promote campaigns
+   * Returns the advertiser&#39;s non-deleted promote campaigns, newest first, with money fields as numbers.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AdvPromoteCampaign&gt;
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerListPromote() throws ApiException {
-    advertiserControllerListPromoteWithHttpInfo();
+  public List<AdvPromoteCampaign> advertiserControllerListPromote() throws ApiException {
+    ApiResponse<List<AdvPromoteCampaign>> localVarResponse = advertiserControllerListPromoteWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List sponsored-product promote campaigns
+   * Returns the advertiser&#39;s non-deleted promote campaigns, newest first, with money fields as numbers.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AdvPromoteCampaign&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerListPromoteWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvPromoteCampaign>> advertiserControllerListPromoteWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerListPromoteRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2650,17 +2595,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerListPromote", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvPromoteCampaign>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvPromoteCampaign>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2692,25 +2632,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create a heuristic lookalike audience
+   * Builds a new &#x60;lookalike&#x60; audience from the seed audience using a profile heuristic, not a trained model: it finds the dominant geo/device of the seed&#39;s recent impressions (falling back to the network-wide profile) and selects other recent users with that profile, excluding seed members. &#x60;size&#x60; is capped by LOOKALIKE_MAX (default 50,000). The result can be empty. 404/403 when the seed is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param lookalikeDto  (required)
+   * @return AdvertiserControllerLookalikeAudience201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerLookalikeAudience(String id, LookalikeDto lookalikeDto) throws ApiException {
-    advertiserControllerLookalikeAudienceWithHttpInfo(id, lookalikeDto);
+  public AdvertiserControllerLookalikeAudience201Response advertiserControllerLookalikeAudience(String id, LookalikeDto lookalikeDto) throws ApiException {
+    ApiResponse<AdvertiserControllerLookalikeAudience201Response> localVarResponse = advertiserControllerLookalikeAudienceWithHttpInfo(id, lookalikeDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a heuristic lookalike audience
+   * Builds a new &#x60;lookalike&#x60; audience from the seed audience using a profile heuristic, not a trained model: it finds the dominant geo/device of the seed&#39;s recent impressions (falling back to the network-wide profile) and selects other recent users with that profile, excluding seed members. &#x60;size&#x60; is capped by LOOKALIKE_MAX (default 50,000). The result can be empty. 404/403 when the seed is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param lookalikeDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerLookalikeAudience201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerLookalikeAudienceWithHttpInfo(String id, LookalikeDto lookalikeDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerLookalikeAudience201Response> advertiserControllerLookalikeAudienceWithHttpInfo(String id, LookalikeDto lookalikeDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerLookalikeAudienceRequestBuilder(id, lookalikeDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2723,17 +2665,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerLookalikeAudience", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerLookalikeAudience201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerLookalikeAudience201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2780,23 +2717,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create a modeled lookalike audience
+   * Fits a model of the seed audience&#39;s distinctive first-party pixel features against the account&#39;s background audience, scores recent pixel-active users (excluding seed members and opt-outs) and creates a new lookalike audience. Body: &#x60;seedAudienceId&#x60;, optional &#x60;size&#x60; and &#x60;minScore&#x60; (0-1). Responds 400 when the seed or the output is below the k-anonymity floor, and 404/403 when the seed is not owned. The audience is rebuilt periodically.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param modeledLookalikeDto  (required)
+   * @return AdvertiserControllerModeledLookalike201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerModeledLookalike(ModeledLookalikeDto modeledLookalikeDto) throws ApiException {
-    advertiserControllerModeledLookalikeWithHttpInfo(modeledLookalikeDto);
+  public AdvertiserControllerModeledLookalike201Response advertiserControllerModeledLookalike(ModeledLookalikeDto modeledLookalikeDto) throws ApiException {
+    ApiResponse<AdvertiserControllerModeledLookalike201Response> localVarResponse = advertiserControllerModeledLookalikeWithHttpInfo(modeledLookalikeDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a modeled lookalike audience
+   * Fits a model of the seed audience&#39;s distinctive first-party pixel features against the account&#39;s background audience, scores recent pixel-active users (excluding seed members and opt-outs) and creates a new lookalike audience. Body: &#x60;seedAudienceId&#x60;, optional &#x60;size&#x60; and &#x60;minScore&#x60; (0-1). Responds 400 when the seed or the output is below the k-anonymity floor, and 404/403 when the seed is not owned. The audience is rebuilt periodically.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param modeledLookalikeDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerModeledLookalike201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerModeledLookalikeWithHttpInfo(ModeledLookalikeDto modeledLookalikeDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerModeledLookalike201Response> advertiserControllerModeledLookalikeWithHttpInfo(ModeledLookalikeDto modeledLookalikeDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerModeledLookalikeRequestBuilder(modeledLookalikeDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2809,17 +2748,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerModeledLookalike", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerModeledLookalike201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerModeledLookalike201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2861,23 +2795,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Preview a modeled lookalike for a seed
+   * Returns the seed and background sizes, whether the seed passes the k-anonymity gate (&#x60;eligible&#x60;) and the most distinctive features, without creating an audience. When ineligible, &#x60;note&#x60; explains why and &#x60;topFeatures&#x60; is empty. 404/403 when the seed is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvertiserControllerModeledLookalikePreview200Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerModeledLookalikePreview(String id) throws ApiException {
-    advertiserControllerModeledLookalikePreviewWithHttpInfo(id);
+  public AdvertiserControllerModeledLookalikePreview200Response advertiserControllerModeledLookalikePreview(String id) throws ApiException {
+    ApiResponse<AdvertiserControllerModeledLookalikePreview200Response> localVarResponse = advertiserControllerModeledLookalikePreviewWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Preview a modeled lookalike for a seed
+   * Returns the seed and background sizes, whether the seed passes the k-anonymity gate (&#x60;eligible&#x60;) and the most distinctive features, without creating an audience. When ineligible, &#x60;note&#x60; explains why and &#x60;topFeatures&#x60; is empty. 404/403 when the seed is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerModeledLookalikePreview200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerModeledLookalikePreviewWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvertiserControllerModeledLookalikePreview200Response> advertiserControllerModeledLookalikePreviewWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerModeledLookalikePreviewRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2890,17 +2826,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerModeledLookalikePreview", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerModeledLookalikePreview200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerModeledLookalikePreview200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2937,25 +2868,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Activate or pause a promote campaign
+   * Sets &#x60;status&#x60; to active or paused and republishes the serving index so the engine adds or removes it from sponsored-product auctions. 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param setPromoteStatusDto  (required)
+   * @return AdvStatusResult
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerPromoteStatus(String id, SetPromoteStatusDto setPromoteStatusDto) throws ApiException {
-    advertiserControllerPromoteStatusWithHttpInfo(id, setPromoteStatusDto);
+  public AdvStatusResult advertiserControllerPromoteStatus(String id, SetPromoteStatusDto setPromoteStatusDto) throws ApiException {
+    ApiResponse<AdvStatusResult> localVarResponse = advertiserControllerPromoteStatusWithHttpInfo(id, setPromoteStatusDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Activate or pause a promote campaign
+   * Sets &#x60;status&#x60; to active or paused and republishes the serving index so the engine adds or removes it from sponsored-product auctions. 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param setPromoteStatusDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvStatusResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerPromoteStatusWithHttpInfo(String id, SetPromoteStatusDto setPromoteStatusDto) throws ApiException {
+  public ApiResponse<AdvStatusResult> advertiserControllerPromoteStatusWithHttpInfo(String id, SetPromoteStatusDto setPromoteStatusDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerPromoteStatusRequestBuilder(id, setPromoteStatusDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2968,17 +2901,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerPromoteStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvStatusResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvStatusResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3025,23 +2953,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Estimate daily reach for targeting
+   * Estimates available daily impressions as the average daily ad-request volume over the last 7 days, optionally filtered by &#x60;geoInclude&#x60; (country codes) and &#x60;deviceTypes&#x60;. The &#x60;format&#x60; field is accepted but not used in the estimate. If ClickHouse has no usable history the estimate is 0 with a &#x60;note&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param reachEstimateDto  (required)
+   * @return AdvertiserControllerReach201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerReach(ReachEstimateDto reachEstimateDto) throws ApiException {
-    advertiserControllerReachWithHttpInfo(reachEstimateDto);
+  public AdvertiserControllerReach201Response advertiserControllerReach(ReachEstimateDto reachEstimateDto) throws ApiException {
+    ApiResponse<AdvertiserControllerReach201Response> localVarResponse = advertiserControllerReachWithHttpInfo(reachEstimateDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Estimate daily reach for targeting
+   * Estimates available daily impressions as the average daily ad-request volume over the last 7 days, optionally filtered by &#x60;geoInclude&#x60; (country codes) and &#x60;deviceTypes&#x60;. The &#x60;format&#x60; field is accepted but not used in the estimate. If ClickHouse has no usable history the estimate is 0 with a &#x60;note&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param reachEstimateDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerReach201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerReachWithHttpInfo(ReachEstimateDto reachEstimateDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerReach201Response> advertiserControllerReachWithHttpInfo(ReachEstimateDto reachEstimateDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerReachRequestBuilder(reachEstimateDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3054,17 +2984,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerReach", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerReach201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerReach201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3106,23 +3031,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Register a scheduled catalog feed
+   * Registers a hosted JSON or CSV catalog at &#x60;feedUrl&#x60; (http/https; 400 otherwise) that a background job re-fetches every &#x60;intervalMinutes&#x60; (minimum 15, default 360) into the catalog. Registering a URL that is already registered updates its interval and reactivates it instead of creating a duplicate.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param registerCatalogFeedDto  (required)
+   * @return AdvCatalogFeed
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRegisterCatalogFeed(RegisterCatalogFeedDto registerCatalogFeedDto) throws ApiException {
-    advertiserControllerRegisterCatalogFeedWithHttpInfo(registerCatalogFeedDto);
+  public AdvCatalogFeed advertiserControllerRegisterCatalogFeed(RegisterCatalogFeedDto registerCatalogFeedDto) throws ApiException {
+    ApiResponse<AdvCatalogFeed> localVarResponse = advertiserControllerRegisterCatalogFeedWithHttpInfo(registerCatalogFeedDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Register a scheduled catalog feed
+   * Registers a hosted JSON or CSV catalog at &#x60;feedUrl&#x60; (http/https; 400 otherwise) that a background job re-fetches every &#x60;intervalMinutes&#x60; (minimum 15, default 360) into the catalog. Registering a URL that is already registered updates its interval and reactivates it instead of creating a duplicate.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param registerCatalogFeedDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCatalogFeed&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRegisterCatalogFeedWithHttpInfo(RegisterCatalogFeedDto registerCatalogFeedDto) throws ApiException {
+  public ApiResponse<AdvCatalogFeed> advertiserControllerRegisterCatalogFeedWithHttpInfo(RegisterCatalogFeedDto registerCatalogFeedDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRegisterCatalogFeedRequestBuilder(registerCatalogFeedDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3135,17 +3062,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRegisterCatalogFeed", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCatalogFeed>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCatalogFeed>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3187,23 +3109,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a campaign
+   * Soft-deletes the campaign and republishes the serving index so it stops serving immediately. Historical spend and stats remain available for reporting. Responds 404 when missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemove(String id) throws ApiException {
-    advertiserControllerRemoveWithHttpInfo(id);
+  public AdvDeleted advertiserControllerRemove(String id) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a campaign
+   * Soft-deletes the campaign and republishes the serving index so it stops serving immediately. Historical spend and stats remain available for reporting. Responds 404 when missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3216,17 +3140,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemove", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3263,23 +3182,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete an audience
+   * Permanently deletes the audience row and its member set, so targeting that references it stops matching. Responds 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemoveAudience(String id) throws ApiException {
-    advertiserControllerRemoveAudienceWithHttpInfo(id);
+  public AdvDeleted advertiserControllerRemoveAudience(String id) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveAudienceWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete an audience
+   * Permanently deletes the audience row and its member set, so targeting that references it stops matching. Responds 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveAudienceWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveAudienceWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveAudienceRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3292,17 +3213,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemoveAudience", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3339,23 +3255,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a scheduled catalog feed
+   * Soft-deletes the feed and stops its scheduled syncs; items already imported stay in the catalog. Returns &#x60;deleted: false&#x60; (not 404) when no owned, live feed matches.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemoveCatalogFeed(String id) throws ApiException {
-    advertiserControllerRemoveCatalogFeedWithHttpInfo(id);
+  public AdvDeleted advertiserControllerRemoveCatalogFeed(String id) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveCatalogFeedWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a scheduled catalog feed
+   * Soft-deletes the feed and stops its scheduled syncs; items already imported stay in the catalog. Returns &#x60;deleted: false&#x60; (not 404) when no owned, live feed matches.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveCatalogFeedWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveCatalogFeedWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveCatalogFeedRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3368,17 +3286,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemoveCatalogFeed", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3415,25 +3328,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a DCO component
+   * Soft-deletes component &#x60;cid&#x60; and republishes the serving index. Responds 404 when the creative or the component is not owned by the advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param cid  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemoveComponent(String id, String cid) throws ApiException {
-    advertiserControllerRemoveComponentWithHttpInfo(id, cid);
+  public AdvDeleted advertiserControllerRemoveComponent(String id, String cid) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveComponentWithHttpInfo(id, cid);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a DCO component
+   * Soft-deletes component &#x60;cid&#x60; and republishes the serving index. Responds 404 when the creative or the component is not owned by the advertiser.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param cid  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveComponentWithHttpInfo(String id, String cid) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveComponentWithHttpInfo(String id, String cid) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveComponentRequestBuilder(id, cid);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3446,17 +3361,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemoveComponent", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3498,23 +3408,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a creative
+   * Soft-deletes the creative, removes all its campaign attachments, and republishes the serving index. Responds 404 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemoveCreative(String id) throws ApiException {
-    advertiserControllerRemoveCreativeWithHttpInfo(id);
+  public AdvDeleted advertiserControllerRemoveCreative(String id) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveCreativeWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a creative
+   * Soft-deletes the creative, removes all its campaign attachments, and republishes the serving index. Responds 404 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveCreativeWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveCreativeWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveCreativeRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3527,17 +3439,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemoveCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3574,23 +3481,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a sync destination
+   * Deletes the destination; members already pushed to the external system are not removed there. 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param did  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemoveDestination(String did) throws ApiException {
-    advertiserControllerRemoveDestinationWithHttpInfo(did);
+  public AdvDeleted advertiserControllerRemoveDestination(String did) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveDestinationWithHttpInfo(did);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a sync destination
+   * Deletes the destination; members already pushed to the external system are not removed there. 404/403 when missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param did  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveDestinationWithHttpInfo(String did) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveDestinationWithHttpInfo(String did) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveDestinationRequestBuilder(did);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3603,17 +3512,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemoveDestination", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3650,23 +3554,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a campaign group
+   * Soft-deletes the group. Its ad sets are not deleted; they are detached (&#x60;group_id&#x60; set to null) and keep serving as standalone campaigns. Responds 404 when the group is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerRemoveGroup(String id) throws ApiException {
-    advertiserControllerRemoveGroupWithHttpInfo(id);
+  public AdvDeleted advertiserControllerRemoveGroup(String id) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = advertiserControllerRemoveGroupWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a campaign group
+   * Soft-deletes the group. Its ad sets are not deleted; they are detached (&#x60;group_id&#x60; set to null) and keep serving as standalone campaigns. Responds 404 when the group is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerRemoveGroupWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvDeleted> advertiserControllerRemoveGroupWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerRemoveGroupRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3679,17 +3585,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerRemoveGroup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3726,25 +3627,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Set DCO and product-ad flags on a creative
+   * Sets &#x60;isDco&#x60; (default true) and &#x60;dcoContext&#x60; (global, geo, device or audience; default global; 400 otherwise), and optionally &#x60;productAd&#x60; and &#x60;defaultProductId&#x60; for dynamic product ads. When DCO is on, the engine fills the creative per render from the component pools. 404 when the creative is not owned or has no campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param setDcoDto  (required)
+   * @return AdvertiserControllerSetDco200Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerSetDco(String id, SetDcoDto setDcoDto) throws ApiException {
-    advertiserControllerSetDcoWithHttpInfo(id, setDcoDto);
+  public AdvertiserControllerSetDco200Response advertiserControllerSetDco(String id, SetDcoDto setDcoDto) throws ApiException {
+    ApiResponse<AdvertiserControllerSetDco200Response> localVarResponse = advertiserControllerSetDcoWithHttpInfo(id, setDcoDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set DCO and product-ad flags on a creative
+   * Sets &#x60;isDco&#x60; (default true) and &#x60;dcoContext&#x60; (global, geo, device or audience; default global; 400 otherwise), and optionally &#x60;productAd&#x60; and &#x60;defaultProductId&#x60; for dynamic product ads. When DCO is on, the engine fills the creative per render from the component pools. 404 when the creative is not owned or has no campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param setDcoDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerSetDco200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerSetDcoWithHttpInfo(String id, SetDcoDto setDcoDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerSetDco200Response> advertiserControllerSetDcoWithHttpInfo(String id, SetDcoDto setDcoDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerSetDcoRequestBuilder(id, setDcoDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3757,17 +3660,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerSetDco", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerSetDco200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerSetDco200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3814,23 +3712,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Activate or pause a campaign
+   * Sets the campaign status from the body field &#x60;status&#x60; (&#x60;active&#x60; or &#x60;paused&#x60;) and republishes the serving index. Returns the status that was written. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvStatusResult
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerStatus(String id) throws ApiException {
-    advertiserControllerStatusWithHttpInfo(id);
+  public AdvStatusResult advertiserControllerStatus(String id) throws ApiException {
+    ApiResponse<AdvStatusResult> localVarResponse = advertiserControllerStatusWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Activate or pause a campaign
+   * Sets the campaign status from the body field &#x60;status&#x60; (&#x60;active&#x60; or &#x60;paused&#x60;) and republishes the serving index. Returns the status that was written. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvStatusResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerStatusWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvStatusResult> advertiserControllerStatusWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerStatusRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3843,17 +3743,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvStatusResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvStatusResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3890,23 +3785,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Submit a campaign for moderation review
+   * Moves a &#x60;draft&#x60; campaign to &#x60;pending_review&#x60; and enqueues it in the moderation queue. A campaign that is not in draft keeps its status, but the response still reports &#x60;pending_review&#x60;. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvStatusResult
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerSubmit(String id) throws ApiException {
-    advertiserControllerSubmitWithHttpInfo(id);
+  public AdvStatusResult advertiserControllerSubmit(String id) throws ApiException {
+    ApiResponse<AdvStatusResult> localVarResponse = advertiserControllerSubmitWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Submit a campaign for moderation review
+   * Moves a &#x60;draft&#x60; campaign to &#x60;pending_review&#x60; and enqueues it in the moderation queue. A campaign that is not in draft keeps its status, but the response still reports &#x60;pending_review&#x60;. 404/403 as for GET campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvStatusResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerSubmitWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvStatusResult> advertiserControllerSubmitWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerSubmitRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3919,17 +3816,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerSubmit", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvStatusResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvStatusResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3966,23 +3858,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Submit a promote campaign for review
+   * Moves a draft promote campaign to &#x60;pending_review&#x60; and enqueues it for moderation; a non-draft keeps its status. Responds 404 when missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvStatusResult
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerSubmitPromote(String id) throws ApiException {
-    advertiserControllerSubmitPromoteWithHttpInfo(id);
+  public AdvStatusResult advertiserControllerSubmitPromote(String id) throws ApiException {
+    ApiResponse<AdvStatusResult> localVarResponse = advertiserControllerSubmitPromoteWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Submit a promote campaign for review
+   * Moves a draft promote campaign to &#x60;pending_review&#x60; and enqueues it for moderation; a non-draft keeps its status. Responds 404 when missing and 403 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvStatusResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerSubmitPromoteWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvStatusResult> advertiserControllerSubmitPromoteWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerSubmitPromoteRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3995,17 +3889,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerSubmitPromote", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvStatusResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvStatusResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4042,23 +3931,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Sync a destination now
+   * Pushes the audience&#39;s current members (up to 500,000, excluding opt-outs) to the destination immediately and records the outcome on the destination. Returns the sync status and member count. 404/403 when the destination is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param did  (required)
+   * @return AdvertiserControllerSyncDestination201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerSyncDestination(String did) throws ApiException {
-    advertiserControllerSyncDestinationWithHttpInfo(did);
+  public AdvertiserControllerSyncDestination201Response advertiserControllerSyncDestination(String did) throws ApiException {
+    ApiResponse<AdvertiserControllerSyncDestination201Response> localVarResponse = advertiserControllerSyncDestinationWithHttpInfo(did);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Sync a destination now
+   * Pushes the audience&#39;s current members (up to 500,000, excluding opt-outs) to the destination immediately and records the outcome on the destination. Returns the sync status and member count. 404/403 when the destination is missing or not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param did  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerSyncDestination201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerSyncDestinationWithHttpInfo(String did) throws ApiException {
+  public ApiResponse<AdvertiserControllerSyncDestination201Response> advertiserControllerSyncDestinationWithHttpInfo(String did) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerSyncDestinationRequestBuilder(did);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4071,17 +3962,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerSyncDestination", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerSyncDestination201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerSyncDestination201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4118,23 +4004,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Queue HLS transcoding for a video creative
+   * Starts (or restarts) transcoding the creative&#39;s video to HLS so SSAI can splice its segments. The job runs in the background and errors are not reported; the response only confirms it was queued. Responds 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AdvertiserControllerTranscodeCreative201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerTranscodeCreative(String id) throws ApiException {
-    advertiserControllerTranscodeCreativeWithHttpInfo(id);
+  public AdvertiserControllerTranscodeCreative201Response advertiserControllerTranscodeCreative(String id) throws ApiException {
+    ApiResponse<AdvertiserControllerTranscodeCreative201Response> localVarResponse = advertiserControllerTranscodeCreativeWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Queue HLS transcoding for a video creative
+   * Starts (or restarts) transcoding the creative&#39;s video to HLS so SSAI can splice its segments. The job runs in the background and errors are not reported; the response only confirms it was queued. Responds 404 when the creative is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerTranscodeCreative201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerTranscodeCreativeWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvertiserControllerTranscodeCreative201Response> advertiserControllerTranscodeCreativeWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerTranscodeCreativeRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4147,17 +4035,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerTranscodeCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerTranscodeCreative201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerTranscodeCreative201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4194,25 +4077,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Update a campaign
+   * Patches the campaign. Updatable: name, bidAmount, budgets, pacing, startAt/endAt, SKAdNetwork ids, houseAd, priorityTier, deliveryGoal/goalType, bidModifiers, portfolioFreqCap, sequenceGroup/sequenceOrder, suppressAfterConversion, holdoutPct (clamped 0-1), bidStrategy/targetCpa/targetRoas and utm (null resets to defaults). Passing &#x60;targeting&#x60; replaces the whole targeting row (omitted targeting fields are cleared). Format, pricing model and currency cannot change. Republishes the serving index and returns the same shape as GET; 404/403 as for GET.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param updateCampaignDto  (required)
+   * @return AdvCampaignDetail
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpdate(String id, UpdateCampaignDto updateCampaignDto) throws ApiException {
-    advertiserControllerUpdateWithHttpInfo(id, updateCampaignDto);
+  public AdvCampaignDetail advertiserControllerUpdate(String id, UpdateCampaignDto updateCampaignDto) throws ApiException {
+    ApiResponse<AdvCampaignDetail> localVarResponse = advertiserControllerUpdateWithHttpInfo(id, updateCampaignDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a campaign
+   * Patches the campaign. Updatable: name, bidAmount, budgets, pacing, startAt/endAt, SKAdNetwork ids, houseAd, priorityTier, deliveryGoal/goalType, bidModifiers, portfolioFreqCap, sequenceGroup/sequenceOrder, suppressAfterConversion, holdoutPct (clamped 0-1), bidStrategy/targetCpa/targetRoas and utm (null resets to defaults). Passing &#x60;targeting&#x60; replaces the whole targeting row (omitted targeting fields are cleared). Format, pricing model and currency cannot change. Republishes the serving index and returns the same shape as GET; 404/403 as for GET.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param updateCampaignDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCampaignDetail&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpdateWithHttpInfo(String id, UpdateCampaignDto updateCampaignDto) throws ApiException {
+  public ApiResponse<AdvCampaignDetail> advertiserControllerUpdateWithHttpInfo(String id, UpdateCampaignDto updateCampaignDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpdateRequestBuilder(id, updateCampaignDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4225,17 +4110,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCampaignDetail>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCampaignDetail>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4282,25 +4162,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Update an audience
+   * Updates &#x60;name&#x60; and/or &#x60;rule&#x60;. Setting a rule converts the audience to type &#x60;rule&#x60; and re-resolves its membership in the background. Responds 404 when the audience does not exist and 403 when it belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param createAudienceDto  (required)
+   * @return AdvertiserControllerCreateAudience201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpdateAudience(String id, CreateAudienceDto createAudienceDto) throws ApiException {
-    advertiserControllerUpdateAudienceWithHttpInfo(id, createAudienceDto);
+  public AdvertiserControllerCreateAudience201Response advertiserControllerUpdateAudience(String id, CreateAudienceDto createAudienceDto) throws ApiException {
+    ApiResponse<AdvertiserControllerCreateAudience201Response> localVarResponse = advertiserControllerUpdateAudienceWithHttpInfo(id, createAudienceDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update an audience
+   * Updates &#x60;name&#x60; and/or &#x60;rule&#x60;. Setting a rule converts the audience to type &#x60;rule&#x60; and re-resolves its membership in the background. Responds 404 when the audience does not exist and 403 when it belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param createAudienceDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerCreateAudience201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpdateAudienceWithHttpInfo(String id, CreateAudienceDto createAudienceDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerCreateAudience201Response> advertiserControllerUpdateAudienceWithHttpInfo(String id, CreateAudienceDto createAudienceDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpdateAudienceRequestBuilder(id, createAudienceDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4313,17 +4195,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpdateAudience", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerCreateAudience201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerCreateAudience201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4370,25 +4247,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Update a creative
+   * Patches the creative&#39;s editable fields (asset/landing/icon/main-image URLs, copy, dimensions, weight, carousel items, video and VAST fields). URLs are SSRF-checked and the merged video fields re-validated (400). Any content change (asset, landing, copy, images, VAST tag, VPAID, companions) resets moderation to &#x60;pending&#x60; and re-runs the malware scan. Republishes the serving index; an empty patch returns the current row. 404 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param updateCreativeDto  (required)
+   * @return AdvCreative
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpdateCreative(String id, UpdateCreativeDto updateCreativeDto) throws ApiException {
-    advertiserControllerUpdateCreativeWithHttpInfo(id, updateCreativeDto);
+  public AdvCreative advertiserControllerUpdateCreative(String id, UpdateCreativeDto updateCreativeDto) throws ApiException {
+    ApiResponse<AdvCreative> localVarResponse = advertiserControllerUpdateCreativeWithHttpInfo(id, updateCreativeDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a creative
+   * Patches the creative&#39;s editable fields (asset/landing/icon/main-image URLs, copy, dimensions, weight, carousel items, video and VAST fields). URLs are SSRF-checked and the merged video fields re-validated (400). Any content change (asset, landing, copy, images, VAST tag, VPAID, companions) resets moderation to &#x60;pending&#x60; and re-runs the malware scan. Republishes the serving index; an empty patch returns the current row. 404 when not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param updateCreativeDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCreative&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpdateCreativeWithHttpInfo(String id, UpdateCreativeDto updateCreativeDto) throws ApiException {
+  public ApiResponse<AdvCreative> advertiserControllerUpdateCreativeWithHttpInfo(String id, UpdateCreativeDto updateCreativeDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpdateCreativeRequestBuilder(id, updateCreativeDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4401,17 +4280,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpdateCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCreative>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCreative>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4458,25 +4332,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Update a sync destination
+   * Updates the destination&#39;s &#x60;config&#x60; and/or &#x60;active&#x60; flag. Responds 404 when it does not exist and 403 when it belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param did  (required)
    * @param updateDestinationDto  (required)
+   * @return AdvertiserControllerCreateAudience201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpdateDestination(String did, UpdateDestinationDto updateDestinationDto) throws ApiException {
-    advertiserControllerUpdateDestinationWithHttpInfo(did, updateDestinationDto);
+  public AdvertiserControllerCreateAudience201Response advertiserControllerUpdateDestination(String did, UpdateDestinationDto updateDestinationDto) throws ApiException {
+    ApiResponse<AdvertiserControllerCreateAudience201Response> localVarResponse = advertiserControllerUpdateDestinationWithHttpInfo(did, updateDestinationDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a sync destination
+   * Updates the destination&#39;s &#x60;config&#x60; and/or &#x60;active&#x60; flag. Responds 404 when it does not exist and 403 when it belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param did  (required)
    * @param updateDestinationDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerCreateAudience201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpdateDestinationWithHttpInfo(String did, UpdateDestinationDto updateDestinationDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerCreateAudience201Response> advertiserControllerUpdateDestinationWithHttpInfo(String did, UpdateDestinationDto updateDestinationDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpdateDestinationRequestBuilder(did, updateDestinationDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4489,17 +4365,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpdateDestination", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerCreateAudience201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerCreateAudience201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4546,25 +4417,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Update a campaign group
+   * Patches &#x60;name&#x60;, &#x60;status&#x60; (active | paused | draft) and/or &#x60;objective&#x60;. Status cascades to the group&#39;s ad sets: &#x60;paused&#x60; pauses every active ad set, &#x60;active&#x60; re-activates paused ones (drafts stay draft), and the serving index is republished. Responds 404 when the group is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param updateCampaignGroupDto  (required)
+   * @return AdvCampaignGroup
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpdateGroup(String id, UpdateCampaignGroupDto updateCampaignGroupDto) throws ApiException {
-    advertiserControllerUpdateGroupWithHttpInfo(id, updateCampaignGroupDto);
+  public AdvCampaignGroup advertiserControllerUpdateGroup(String id, UpdateCampaignGroupDto updateCampaignGroupDto) throws ApiException {
+    ApiResponse<AdvCampaignGroup> localVarResponse = advertiserControllerUpdateGroupWithHttpInfo(id, updateCampaignGroupDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a campaign group
+   * Patches &#x60;name&#x60;, &#x60;status&#x60; (active | paused | draft) and/or &#x60;objective&#x60;. Status cascades to the group&#39;s ad sets: &#x60;paused&#x60; pauses every active ad set, &#x60;active&#x60; re-activates paused ones (drafts stay draft), and the serving index is republished. Responds 404 when the group is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param updateCampaignGroupDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvCampaignGroup&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpdateGroupWithHttpInfo(String id, UpdateCampaignGroupDto updateCampaignGroupDto) throws ApiException {
+  public ApiResponse<AdvCampaignGroup> advertiserControllerUpdateGroupWithHttpInfo(String id, UpdateCampaignGroupDto updateCampaignGroupDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpdateGroupRequestBuilder(id, updateCampaignGroupDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4577,17 +4450,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpdateGroup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvCampaignGroup>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvCampaignGroup>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4634,21 +4502,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Upload a creative asset file
+   * Multipart upload with the file in field &#x60;file&#x60; (400 if missing). The file is ClamAV-scanned (fail-open: &#x60;skipped&#x60; when the scanner is unavailable), stored on object storage, and PNG/GIF/JPEG dimensions are detected. Pass the returned &#x60;assetUrl&#x60; to POST /v1/advertiser/creatives; this call does not create a creative.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return AdvertiserControllerUploadCreative201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUploadCreative() throws ApiException {
-    advertiserControllerUploadCreativeWithHttpInfo();
+  public AdvertiserControllerUploadCreative201Response advertiserControllerUploadCreative() throws ApiException {
+    ApiResponse<AdvertiserControllerUploadCreative201Response> localVarResponse = advertiserControllerUploadCreativeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Upload a creative asset file
+   * Multipart upload with the file in field &#x60;file&#x60; (400 if missing). The file is ClamAV-scanned (fail-open: &#x60;skipped&#x60; when the scanner is unavailable), stored on object storage, and PNG/GIF/JPEG dimensions are detected. Pass the returned &#x60;assetUrl&#x60; to POST /v1/advertiser/creatives; this call does not create a creative.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;AdvertiserControllerUploadCreative201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUploadCreativeWithHttpInfo() throws ApiException {
+  public ApiResponse<AdvertiserControllerUploadCreative201Response> advertiserControllerUploadCreativeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUploadCreativeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4661,17 +4531,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUploadCreative", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerUploadCreative201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerUploadCreative201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4703,21 +4568,23 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Upload a playable (HTML5) ZIP bundle
+   * Multipart upload of a ZIP in field &#x60;file&#x60;. The bundle is malware-scanned and validated: it must have an &#x60;index.html&#x60; at its root, only allowed file types, no unsafe paths, and stay within file-count and size limits (400 otherwise, including zip-bomb expansion). The sandbox/MRAID runtime is injected into the entry document and the files are hosted on the CDN. Pass the returned &#x60;assetUrl&#x60; with &#x60;type: html5&#x60; to POST creatives.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return AdvertiserControllerUploadPlayable201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUploadPlayable() throws ApiException {
-    advertiserControllerUploadPlayableWithHttpInfo();
+  public AdvertiserControllerUploadPlayable201Response advertiserControllerUploadPlayable() throws ApiException {
+    ApiResponse<AdvertiserControllerUploadPlayable201Response> localVarResponse = advertiserControllerUploadPlayableWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Upload a playable (HTML5) ZIP bundle
+   * Multipart upload of a ZIP in field &#x60;file&#x60;. The bundle is malware-scanned and validated: it must have an &#x60;index.html&#x60; at its root, only allowed file types, no unsafe paths, and stay within file-count and size limits (400 otherwise, including zip-bomb expansion). The sandbox/MRAID runtime is injected into the entry document and the files are hosted on the CDN. Pass the returned &#x60;assetUrl&#x60; with &#x60;type: html5&#x60; to POST creatives.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;AdvertiserControllerUploadPlayable201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUploadPlayableWithHttpInfo() throws ApiException {
+  public ApiResponse<AdvertiserControllerUploadPlayable201Response> advertiserControllerUploadPlayableWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUploadPlayableRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4730,17 +4597,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUploadPlayable", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerUploadPlayable201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerUploadPlayable201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4772,23 +4634,25 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Bulk upsert marketplace catalog items
+   * Upserts &#x60;items&#x60; into the marketplace catalog keyed by &#x60;externalId&#x60; (items without one are dropped) and mirrors each to Redis for serve-time rendering and keyword matching of sponsored products. Responds 400 when &#x60;items&#x60; is empty, no item has an externalId, or more than 50,000 items are sent.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param bulkUpsertCatalogDto  (required)
+   * @return AdvertiserControllerUpsertCatalog201Response
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpsertCatalog(BulkUpsertCatalogDto bulkUpsertCatalogDto) throws ApiException {
-    advertiserControllerUpsertCatalogWithHttpInfo(bulkUpsertCatalogDto);
+  public AdvertiserControllerUpsertCatalog201Response advertiserControllerUpsertCatalog(BulkUpsertCatalogDto bulkUpsertCatalogDto) throws ApiException {
+    ApiResponse<AdvertiserControllerUpsertCatalog201Response> localVarResponse = advertiserControllerUpsertCatalogWithHttpInfo(bulkUpsertCatalogDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Bulk upsert marketplace catalog items
+   * Upserts &#x60;items&#x60; into the marketplace catalog keyed by &#x60;externalId&#x60; (items without one are dropped) and mirrors each to Redis for serve-time rendering and keyword matching of sponsored products. Responds 400 when &#x60;items&#x60; is empty, no item has an externalId, or more than 50,000 items are sent.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param bulkUpsertCatalogDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvertiserControllerUpsertCatalog201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpsertCatalogWithHttpInfo(BulkUpsertCatalogDto bulkUpsertCatalogDto) throws ApiException {
+  public ApiResponse<AdvertiserControllerUpsertCatalog201Response> advertiserControllerUpsertCatalogWithHttpInfo(BulkUpsertCatalogDto bulkUpsertCatalogDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpsertCatalogRequestBuilder(bulkUpsertCatalogDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4801,17 +4665,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpsertCatalog", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvertiserControllerUpsertCatalog201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvertiserControllerUpsertCatalog201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -4853,25 +4712,27 @@ public class AdvertiserApi {
   }
 
   /**
-   * 
-   * 
+   * Create or replace a campaign&#39;s conversion config
+   * Upserts the conversion config. Body fields: &#x60;eventType&#x60; (default purchase), &#x60;payoutValue&#x60; (also stored as conversion_value), &#x60;postbackUrl&#x60;, &#x60;dedupeWindowSec&#x60; (default 0), &#x60;attributionWindowDays&#x60; (default 30), &#x60;cpaMode&#x60; flat|percent, &#x60;cpaPercent&#x60;, &#x60;minOrderValue&#x60; (fraud floor) and &#x60;viewThroughHours&#x60;. Omitted fields are reset to their defaults rather than kept. Returns the stored config; 404/403 as for GET.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param body  (required)
+   * @return AdvConversionConfig
    * @throws ApiException if fails to make API call
    */
-  public void advertiserControllerUpsertConversionConfig(String id, Object body) throws ApiException {
-    advertiserControllerUpsertConversionConfigWithHttpInfo(id, body);
+  public AdvConversionConfig advertiserControllerUpsertConversionConfig(String id, Object body) throws ApiException {
+    ApiResponse<AdvConversionConfig> localVarResponse = advertiserControllerUpsertConversionConfigWithHttpInfo(id, body);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create or replace a campaign&#39;s conversion config
+   * Upserts the conversion config. Body fields: &#x60;eventType&#x60; (default purchase), &#x60;payoutValue&#x60; (also stored as conversion_value), &#x60;postbackUrl&#x60;, &#x60;dedupeWindowSec&#x60; (default 0), &#x60;attributionWindowDays&#x60; (default 30), &#x60;cpaMode&#x60; flat|percent, &#x60;cpaPercent&#x60;, &#x60;minOrderValue&#x60; (fraud floor) and &#x60;viewThroughHours&#x60;. Omitted fields are reset to their defaults rather than kept. Returns the stored config; 404/403 as for GET.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param body  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvConversionConfig&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> advertiserControllerUpsertConversionConfigWithHttpInfo(String id, Object body) throws ApiException {
+  public ApiResponse<AdvConversionConfig> advertiserControllerUpsertConversionConfigWithHttpInfo(String id, Object body) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = advertiserControllerUpsertConversionConfigRequestBuilder(id, body);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -4884,17 +4745,12 @@ public class AdvertiserApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("advertiserControllerUpsertConversionConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvConversionConfig>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvConversionConfig>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

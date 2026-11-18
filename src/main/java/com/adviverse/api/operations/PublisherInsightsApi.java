@@ -17,6 +17,10 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.PublisherInsightsControllerClearing200Response;
+import com.adviverse.api.models.PublisherInsightsControllerDeals200Response;
+import com.adviverse.api.models.PublisherInsightsControllerFloorRecommendation200Response;
+import com.adviverse.api.models.PublisherInsightsControllerNoFill200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,23 +85,25 @@ public class PublisherInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Get the clearing-price distribution for a placement
+   * For about 10 candidate floors across the placement&#39;s observed clearing range, returns &#x60;fillRate&#x60; (share of bids clearing at or above the floor) and &#x60;expectedRevenue&#x60; (floor x fillRate), plus clearing p50/p90 and sample size. Requires &#x60;?placementId&#x3D;&#x60;; only your own revenue data is exposed. 404 if the placement is not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param placementId  (required)
+   * @return PublisherInsightsControllerClearing200Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherInsightsControllerClearing(String placementId) throws ApiException {
-    publisherInsightsControllerClearingWithHttpInfo(placementId);
+  public PublisherInsightsControllerClearing200Response publisherInsightsControllerClearing(String placementId) throws ApiException {
+    ApiResponse<PublisherInsightsControllerClearing200Response> localVarResponse = publisherInsightsControllerClearingWithHttpInfo(placementId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the clearing-price distribution for a placement
+   * For about 10 candidate floors across the placement&#39;s observed clearing range, returns &#x60;fillRate&#x60; (share of bids clearing at or above the floor) and &#x60;expectedRevenue&#x60; (floor x fillRate), plus clearing p50/p90 and sample size. Requires &#x60;?placementId&#x3D;&#x60;; only your own revenue data is exposed. 404 if the placement is not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param placementId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherInsightsControllerClearing200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherInsightsControllerClearingWithHttpInfo(String placementId) throws ApiException {
+  public ApiResponse<PublisherInsightsControllerClearing200Response> publisherInsightsControllerClearingWithHttpInfo(String placementId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherInsightsControllerClearingRequestBuilder(placementId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -110,17 +116,12 @@ public class PublisherInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherInsightsControllerClearing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherInsightsControllerClearing200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherInsightsControllerClearing200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -171,21 +172,23 @@ public class PublisherInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Get performance of your deals
+   * Returns every deal you own with attributed impressions, clicks, revenue and eCPM, sorted by revenue. Deals with no delivery show zeros; if analytics is unavailable metrics fall back to zero rather than failing.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return PublisherInsightsControllerDeals200Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherInsightsControllerDeals() throws ApiException {
-    publisherInsightsControllerDealsWithHttpInfo();
+  public PublisherInsightsControllerDeals200Response publisherInsightsControllerDeals() throws ApiException {
+    ApiResponse<PublisherInsightsControllerDeals200Response> localVarResponse = publisherInsightsControllerDealsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get performance of your deals
+   * Returns every deal you own with attributed impressions, clicks, revenue and eCPM, sorted by revenue. Deals with no delivery show zeros; if analytics is unavailable metrics fall back to zero rather than failing.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;PublisherInsightsControllerDeals200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherInsightsControllerDealsWithHttpInfo() throws ApiException {
+  public ApiResponse<PublisherInsightsControllerDeals200Response> publisherInsightsControllerDealsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherInsightsControllerDealsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -198,17 +201,12 @@ public class PublisherInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherInsightsControllerDeals", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherInsightsControllerDeals200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherInsightsControllerDeals200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -240,23 +238,25 @@ public class PublisherInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Get a revenue-maximizing floor recommendation
+   * Picks the floor that maximizes expected revenue on the placement&#39;s empirical fill curve and a matching soft reserve, with the expected revenue lift versus the current floor. With fewer than 500 recent cleared impressions it keeps the current floor and explains why in &#x60;note&#x60;. Requires &#x60;?placementId&#x3D;&#x60;; 404 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param placementId  (required)
+   * @return PublisherInsightsControllerFloorRecommendation200Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherInsightsControllerFloorRecommendation(String placementId) throws ApiException {
-    publisherInsightsControllerFloorRecommendationWithHttpInfo(placementId);
+  public PublisherInsightsControllerFloorRecommendation200Response publisherInsightsControllerFloorRecommendation(String placementId) throws ApiException {
+    ApiResponse<PublisherInsightsControllerFloorRecommendation200Response> localVarResponse = publisherInsightsControllerFloorRecommendationWithHttpInfo(placementId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a revenue-maximizing floor recommendation
+   * Picks the floor that maximizes expected revenue on the placement&#39;s empirical fill curve and a matching soft reserve, with the expected revenue lift versus the current floor. With fewer than 500 recent cleared impressions it keeps the current floor and explains why in &#x60;note&#x60;. Requires &#x60;?placementId&#x3D;&#x60;; 404 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param placementId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherInsightsControllerFloorRecommendation200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherInsightsControllerFloorRecommendationWithHttpInfo(String placementId) throws ApiException {
+  public ApiResponse<PublisherInsightsControllerFloorRecommendation200Response> publisherInsightsControllerFloorRecommendationWithHttpInfo(String placementId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherInsightsControllerFloorRecommendationRequestBuilder(placementId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -269,17 +269,12 @@ public class PublisherInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherInsightsControllerFloorRecommendation", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherInsightsControllerFloorRecommendation200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherInsightsControllerFloorRecommendation200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -330,23 +325,25 @@ public class PublisherInsightsApi {
   }
 
   /**
-   * 
-   * 
+   * Get no-fill reasons for a placement
+   * Breaks down the placement&#39;s last 30 days of requests into filled vs. no-fill, with each no-fill reason&#39;s count and percentage share. &#x60;fillRate&#x60; and &#x60;pct&#x60; are percentages (0-100). Requires &#x60;?placementId&#x3D;&#x60;; 404 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param placementId  (required)
+   * @return PublisherInsightsControllerNoFill200Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherInsightsControllerNoFill(String placementId) throws ApiException {
-    publisherInsightsControllerNoFillWithHttpInfo(placementId);
+  public PublisherInsightsControllerNoFill200Response publisherInsightsControllerNoFill(String placementId) throws ApiException {
+    ApiResponse<PublisherInsightsControllerNoFill200Response> localVarResponse = publisherInsightsControllerNoFillWithHttpInfo(placementId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get no-fill reasons for a placement
+   * Breaks down the placement&#39;s last 30 days of requests into filled vs. no-fill, with each no-fill reason&#39;s count and percentage share. &#x60;fillRate&#x60; and &#x60;pct&#x60; are percentages (0-100). Requires &#x60;?placementId&#x3D;&#x60;; 404 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param placementId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherInsightsControllerNoFill200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherInsightsControllerNoFillWithHttpInfo(String placementId) throws ApiException {
+  public ApiResponse<PublisherInsightsControllerNoFill200Response> publisherInsightsControllerNoFillWithHttpInfo(String placementId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherInsightsControllerNoFillRequestBuilder(placementId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -359,17 +356,12 @@ public class PublisherInsightsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherInsightsControllerNoFill", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherInsightsControllerNoFill200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherInsightsControllerNoFill200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

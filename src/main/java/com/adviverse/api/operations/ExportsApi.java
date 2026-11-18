@@ -17,6 +17,8 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.ExportJob;
+import com.adviverse.api.models.ExportsControllerRun201Response;
 import com.adviverse.api.models.RunExportDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,21 +84,23 @@ public class ExportsApi {
   }
 
   /**
-   * 
-   * 
+   * List export jobs
+   * Returns the 200 most recent export jobs, newest first: the caller&#39;s own for advertisers, all jobs for admins.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;ExportJob&gt;
    * @throws ApiException if fails to make API call
    */
-  public void exportsControllerList() throws ApiException {
-    exportsControllerListWithHttpInfo();
+  public List<ExportJob> exportsControllerList() throws ApiException {
+    ApiResponse<List<ExportJob>> localVarResponse = exportsControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List export jobs
+   * Returns the 200 most recent export jobs, newest first: the caller&#39;s own for advertisers, all jobs for admins.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;ExportJob&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> exportsControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ExportJob>> exportsControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = exportsControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -109,17 +113,12 @@ public class ExportsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("exportsControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ExportJob>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ExportJob>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -151,23 +150,25 @@ public class ExportsApi {
   }
 
   /**
-   * 
-   * 
+   * Export an analytics dataset to object storage
+   * Pages a ClickHouse dataset into one NDJSON or CSV object plus a manifest JSON in object storage and returns a presigned download URL. Body: &#x60;dataset&#x60; (events &#x3D; raw impressions, conversions, or spend &#x3D; hourly rollup), &#x60;from&#x60; (inclusive) and &#x60;to&#x60; (exclusive) as ISO dates, optional &#x60;format&#x60; (ndjson default, csv). Advertisers export only their own rows; admins export network-wide. The job is recorded and marked failed if the export errors.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param runExportDto  (required)
+   * @return ExportsControllerRun201Response
    * @throws ApiException if fails to make API call
    */
-  public void exportsControllerRun(RunExportDto runExportDto) throws ApiException {
-    exportsControllerRunWithHttpInfo(runExportDto);
+  public ExportsControllerRun201Response exportsControllerRun(RunExportDto runExportDto) throws ApiException {
+    ApiResponse<ExportsControllerRun201Response> localVarResponse = exportsControllerRunWithHttpInfo(runExportDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Export an analytics dataset to object storage
+   * Pages a ClickHouse dataset into one NDJSON or CSV object plus a manifest JSON in object storage and returns a presigned download URL. Body: &#x60;dataset&#x60; (events &#x3D; raw impressions, conversions, or spend &#x3D; hourly rollup), &#x60;from&#x60; (inclusive) and &#x60;to&#x60; (exclusive) as ISO dates, optional &#x60;format&#x60; (ndjson default, csv). Advertisers export only their own rows; admins export network-wide. The job is recorded and marked failed if the export errors.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param runExportDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ExportsControllerRun201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> exportsControllerRunWithHttpInfo(RunExportDto runExportDto) throws ApiException {
+  public ApiResponse<ExportsControllerRun201Response> exportsControllerRunWithHttpInfo(RunExportDto runExportDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = exportsControllerRunRequestBuilder(runExportDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -180,17 +181,12 @@ public class ExportsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("exportsControllerRun", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ExportsControllerRun201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ExportsControllerRun201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

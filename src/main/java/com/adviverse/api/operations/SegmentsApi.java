@@ -17,6 +17,18 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AudienceCatalogEntry;
+import com.adviverse.api.models.AudienceTaxonomyNode;
+import com.adviverse.api.models.SegmentsControllerContribute201Response;
+import com.adviverse.api.models.SegmentsControllerContributions200ResponseInner;
+import com.adviverse.api.models.SegmentsControllerDetectNiche200Response;
+import com.adviverse.api.models.SegmentsControllerEarnings200Response;
+import com.adviverse.api.models.SegmentsControllerLicense201Response;
+import com.adviverse.api.models.SegmentsControllerLicenses200ResponseInner;
+import com.adviverse.api.models.SegmentsControllerOptOut201Response;
+import com.adviverse.api.models.SegmentsControllerRebuild201Response;
+import com.adviverse.api.models.SegmentsControllerRevoke201Response;
+import com.adviverse.api.models.SegmentsControllerUserSegments200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +93,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Get the targetable interest catalog
+   * Lists every non-sensitive taxonomy node with two ways to target it. &#x60;contextualKeywords&#x60; goes into targeting.contextual_include, is matched against page content at serve time and is free. &#x60;behavioral&#x60; is a network preset segment for targeting.audience_include and carries a data CPM; it is null until the preset reaches its k-anonymity minimum, and &#x60;behavioralBuilding&#x60; reports progress while it builds.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;AudienceCatalogEntry&gt;
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerCatalog() throws ApiException {
-    segmentsControllerCatalogWithHttpInfo();
+  public List<AudienceCatalogEntry> segmentsControllerCatalog() throws ApiException {
+    ApiResponse<List<AudienceCatalogEntry>> localVarResponse = segmentsControllerCatalogWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the targetable interest catalog
+   * Lists every non-sensitive taxonomy node with two ways to target it. &#x60;contextualKeywords&#x60; goes into targeting.contextual_include, is matched against page content at serve time and is free. &#x60;behavioral&#x60; is a network preset segment for targeting.audience_include and carries a data CPM; it is null until the preset reaches its k-anonymity minimum, and &#x60;behavioralBuilding&#x60; reports progress while it builds.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;AudienceCatalogEntry&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerCatalogWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AudienceCatalogEntry>> segmentsControllerCatalogWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerCatalogRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +122,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerCatalog", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AudienceCatalogEntry>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AudienceCatalogEntry>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -150,21 +159,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Contribute an audience to the co-op
+   * Shares one of the caller&#39;s audiences (&#x60;audienceId&#x60;) as a co-op segment that other advertisers can license. &#x60;taxonomyId&#x60; is optional: when omitted the niche is auto-detected from the members, and unknown or sensitive niches leave the segment uncategorized. &#x60;revShare&#x60; (default 0.5, clamped to 0-0.9) sets the contributor&#39;s share of data fees. Re-contributing updates the existing segment. Members are materialized minus opted-out ids. Returns 404 if the audience is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return SegmentsControllerContribute201Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerContribute() throws ApiException {
-    segmentsControllerContributeWithHttpInfo();
+  public SegmentsControllerContribute201Response segmentsControllerContribute() throws ApiException {
+    ApiResponse<SegmentsControllerContribute201Response> localVarResponse = segmentsControllerContributeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Contribute an audience to the co-op
+   * Shares one of the caller&#39;s audiences (&#x60;audienceId&#x60;) as a co-op segment that other advertisers can license. &#x60;taxonomyId&#x60; is optional: when omitted the niche is auto-detected from the members, and unknown or sensitive niches leave the segment uncategorized. &#x60;revShare&#x60; (default 0.5, clamped to 0-0.9) sets the contributor&#39;s share of data fees. Re-contributing updates the existing segment. Members are materialized minus opted-out ids. Returns 404 if the audience is not owned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;SegmentsControllerContribute201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerContributeWithHttpInfo() throws ApiException {
+  public ApiResponse<SegmentsControllerContribute201Response> segmentsControllerContributeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerContributeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -177,17 +188,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerContribute", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerContribute201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerContribute201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -219,21 +225,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * List your co-op contributions
+   * Returns the caller&#39;s contributed co-op segments, newest first, with their size, rev-share and the number of advertisers that have licensed each one.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return List&lt;SegmentsControllerContributions200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerContributions() throws ApiException {
-    segmentsControllerContributionsWithHttpInfo();
+  public List<SegmentsControllerContributions200ResponseInner> segmentsControllerContributions() throws ApiException {
+    ApiResponse<List<SegmentsControllerContributions200ResponseInner>> localVarResponse = segmentsControllerContributionsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your co-op contributions
+   * Returns the caller&#39;s contributed co-op segments, newest first, with their size, rev-share and the number of advertisers that have licensed each one.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;List&lt;SegmentsControllerContributions200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerContributionsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<SegmentsControllerContributions200ResponseInner>> segmentsControllerContributionsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerContributionsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -246,17 +254,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerContributions", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<SegmentsControllerContributions200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<SegmentsControllerContributions200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -288,23 +291,25 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Detect an audience&#39;s interest niche
+   * Previews the taxonomy node that best matches the members of &#x60;audienceId&#x60;, scored by keyword overlap. This is the niche contribute would assign. Returns nulls when nothing matches and 404 when the audience is not owned by the caller.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param audienceId  (required)
+   * @return SegmentsControllerDetectNiche200Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerDetectNiche(String audienceId) throws ApiException {
-    segmentsControllerDetectNicheWithHttpInfo(audienceId);
+  public SegmentsControllerDetectNiche200Response segmentsControllerDetectNiche(String audienceId) throws ApiException {
+    ApiResponse<SegmentsControllerDetectNiche200Response> localVarResponse = segmentsControllerDetectNicheWithHttpInfo(audienceId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Detect an audience&#39;s interest niche
+   * Previews the taxonomy node that best matches the members of &#x60;audienceId&#x60;, scored by keyword overlap. This is the niche contribute would assign. Returns nulls when nothing matches and 404 when the audience is not owned by the caller.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param audienceId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SegmentsControllerDetectNiche200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerDetectNicheWithHttpInfo(String audienceId) throws ApiException {
+  public ApiResponse<SegmentsControllerDetectNiche200Response> segmentsControllerDetectNicheWithHttpInfo(String audienceId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerDetectNicheRequestBuilder(audienceId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -317,17 +322,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerDetectNiche", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerDetectNiche200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerDetectNiche200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -378,21 +378,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Co-op data-fee statement
+   * Reads the ledger for co-op data-fee movements. Returns the total earned as a contributor (rev-share credits) and the total spent as a licensee, a per-segment earnings rollup, and the 50 most recent earning and spend entries. Totals are rounded to cents.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return SegmentsControllerEarnings200Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerEarnings() throws ApiException {
-    segmentsControllerEarningsWithHttpInfo();
+  public SegmentsControllerEarnings200Response segmentsControllerEarnings() throws ApiException {
+    ApiResponse<SegmentsControllerEarnings200Response> localVarResponse = segmentsControllerEarningsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Co-op data-fee statement
+   * Reads the ledger for co-op data-fee movements. Returns the total earned as a contributor (rev-share credits) and the total spent as a licensee, a per-segment earnings rollup, and the 50 most recent earning and spend entries. Totals are rounded to cents.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;SegmentsControllerEarnings200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerEarningsWithHttpInfo() throws ApiException {
+  public ApiResponse<SegmentsControllerEarnings200Response> segmentsControllerEarningsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerEarningsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -405,17 +407,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerEarnings", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerEarnings200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerEarnings200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -447,23 +444,25 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * License a co-op, preset or in-market segment
+   * Grants the advertiser the right to target segment &#x60;id&#x60;, recording the data CPM that is charged on delivery and shared with the contributor. Returns 404 if the segment is not a coop/preset/in_market segment. Returns 400 if the caller owns it, if it is sensitive, or if it is below the k-anonymity threshold. Licensing is idempotent; add the returned &#x60;segmentId&#x60; to a campaign&#39;s targeting.audience_include.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return SegmentsControllerLicense201Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerLicense(String id) throws ApiException {
-    segmentsControllerLicenseWithHttpInfo(id);
+  public SegmentsControllerLicense201Response segmentsControllerLicense(String id) throws ApiException {
+    ApiResponse<SegmentsControllerLicense201Response> localVarResponse = segmentsControllerLicenseWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * License a co-op, preset or in-market segment
+   * Grants the advertiser the right to target segment &#x60;id&#x60;, recording the data CPM that is charged on delivery and shared with the contributor. Returns 404 if the segment is not a coop/preset/in_market segment. Returns 400 if the caller owns it, if it is sensitive, or if it is below the k-anonymity threshold. Licensing is idempotent; add the returned &#x60;segmentId&#x60; to a campaign&#39;s targeting.audience_include.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SegmentsControllerLicense201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerLicenseWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SegmentsControllerLicense201Response> segmentsControllerLicenseWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerLicenseRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -476,17 +475,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerLicense", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerLicense201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerLicense201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -523,21 +517,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * List licensed segments
+   * Returns the segments the advertiser has licensed, newest first, with the data CPM locked at license time and the segment&#39;s name, taxonomy node, size and scope.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;SegmentsControllerLicenses200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerLicenses() throws ApiException {
-    segmentsControllerLicensesWithHttpInfo();
+  public List<SegmentsControllerLicenses200ResponseInner> segmentsControllerLicenses() throws ApiException {
+    ApiResponse<List<SegmentsControllerLicenses200ResponseInner>> localVarResponse = segmentsControllerLicensesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List licensed segments
+   * Returns the segments the advertiser has licensed, newest first, with the data CPM locked at license time and the segment&#39;s name, taxonomy node, size and scope.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;SegmentsControllerLicenses200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerLicensesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<SegmentsControllerLicenses200ResponseInner>> segmentsControllerLicensesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerLicensesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -550,17 +546,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerLicenses", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<SegmentsControllerLicenses200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<SegmentsControllerLicenses200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -592,21 +583,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Opt a user out of all audience segments
+   * Public privacy endpoint, typically called by a preference center with the visitor&#39;s &#x60;adnet_uid&#x60; cookie or canonical id as &#x60;id&#x60;. The id is recorded as opted out and excluded from every future segment rebuild, and it is removed from live segment sets straight away on a best-effort basis. A missing &#x60;id&#x60; returns 400.  Auth: public, no credentials required.
+   * @return SegmentsControllerOptOut201Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerOptOut() throws ApiException {
-    segmentsControllerOptOutWithHttpInfo();
+  public SegmentsControllerOptOut201Response segmentsControllerOptOut() throws ApiException {
+    ApiResponse<SegmentsControllerOptOut201Response> localVarResponse = segmentsControllerOptOutWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Opt a user out of all audience segments
+   * Public privacy endpoint, typically called by a preference center with the visitor&#39;s &#x60;adnet_uid&#x60; cookie or canonical id as &#x60;id&#x60;. The id is recorded as opted out and excluded from every future segment rebuild, and it is removed from live segment sets straight away on a best-effort basis. A missing &#x60;id&#x60; returns 400.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;SegmentsControllerOptOut201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerOptOutWithHttpInfo() throws ApiException {
+  public ApiResponse<SegmentsControllerOptOut201Response> segmentsControllerOptOutWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerOptOutRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -619,17 +612,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerOptOut", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerOptOut201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerOptOut201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -661,21 +649,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Force a segment rebuild
+   * Runs, in order, the jobs that normally run on a timer: network preset classification, co-op niche union, in-market segments, and per-account first-party interest segments. Returns each job&#39;s count. Can be slow on large datasets because it scans ClickHouse keyword data for each taxonomy node.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return SegmentsControllerRebuild201Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerRebuild() throws ApiException {
-    segmentsControllerRebuildWithHttpInfo();
+  public SegmentsControllerRebuild201Response segmentsControllerRebuild() throws ApiException {
+    ApiResponse<SegmentsControllerRebuild201Response> localVarResponse = segmentsControllerRebuildWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Force a segment rebuild
+   * Runs, in order, the jobs that normally run on a timer: network preset classification, co-op niche union, in-market segments, and per-account first-party interest segments. Returns each job&#39;s count. Can be slow on large datasets because it scans ClickHouse keyword data for each taxonomy node.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;SegmentsControllerRebuild201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerRebuildWithHttpInfo() throws ApiException {
+  public ApiResponse<SegmentsControllerRebuild201Response> segmentsControllerRebuildWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerRebuildRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -688,17 +678,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerRebuild", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerRebuild201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerRebuild201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -730,23 +715,25 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Stop sharing a contributed segment
+   * Unshares the co-op segment &#x60;id&#x60; and removes its contribution record, so it earns no further data fees. Only affects segments the caller owns; other ids are silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param id  (required)
+   * @return SegmentsControllerRevoke201Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerRevoke(String id) throws ApiException {
-    segmentsControllerRevokeWithHttpInfo(id);
+  public SegmentsControllerRevoke201Response segmentsControllerRevoke(String id) throws ApiException {
+    ApiResponse<SegmentsControllerRevoke201Response> localVarResponse = segmentsControllerRevokeWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Stop sharing a contributed segment
+   * Unshares the co-op segment &#x60;id&#x60; and removes its contribution record, so it earns no further data fees. Only affects segments the caller owns; other ids are silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SegmentsControllerRevoke201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerRevokeWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SegmentsControllerRevoke201Response> segmentsControllerRevokeWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerRevokeRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -759,17 +746,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerRevoke", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerRevoke201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerRevoke201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -806,21 +788,23 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * Get the interest taxonomy
+   * Returns every node of the Audience Cloud interest taxonomy with its parent, display name, matching keywords and whether it is a sensitive category. Sensitive nodes are never built into shareable or licensable segments.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return List&lt;AudienceTaxonomyNode&gt;
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerTaxonomy() throws ApiException {
-    segmentsControllerTaxonomyWithHttpInfo();
+  public List<AudienceTaxonomyNode> segmentsControllerTaxonomy() throws ApiException {
+    ApiResponse<List<AudienceTaxonomyNode>> localVarResponse = segmentsControllerTaxonomyWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the interest taxonomy
+   * Returns every node of the Audience Cloud interest taxonomy with its parent, display name, matching keywords and whether it is a sensitive category. Sensitive nodes are never built into shareable or licensable segments.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;List&lt;AudienceTaxonomyNode&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerTaxonomyWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AudienceTaxonomyNode>> segmentsControllerTaxonomyWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerTaxonomyRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -833,17 +817,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerTaxonomy", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AudienceTaxonomyNode>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AudienceTaxonomyNode>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -875,23 +854,25 @@ public class SegmentsApi {
   }
 
   /**
-   * 
-   * 
+   * List the segments containing an id
+   * Admin transparency tool: checks every non-empty segment for membership of &#x60;idHash&#x60; (a canonical id or uid) and returns the matching segments with their scope and taxonomy node.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param idHash  (required)
+   * @return SegmentsControllerUserSegments200Response
    * @throws ApiException if fails to make API call
    */
-  public void segmentsControllerUserSegments(String idHash) throws ApiException {
-    segmentsControllerUserSegmentsWithHttpInfo(idHash);
+  public SegmentsControllerUserSegments200Response segmentsControllerUserSegments(String idHash) throws ApiException {
+    ApiResponse<SegmentsControllerUserSegments200Response> localVarResponse = segmentsControllerUserSegmentsWithHttpInfo(idHash);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List the segments containing an id
+   * Admin transparency tool: checks every non-empty segment for membership of &#x60;idHash&#x60; (a canonical id or uid) and returns the matching segments with their scope and taxonomy node.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param idHash  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SegmentsControllerUserSegments200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> segmentsControllerUserSegmentsWithHttpInfo(String idHash) throws ApiException {
+  public ApiResponse<SegmentsControllerUserSegments200Response> segmentsControllerUserSegmentsWithHttpInfo(String idHash) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = segmentsControllerUserSegmentsRequestBuilder(idHash);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -904,17 +885,12 @@ public class SegmentsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("segmentsControllerUserSegments", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerUserSegments200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerUserSegments200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

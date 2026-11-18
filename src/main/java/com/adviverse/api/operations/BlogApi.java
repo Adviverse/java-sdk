@@ -17,6 +17,9 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AdminControllerSetStatus201Response;
+import com.adviverse.api.models.BlogControllerGet200Response;
+import com.adviverse.api.models.BlogPost;
 import com.adviverse.api.models.CreatePostDto;
 import com.adviverse.api.models.UpdatePostDto;
 
@@ -83,23 +86,25 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * List all blog posts
+   * Returns every post, including unpublished ones, optionally filtered by &#x60;locale&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param locale  (required)
+   * @return List&lt;BlogPost&gt;
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerAdminList(String locale) throws ApiException {
-    blogControllerAdminListWithHttpInfo(locale);
+  public List<BlogPost> blogControllerAdminList(String locale) throws ApiException {
+    ApiResponse<List<BlogPost>> localVarResponse = blogControllerAdminListWithHttpInfo(locale);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List all blog posts
+   * Returns every post, including unpublished ones, optionally filtered by &#x60;locale&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param locale  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;BlogPost&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerAdminListWithHttpInfo(String locale) throws ApiException {
+  public ApiResponse<List<BlogPost>> blogControllerAdminListWithHttpInfo(String locale) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerAdminListRequestBuilder(locale);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -112,17 +117,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerAdminList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<BlogPost>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<BlogPost>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -173,23 +173,25 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Create or replace a blog post
+   * Creates a post from &#x60;slug&#x60; and &#x60;title&#x60; with optional &#x60;locale&#x60; (&#x60;en&#x60;), &#x60;tag&#x60; (&#x60;News&#x60;), &#x60;author&#x60; (&#x60;Adviverse Team&#x60;), &#x60;excerpt&#x60;, Markdown &#x60;body&#x60;, &#x60;cover_image&#x60;, &#x60;published_at&#x60; (now), &#x60;position&#x60; and &#x60;published&#x60; (true). An existing post with the same slug and locale is overwritten (upsert). Clears the public cache. Posts without a cover get a generated SVG cover at the next service start.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param createPostDto  (required)
+   * @return BlogPost
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerCreate(CreatePostDto createPostDto) throws ApiException {
-    blogControllerCreateWithHttpInfo(createPostDto);
+  public BlogPost blogControllerCreate(CreatePostDto createPostDto) throws ApiException {
+    ApiResponse<BlogPost> localVarResponse = blogControllerCreateWithHttpInfo(createPostDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create or replace a blog post
+   * Creates a post from &#x60;slug&#x60; and &#x60;title&#x60; with optional &#x60;locale&#x60; (&#x60;en&#x60;), &#x60;tag&#x60; (&#x60;News&#x60;), &#x60;author&#x60; (&#x60;Adviverse Team&#x60;), &#x60;excerpt&#x60;, Markdown &#x60;body&#x60;, &#x60;cover_image&#x60;, &#x60;published_at&#x60; (now), &#x60;position&#x60; and &#x60;published&#x60; (true). An existing post with the same slug and locale is overwritten (upsert). Clears the public cache. Posts without a cover get a generated SVG cover at the next service start.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param createPostDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BlogPost&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerCreateWithHttpInfo(CreatePostDto createPostDto) throws ApiException {
+  public ApiResponse<BlogPost> blogControllerCreateWithHttpInfo(CreatePostDto createPostDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerCreateRequestBuilder(createPostDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -202,17 +204,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerCreate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BlogPost>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BlogPost>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -254,25 +251,27 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Get a published blog post
+   * Public. Returns a published post by &#x60;slug&#x60; and &#x60;locale&#x60; (default &#x60;en&#x60;). An unknown or unpublished slug returns HTTP 200 with &#x60;{ error: \&quot;not_found\&quot; }&#x60;, not 404.  Auth: public, no credentials required.
    * @param slug  (required)
    * @param locale  (required)
+   * @return BlogControllerGet200Response
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerGet(String slug, String locale) throws ApiException {
-    blogControllerGetWithHttpInfo(slug, locale);
+  public BlogControllerGet200Response blogControllerGet(String slug, String locale) throws ApiException {
+    ApiResponse<BlogControllerGet200Response> localVarResponse = blogControllerGetWithHttpInfo(slug, locale);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a published blog post
+   * Public. Returns a published post by &#x60;slug&#x60; and &#x60;locale&#x60; (default &#x60;en&#x60;). An unknown or unpublished slug returns HTTP 200 with &#x60;{ error: \&quot;not_found\&quot; }&#x60;, not 404.  Auth: public, no credentials required.
    * @param slug  (required)
    * @param locale  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BlogControllerGet200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerGetWithHttpInfo(String slug, String locale) throws ApiException {
+  public ApiResponse<BlogControllerGet200Response> blogControllerGetWithHttpInfo(String slug, String locale) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerGetRequestBuilder(slug, locale);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -285,17 +284,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BlogControllerGet200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BlogControllerGet200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -351,21 +345,23 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Render the public blog index page
+   * Public, server-rendered HTML for /blog listing published English posts. Cached (max-age 300, s-maxage 3600).  Auth: public, no credentials required.
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerIndexHtml() throws ApiException {
-    blogControllerIndexHtmlWithHttpInfo();
+  public String blogControllerIndexHtml() throws ApiException {
+    ApiResponse<String> localVarResponse = blogControllerIndexHtmlWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Render the public blog index page
+   * Public, server-rendered HTML for /blog listing published English posts. Cached (max-age 300, s-maxage 3600).  Auth: public, no credentials required.
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerIndexHtmlWithHttpInfo() throws ApiException {
+  public ApiResponse<String> blogControllerIndexHtmlWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerIndexHtmlRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -378,17 +374,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerIndexHtml", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -407,7 +398,7 @@ public class BlogApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/html");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -420,25 +411,27 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * List published blog posts
+   * Public. Returns published posts for &#x60;locale&#x60; (default &#x60;en&#x60;), newest &#x60;published_at&#x60; first, optionally filtered by &#x60;tag&#x60;. Reads are cached in Redis for 60 seconds.  Auth: public, no credentials required.
    * @param locale  (required)
    * @param tag  (required)
+   * @return List&lt;BlogPost&gt;
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerList(String locale, String tag) throws ApiException {
-    blogControllerListWithHttpInfo(locale, tag);
+  public List<BlogPost> blogControllerList(String locale, String tag) throws ApiException {
+    ApiResponse<List<BlogPost>> localVarResponse = blogControllerListWithHttpInfo(locale, tag);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List published blog posts
+   * Public. Returns published posts for &#x60;locale&#x60; (default &#x60;en&#x60;), newest &#x60;published_at&#x60; first, optionally filtered by &#x60;tag&#x60;. Reads are cached in Redis for 60 seconds.  Auth: public, no credentials required.
    * @param locale  (required)
    * @param tag  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;BlogPost&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerListWithHttpInfo(String locale, String tag) throws ApiException {
+  public ApiResponse<List<BlogPost>> blogControllerListWithHttpInfo(String locale, String tag) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerListRequestBuilder(locale, tag);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -451,17 +444,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<BlogPost>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<BlogPost>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -518,23 +506,25 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Render a public blog post page
+   * Public, server-rendered HTML for one English post, with its Markdown body rendered escape-first. Unknown slugs return a 404 HTML page.  Auth: public, no credentials required.
    * @param slug  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerPageHtml(String slug) throws ApiException {
-    blogControllerPageHtmlWithHttpInfo(slug);
+  public String blogControllerPageHtml(String slug) throws ApiException {
+    ApiResponse<String> localVarResponse = blogControllerPageHtmlWithHttpInfo(slug);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Render a public blog post page
+   * Public, server-rendered HTML for one English post, with its Markdown body rendered escape-first. Unknown slugs return a 404 HTML page.  Auth: public, no credentials required.
    * @param slug  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerPageHtmlWithHttpInfo(String slug) throws ApiException {
+  public ApiResponse<String> blogControllerPageHtmlWithHttpInfo(String slug) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerPageHtmlRequestBuilder(slug);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -547,17 +537,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerPageHtml", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -581,7 +566,7 @@ public class BlogApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/html");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -594,23 +579,25 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a blog post
+   * Deletes the post and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerRemove(String id) throws ApiException {
-    blogControllerRemoveWithHttpInfo(id);
+  public AdminControllerSetStatus201Response blogControllerRemove(String id) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = blogControllerRemoveWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a blog post
+   * Deletes the post and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerRemoveWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> blogControllerRemoveWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerRemoveRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -623,17 +610,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerRemove", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -670,21 +652,23 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Get the blog sitemap
+   * Public XML sitemap listing /blog and every published English post page.  Auth: public, no credentials required.
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerSitemap() throws ApiException {
-    blogControllerSitemapWithHttpInfo();
+  public String blogControllerSitemap() throws ApiException {
+    ApiResponse<String> localVarResponse = blogControllerSitemapWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the blog sitemap
+   * Public XML sitemap listing /blog and every published English post page.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerSitemapWithHttpInfo() throws ApiException {
+  public ApiResponse<String> blogControllerSitemapWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerSitemapRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -697,17 +681,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerSitemap", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -726,7 +705,7 @@ public class BlogApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "application/xml");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -739,25 +718,27 @@ public class BlogApi {
   }
 
   /**
-   * 
-   * 
+   * Update a blog post
+   * Partially updates any post field (slug, locale, title, tag, author, excerpt, body, cover_image, position, published, published_at) and clears the public cache. Returns the updated post, or null for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param updatePostDto  (required)
+   * @return BlogPost
    * @throws ApiException if fails to make API call
    */
-  public void blogControllerUpdate(String id, UpdatePostDto updatePostDto) throws ApiException {
-    blogControllerUpdateWithHttpInfo(id, updatePostDto);
+  public BlogPost blogControllerUpdate(String id, UpdatePostDto updatePostDto) throws ApiException {
+    ApiResponse<BlogPost> localVarResponse = blogControllerUpdateWithHttpInfo(id, updatePostDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a blog post
+   * Partially updates any post field (slug, locale, title, tag, author, excerpt, body, cover_image, position, published, published_at) and clears the public cache. Returns the updated post, or null for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param updatePostDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BlogPost&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> blogControllerUpdateWithHttpInfo(String id, UpdatePostDto updatePostDto) throws ApiException {
+  public ApiResponse<BlogPost> blogControllerUpdateWithHttpInfo(String id, UpdatePostDto updatePostDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerUpdateRequestBuilder(id, updatePostDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -770,17 +751,12 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BlogPost>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BlogPost>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

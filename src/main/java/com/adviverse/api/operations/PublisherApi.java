@@ -17,9 +17,19 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AuthControllerResendVerification201Response;
 import com.adviverse.api.models.CreateAppDto;
 import com.adviverse.api.models.CreatePlacementDto;
 import com.adviverse.api.models.CreatePropertyDto;
+import com.adviverse.api.models.PubPlacement;
+import com.adviverse.api.models.PubProperty;
+import com.adviverse.api.models.PubServingDomain;
+import com.adviverse.api.models.PublisherControllerDisableSigning200Response;
+import com.adviverse.api.models.PublisherControllerDomainConnect201Response;
+import com.adviverse.api.models.PublisherControllerRotateSigningSecret201Response;
+import com.adviverse.api.models.PublisherControllerTag200Response;
+import com.adviverse.api.models.PublisherControllerVerify201Response;
+import com.adviverse.api.models.PublisherControllerVerifyServingDomain201Response;
 import com.adviverse.api.models.ServingDomainDto;
 import com.adviverse.api.models.UpdateAppDto;
 import com.adviverse.api.models.UpdatePlacementDto;
@@ -88,23 +98,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Get the app-ads.txt content for an app
+   * Returns plain-text app-ads.txt: a comment, the network&#39;s own &#x60;adviverse.com, &lt;publisherAccountId&gt;, DIRECT&#x60; line, then each configured authorized-seller entry (&#x60;domain, sellerId, DIRECT|RESELLER[, certId]&#x60;). 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerAppAdsTxt(String id) throws ApiException {
-    publisherControllerAppAdsTxtWithHttpInfo(id);
+  public String publisherControllerAppAdsTxt(String id) throws ApiException {
+    ApiResponse<String> localVarResponse = publisherControllerAppAdsTxtWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the app-ads.txt content for an app
+   * Returns plain-text app-ads.txt: a comment, the network&#39;s own &#x60;adviverse.com, &lt;publisherAccountId&gt;, DIRECT&#x60; line, then each configured authorized-seller entry (&#x60;domain, sellerId, DIRECT|RESELLER[, certId]&#x60;). 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerAppAdsTxtWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<String> publisherControllerAppAdsTxtWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerAppAdsTxtRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -117,17 +129,20 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerAppAdsTxt", localVarResponse);
         }
-        return new ApiResponse<Void>(
-          localVarResponse.statusCode(),
-          localVarResponse.headers().map(),
-          null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
+        // for plain text response
+        if (localVarResponse.headers().map().containsKey("Content-Type") &&
+                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
+          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
+          String responseBodyText = s.hasNext() ? s.next() : "";
+          return new ApiResponse<String>(
+                  localVarResponse.statusCode(),
+                  localVarResponse.headers().map(),
+                  responseBodyText
+          );
+        } else {
+            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
         }
-        localVarResponse.body().close();
+      } finally {
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -151,7 +166,7 @@ public class PublisherApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/plain");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -164,23 +179,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Register a mobile or CTV app
+   * Creates a &#x60;mobile_app&#x60; or &#x60;ctv&#x60; property from &#x60;kind&#x60;, &#x60;name&#x60;, &#x60;bundleId&#x60; and &#x60;platform&#x60; (ios, android, roku, firetv, appletv, androidtv, web), with optional &#x60;storeUrl&#x60;, &#x60;appStoreId&#x60;, &#x60;category&#x60; and &#x60;ctvMeta&#x60;. The bundle id is stored in both &#x60;bundle_id&#x60; and &#x60;domain&#x60;; the app enters the normal &#x60;pending&#x60; approval flow with file verification.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createAppDto  (required)
+   * @return PubProperty
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerCreateApp(CreateAppDto createAppDto) throws ApiException {
-    publisherControllerCreateAppWithHttpInfo(createAppDto);
+  public PubProperty publisherControllerCreateApp(CreateAppDto createAppDto) throws ApiException {
+    ApiResponse<PubProperty> localVarResponse = publisherControllerCreateAppWithHttpInfo(createAppDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Register a mobile or CTV app
+   * Creates a &#x60;mobile_app&#x60; or &#x60;ctv&#x60; property from &#x60;kind&#x60;, &#x60;name&#x60;, &#x60;bundleId&#x60; and &#x60;platform&#x60; (ios, android, roku, firetv, appletv, androidtv, web), with optional &#x60;storeUrl&#x60;, &#x60;appStoreId&#x60;, &#x60;category&#x60; and &#x60;ctvMeta&#x60;. The bundle id is stored in both &#x60;bundle_id&#x60; and &#x60;domain&#x60;; the app enters the normal &#x60;pending&#x60; approval flow with file verification.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createAppDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerCreateAppWithHttpInfo(CreateAppDto createAppDto) throws ApiException {
+  public ApiResponse<PubProperty> publisherControllerCreateAppWithHttpInfo(CreateAppDto createAppDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerCreateAppRequestBuilder(createAppDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -193,17 +210,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerCreateApp", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubProperty>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubProperty>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -245,23 +257,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Create a placement
+   * Creates an ad unit on one of your properties (&#x60;propertyId&#x60;, &#x60;name&#x60;, &#x60;format&#x60; required) with a generated &#x60;tag_key&#x60;. Optional fields cover size (&#x60;width&#x60;/&#x60;height&#x60; or &#x60;responsive&#x60;), &#x60;floorCpm&#x60;, &#x60;revShare&#x60; (defaults to the network rev-share), &#x60;auctionType&#x60; (default &#x60;first_price&#x60;), &#x60;passbackUrl&#x60;, &#x60;frequencyCap&#x60;, format &#x60;settings&#x60;, and yield fill (&#x60;houseOnly&#x60;, &#x60;houseShare&#x60; clamped to 0-1, &#x60;houseBackfill&#x60;, &#x60;floorFallback&#x60;). Popunders default to a 1-per-visitor-per-24h frequency cap unless &#x60;frequencyCap&#x60; is given (&#x60;{}&#x60; opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createPlacementDto  (required)
+   * @return PubPlacement
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerCreatePlacement(CreatePlacementDto createPlacementDto) throws ApiException {
-    publisherControllerCreatePlacementWithHttpInfo(createPlacementDto);
+  public PubPlacement publisherControllerCreatePlacement(CreatePlacementDto createPlacementDto) throws ApiException {
+    ApiResponse<PubPlacement> localVarResponse = publisherControllerCreatePlacementWithHttpInfo(createPlacementDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a placement
+   * Creates an ad unit on one of your properties (&#x60;propertyId&#x60;, &#x60;name&#x60;, &#x60;format&#x60; required) with a generated &#x60;tag_key&#x60;. Optional fields cover size (&#x60;width&#x60;/&#x60;height&#x60; or &#x60;responsive&#x60;), &#x60;floorCpm&#x60;, &#x60;revShare&#x60; (defaults to the network rev-share), &#x60;auctionType&#x60; (default &#x60;first_price&#x60;), &#x60;passbackUrl&#x60;, &#x60;frequencyCap&#x60;, format &#x60;settings&#x60;, and yield fill (&#x60;houseOnly&#x60;, &#x60;houseShare&#x60; clamped to 0-1, &#x60;houseBackfill&#x60;, &#x60;floorFallback&#x60;). Popunders default to a 1-per-visitor-per-24h frequency cap unless &#x60;frequencyCap&#x60; is given (&#x60;{}&#x60; opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createPlacementDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubPlacement&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerCreatePlacementWithHttpInfo(CreatePlacementDto createPlacementDto) throws ApiException {
+  public ApiResponse<PubPlacement> publisherControllerCreatePlacementWithHttpInfo(CreatePlacementDto createPlacementDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerCreatePlacementRequestBuilder(createPlacementDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -274,17 +288,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerCreatePlacement", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubPlacement>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubPlacement>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -326,23 +335,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Register a property
+   * Creates a property with a fresh &#x60;adviverse-verify-…&#x60; verification token. &#x60;domain&#x60; is required; &#x60;kind&#x60; defaults to &#x60;website&#x60; and &#x60;verificationMethod&#x60; to &#x60;dns&#x60;. Website properties start &#x60;unverified&#x60;/&#x60;pending&#x60; and must be verified before they serve. With &#x60;kind: \&quot;cli\&quot;&#x60; the property is a terminal/AI-agent tool: &#x60;domain&#x60; is treated as a tool name and turned into a unique slug, and the row is created already &#x60;verified&#x60; and &#x60;approved&#x60; (no domain to prove).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createPropertyDto  (required)
+   * @return PubProperty
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerCreateProperty(CreatePropertyDto createPropertyDto) throws ApiException {
-    publisherControllerCreatePropertyWithHttpInfo(createPropertyDto);
+  public PubProperty publisherControllerCreateProperty(CreatePropertyDto createPropertyDto) throws ApiException {
+    ApiResponse<PubProperty> localVarResponse = publisherControllerCreatePropertyWithHttpInfo(createPropertyDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Register a property
+   * Creates a property with a fresh &#x60;adviverse-verify-…&#x60; verification token. &#x60;domain&#x60; is required; &#x60;kind&#x60; defaults to &#x60;website&#x60; and &#x60;verificationMethod&#x60; to &#x60;dns&#x60;. Website properties start &#x60;unverified&#x60;/&#x60;pending&#x60; and must be verified before they serve. With &#x60;kind: \&quot;cli\&quot;&#x60; the property is a terminal/AI-agent tool: &#x60;domain&#x60; is treated as a tool name and turned into a unique slug, and the row is created already &#x60;verified&#x60; and &#x60;approved&#x60; (no domain to prove).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createPropertyDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerCreatePropertyWithHttpInfo(CreatePropertyDto createPropertyDto) throws ApiException {
+  public ApiResponse<PubProperty> publisherControllerCreatePropertyWithHttpInfo(CreatePropertyDto createPropertyDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerCreatePropertyRequestBuilder(createPropertyDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -355,17 +366,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerCreateProperty", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubProperty>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubProperty>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -407,23 +413,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Disable signed-tag enforcement
+   * Removes the placement&#39;s signing secret so it goes back to unsigned serving, and republishes the index. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PublisherControllerDisableSigning200Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerDisableSigning(String id) throws ApiException {
-    publisherControllerDisableSigningWithHttpInfo(id);
+  public PublisherControllerDisableSigning200Response publisherControllerDisableSigning(String id) throws ApiException {
+    ApiResponse<PublisherControllerDisableSigning200Response> localVarResponse = publisherControllerDisableSigningWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Disable signed-tag enforcement
+   * Removes the placement&#39;s signing secret so it goes back to unsigned serving, and republishes the index. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherControllerDisableSigning200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerDisableSigningWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PublisherControllerDisableSigning200Response> publisherControllerDisableSigningWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerDisableSigningRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -436,17 +444,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerDisableSigning", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherControllerDisableSigning200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerDisableSigning200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -483,23 +486,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Get a DomainConnect one-click DNS setup URL
+   * Discovers whether the property domain&#39;s DNS provider supports DomainConnect (TXT at &#x60;_domainconnect.&lt;domain&gt;&#x60;, then the provider settings &#x60;urlSyncUX&#x60;). If it does, returns &#x60;supported: true&#x60; with an &#x60;applyUrl&#x60; the user opens to approve writing the verification TXT record; afterwards call verify. On any discovery failure it returns &#x60;supported: false, method: \&quot;manual\&quot;&#x60; with the token so the publisher can add the TXT record by hand.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PublisherControllerDomainConnect201Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerDomainConnect(String id) throws ApiException {
-    publisherControllerDomainConnectWithHttpInfo(id);
+  public PublisherControllerDomainConnect201Response publisherControllerDomainConnect(String id) throws ApiException {
+    ApiResponse<PublisherControllerDomainConnect201Response> localVarResponse = publisherControllerDomainConnectWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a DomainConnect one-click DNS setup URL
+   * Discovers whether the property domain&#39;s DNS provider supports DomainConnect (TXT at &#x60;_domainconnect.&lt;domain&gt;&#x60;, then the provider settings &#x60;urlSyncUX&#x60;). If it does, returns &#x60;supported: true&#x60; with an &#x60;applyUrl&#x60; the user opens to approve writing the verification TXT record; afterwards call verify. On any discovery failure it returns &#x60;supported: false, method: \&quot;manual\&quot;&#x60; with the token so the publisher can add the TXT record by hand.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherControllerDomainConnect201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerDomainConnectWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PublisherControllerDomainConnect201Response> publisherControllerDomainConnectWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerDomainConnectRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -512,17 +517,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerDomainConnect", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherControllerDomainConnect201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerDomainConnect201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -559,23 +559,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Get a mobile or CTV app
+   * Returns one app/CTV property. 404 if it does not exist (or is a web property), 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PubProperty
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerGetApp(String id) throws ApiException {
-    publisherControllerGetAppWithHttpInfo(id);
+  public PubProperty publisherControllerGetApp(String id) throws ApiException {
+    ApiResponse<PubProperty> localVarResponse = publisherControllerGetAppWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a mobile or CTV app
+   * Returns one app/CTV property. 404 if it does not exist (or is a web property), 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerGetAppWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PubProperty> publisherControllerGetAppWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerGetAppRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -588,17 +590,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerGetApp", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubProperty>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubProperty>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -635,21 +632,23 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * List your mobile and CTV apps
+   * Returns the publisher&#39;s properties of kind &#x60;mobile_app&#x60; or &#x60;ctv&#x60;, newest first. Web properties are excluded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return List&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerListApps() throws ApiException {
-    publisherControllerListAppsWithHttpInfo();
+  public List<PubProperty> publisherControllerListApps() throws ApiException {
+    ApiResponse<List<PubProperty>> localVarResponse = publisherControllerListAppsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your mobile and CTV apps
+   * Returns the publisher&#39;s properties of kind &#x60;mobile_app&#x60; or &#x60;ctv&#x60;, newest first. Web properties are excluded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;List&lt;PubProperty&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerListAppsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<PubProperty>> publisherControllerListAppsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerListAppsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -662,17 +661,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerListApps", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<PubProperty>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<PubProperty>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -704,21 +698,23 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * List your placements
+   * Returns every non-deleted placement across all of the publisher&#39;s properties, newest first. Optional &#x60;limit&#x60;/&#x60;offset&#x60; paginate.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return List&lt;PubPlacement&gt;
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerListPlacements() throws ApiException {
-    publisherControllerListPlacementsWithHttpInfo();
+  public List<PubPlacement> publisherControllerListPlacements() throws ApiException {
+    ApiResponse<List<PubPlacement>> localVarResponse = publisherControllerListPlacementsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your placements
+   * Returns every non-deleted placement across all of the publisher&#39;s properties, newest first. Optional &#x60;limit&#x60;/&#x60;offset&#x60; paginate.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;List&lt;PubPlacement&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerListPlacementsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<PubPlacement>> publisherControllerListPlacementsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerListPlacementsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -731,17 +727,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerListPlacements", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<PubPlacement>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<PubPlacement>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -773,21 +764,23 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * List your properties
+   * Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first. Optional &#x60;limit&#x60; (1-500) and &#x60;offset&#x60; query params paginate; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return List&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerListProperties() throws ApiException {
-    publisherControllerListPropertiesWithHttpInfo();
+  public List<PubProperty> publisherControllerListProperties() throws ApiException {
+    ApiResponse<List<PubProperty>> localVarResponse = publisherControllerListPropertiesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your properties
+   * Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first. Optional &#x60;limit&#x60; (1-500) and &#x60;offset&#x60; query params paginate; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @return ApiResponse&lt;List&lt;PubProperty&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerListPropertiesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<PubProperty>> publisherControllerListPropertiesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerListPropertiesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -800,17 +793,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerListProperties", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<PubProperty>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<PubProperty>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -842,23 +830,106 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Get the ads.txt lines for a property
+   * Returns the plain-text ads.txt content to publish at &#x60;https://&lt;domain&gt;/ads.txt&#x60;: a comment line plus &#x60;adviverse.com, &lt;publisherAccountId&gt;, DIRECT&#x60; (the seller id matches sellers.json). 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerRemoveProperty(String id) throws ApiException {
-    publisherControllerRemovePropertyWithHttpInfo(id);
+  public String publisherControllerPropertyAdsTxt(String id) throws ApiException {
+    ApiResponse<String> localVarResponse = publisherControllerPropertyAdsTxtWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the ads.txt lines for a property
+   * Returns the plain-text ads.txt content to publish at &#x60;https://&lt;domain&gt;/ads.txt&#x60;: a comment line plus &#x60;adviverse.com, &lt;publisherAccountId&gt;, DIRECT&#x60; (the seller id matches sellers.json). 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerRemovePropertyWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<String> publisherControllerPropertyAdsTxtWithHttpInfo(String id) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = publisherControllerPropertyAdsTxtRequestBuilder(id);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("publisherControllerPropertyAdsTxt", localVarResponse);
+        }
+        // for plain text response
+        if (localVarResponse.headers().map().containsKey("Content-Type") &&
+                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
+          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
+          String responseBodyText = s.hasNext() ? s.next() : "";
+          return new ApiResponse<String>(
+                  localVarResponse.statusCode(),
+                  localVarResponse.headers().map(),
+                  responseBodyText
+          );
+        } else {
+            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
+        }
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder publisherControllerPropertyAdsTxtRequestBuilder(String id) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling publisherControllerPropertyAdsTxt");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/publisher/properties/{id}/ads.txt"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "text/plain");
+
+    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Delete a property
+   * Soft-deletes the property and all of its placements, then republishes the serving index so ads stop promptly. 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @return AuthControllerResendVerification201Response
+   * @throws ApiException if fails to make API call
+   */
+  public AuthControllerResendVerification201Response publisherControllerRemoveProperty(String id) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = publisherControllerRemovePropertyWithHttpInfo(id);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Delete a property
+   * Soft-deletes the property and all of its placements, then republishes the serving index so ads stop promptly. 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<AuthControllerResendVerification201Response> publisherControllerRemovePropertyWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerRemovePropertyRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -871,17 +942,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerRemoveProperty", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -918,23 +984,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Remove the first-party serving domain
+   * Clears the property&#39;s custom serving domain; tags fall back to the default serving edge and the edge stops issuing certificates for the old host. 404/403 if the property is not found or not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PubServingDomain
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerRemoveServingDomain(String id) throws ApiException {
-    publisherControllerRemoveServingDomainWithHttpInfo(id);
+  public PubServingDomain publisherControllerRemoveServingDomain(String id) throws ApiException {
+    ApiResponse<PubServingDomain> localVarResponse = publisherControllerRemoveServingDomainWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Remove the first-party serving domain
+   * Clears the property&#39;s custom serving domain; tags fall back to the default serving edge and the edge stops issuing certificates for the old host. 404/403 if the property is not found or not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubServingDomain&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerRemoveServingDomainWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PubServingDomain> publisherControllerRemoveServingDomainWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerRemoveServingDomainRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -947,17 +1015,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerRemoveServingDomain", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubServingDomain>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubServingDomain>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -994,23 +1057,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Generate or rotate a placement signing secret
+   * Creates a new &#x60;tsk_…&#x60; HMAC secret for the placement, replacing any previous one, and republishes the index. With a secret set, the engine only serves terminal requests (and accepts integrity pings) that carry a valid signature, so embed it in your signing client. The secret is returned only once. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PublisherControllerRotateSigningSecret201Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerRotateSigningSecret(String id) throws ApiException {
-    publisherControllerRotateSigningSecretWithHttpInfo(id);
+  public PublisherControllerRotateSigningSecret201Response publisherControllerRotateSigningSecret(String id) throws ApiException {
+    ApiResponse<PublisherControllerRotateSigningSecret201Response> localVarResponse = publisherControllerRotateSigningSecretWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Generate or rotate a placement signing secret
+   * Creates a new &#x60;tsk_…&#x60; HMAC secret for the placement, replacing any previous one, and republishes the index. With a secret set, the engine only serves terminal requests (and accepts integrity pings) that carry a valid signature, so embed it in your signing client. The secret is returned only once. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherControllerRotateSigningSecret201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerRotateSigningSecretWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PublisherControllerRotateSigningSecret201Response> publisherControllerRotateSigningSecretWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerRotateSigningSecretRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1023,17 +1088,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerRotateSigningSecret", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherControllerRotateSigningSecret201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerRotateSigningSecret201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1070,25 +1130,27 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Set a first-party serving domain
+   * Sets the property&#39;s custom ad-serving hostname (anti-adblock). Body &#x60;{ domain }&#x60; is normalized to a bare hostname; an empty/missing domain clears it. The domain starts unverified: the publisher must CNAME it to &#x60;cname_target&#x60; and call the verify endpoint before tags use it. 400 for an invalid hostname or one already held by another property.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param servingDomainDto  (required)
+   * @return PubServingDomain
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerSetServingDomain(String id, ServingDomainDto servingDomainDto) throws ApiException {
-    publisherControllerSetServingDomainWithHttpInfo(id, servingDomainDto);
+  public PubServingDomain publisherControllerSetServingDomain(String id, ServingDomainDto servingDomainDto) throws ApiException {
+    ApiResponse<PubServingDomain> localVarResponse = publisherControllerSetServingDomainWithHttpInfo(id, servingDomainDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set a first-party serving domain
+   * Sets the property&#39;s custom ad-serving hostname (anti-adblock). Body &#x60;{ domain }&#x60; is normalized to a bare hostname; an empty/missing domain clears it. The domain starts unverified: the publisher must CNAME it to &#x60;cname_target&#x60; and call the verify endpoint before tags use it. 400 for an invalid hostname or one already held by another property.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param servingDomainDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubServingDomain&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerSetServingDomainWithHttpInfo(String id, ServingDomainDto servingDomainDto) throws ApiException {
+  public ApiResponse<PubServingDomain> publisherControllerSetServingDomainWithHttpInfo(String id, ServingDomainDto servingDomainDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerSetServingDomainRequestBuilder(id, servingDomainDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1101,17 +1163,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerSetServingDomain", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubServingDomain>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubServingDomain>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1158,23 +1215,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Get the embed code for a placement
+   * Returns the integration snippet for the placement, shaped by format: &#x60;script&#x60; (SDK &#x60;&lt;script&gt;&#x60; loader) for web formats, &#x60;directUrl&#x60; for &#x60;direct_link&#x60;, &#x60;emailSnippet&#x60; (tracked image + link with a &#x60;{{RECIPIENT}}&#x60; merge field) for &#x60;email&#x60;, and an HTTP &#x60;endpoint&#x60; for &#x60;terminal&#x60;. If the property has a verified first-party serving domain the snippet points at it and &#x60;firstParty&#x60; is true. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PublisherControllerTag200Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerTag(String id) throws ApiException {
-    publisherControllerTagWithHttpInfo(id);
+  public PublisherControllerTag200Response publisherControllerTag(String id) throws ApiException {
+    ApiResponse<PublisherControllerTag200Response> localVarResponse = publisherControllerTagWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the embed code for a placement
+   * Returns the integration snippet for the placement, shaped by format: &#x60;script&#x60; (SDK &#x60;&lt;script&gt;&#x60; loader) for web formats, &#x60;directUrl&#x60; for &#x60;direct_link&#x60;, &#x60;emailSnippet&#x60; (tracked image + link with a &#x60;{{RECIPIENT}}&#x60; merge field) for &#x60;email&#x60;, and an HTTP &#x60;endpoint&#x60; for &#x60;terminal&#x60;. If the property has a verified first-party serving domain the snippet points at it and &#x60;firstParty&#x60; is true. 404 if not your placement.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherControllerTag200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerTagWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PublisherControllerTag200Response> publisherControllerTagWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerTagRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1187,17 +1246,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerTag", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherControllerTag200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerTag200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1234,25 +1288,27 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Update app-ads.txt, SKAdNetwork and CTV metadata
+   * Patches only the fields sent: &#x60;appAdsTxt&#x60; (authorized-seller entries &#x60;{domain, sellerId, relationship?, certId?}&#x60;, normalized and invalid ones dropped), &#x60;skadnetworkIds&#x60;, &#x60;ctvMeta&#x60;, &#x60;storeUrl&#x60;, &#x60;platform&#x60;. Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updateAppDto  (required)
+   * @return PubProperty
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerUpdateApp(String id, UpdateAppDto updateAppDto) throws ApiException {
-    publisherControllerUpdateAppWithHttpInfo(id, updateAppDto);
+  public PubProperty publisherControllerUpdateApp(String id, UpdateAppDto updateAppDto) throws ApiException {
+    ApiResponse<PubProperty> localVarResponse = publisherControllerUpdateAppWithHttpInfo(id, updateAppDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update app-ads.txt, SKAdNetwork and CTV metadata
+   * Patches only the fields sent: &#x60;appAdsTxt&#x60; (authorized-seller entries &#x60;{domain, sellerId, relationship?, certId?}&#x60;, normalized and invalid ones dropped), &#x60;skadnetworkIds&#x60;, &#x60;ctvMeta&#x60;, &#x60;storeUrl&#x60;, &#x60;platform&#x60;. Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updateAppDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerUpdateAppWithHttpInfo(String id, UpdateAppDto updateAppDto) throws ApiException {
+  public ApiResponse<PubProperty> publisherControllerUpdateAppWithHttpInfo(String id, UpdateAppDto updateAppDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerUpdateAppRequestBuilder(id, updateAppDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1265,17 +1321,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerUpdateApp", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubProperty>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubProperty>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1322,25 +1373,27 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Update a placement
+   * Patches &#x60;name&#x60;, &#x60;floorCpm&#x60;, &#x60;revShare&#x60;, &#x60;auctionType&#x60;, &#x60;passbackUrl&#x60;, &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;), house/yield flags, and the dynamic-floor settings &#x60;floorAuto&#x60; (let the yield optimizer manage the floor) and &#x60;floorSoft&#x60; (soft reserve). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePlacementDto  (required)
+   * @return PubPlacement
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerUpdatePlacement(String id, UpdatePlacementDto updatePlacementDto) throws ApiException {
-    publisherControllerUpdatePlacementWithHttpInfo(id, updatePlacementDto);
+  public PubPlacement publisherControllerUpdatePlacement(String id, UpdatePlacementDto updatePlacementDto) throws ApiException {
+    ApiResponse<PubPlacement> localVarResponse = publisherControllerUpdatePlacementWithHttpInfo(id, updatePlacementDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a placement
+   * Patches &#x60;name&#x60;, &#x60;floorCpm&#x60;, &#x60;revShare&#x60;, &#x60;auctionType&#x60;, &#x60;passbackUrl&#x60;, &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;), house/yield flags, and the dynamic-floor settings &#x60;floorAuto&#x60; (let the yield optimizer manage the floor) and &#x60;floorSoft&#x60; (soft reserve). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePlacementDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubPlacement&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerUpdatePlacementWithHttpInfo(String id, UpdatePlacementDto updatePlacementDto) throws ApiException {
+  public ApiResponse<PubPlacement> publisherControllerUpdatePlacementWithHttpInfo(String id, UpdatePlacementDto updatePlacementDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerUpdatePlacementRequestBuilder(id, updatePlacementDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1353,17 +1406,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerUpdatePlacement", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubPlacement>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubPlacement>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1410,25 +1458,27 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Update a property
+   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePropertyDto  (required)
+   * @return PubProperty
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerUpdateProperty(String id, UpdatePropertyDto updatePropertyDto) throws ApiException {
-    publisherControllerUpdatePropertyWithHttpInfo(id, updatePropertyDto);
+  public PubProperty publisherControllerUpdateProperty(String id, UpdatePropertyDto updatePropertyDto) throws ApiException {
+    ApiResponse<PubProperty> localVarResponse = publisherControllerUpdatePropertyWithHttpInfo(id, updatePropertyDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a property
+   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePropertyDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerUpdatePropertyWithHttpInfo(String id, UpdatePropertyDto updatePropertyDto) throws ApiException {
+  public ApiResponse<PubProperty> publisherControllerUpdatePropertyWithHttpInfo(String id, UpdatePropertyDto updatePropertyDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerUpdatePropertyRequestBuilder(id, updatePropertyDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1441,17 +1491,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerUpdateProperty", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PubProperty>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubProperty>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1498,23 +1543,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Verify property ownership
+   * Checks the property for its verification token using its method: &#x60;dns&#x60; looks up a TXT record at &#x60;adviverse-verify.&lt;domain&gt;&#x60;, &#x60;file&#x60; fetches &#x60;http://&lt;domain&gt;/.well-known/adviverse-verify.txt&#x60;, &#x60;meta&#x60; fetches the homepage and looks for the token. On success the property becomes &#x60;verified&#x60;, a &#x60;pending&#x60; property is auto-approved, and the serving index is republished so its placements start serving. A failed check is not an error: it returns &#x60;verified: false&#x60; with the token and method to show the publisher.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PublisherControllerVerify201Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerVerify(String id) throws ApiException {
-    publisherControllerVerifyWithHttpInfo(id);
+  public PublisherControllerVerify201Response publisherControllerVerify(String id) throws ApiException {
+    ApiResponse<PublisherControllerVerify201Response> localVarResponse = publisherControllerVerifyWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Verify property ownership
+   * Checks the property for its verification token using its method: &#x60;dns&#x60; looks up a TXT record at &#x60;adviverse-verify.&lt;domain&gt;&#x60;, &#x60;file&#x60; fetches &#x60;http://&lt;domain&gt;/.well-known/adviverse-verify.txt&#x60;, &#x60;meta&#x60; fetches the homepage and looks for the token. On success the property becomes &#x60;verified&#x60;, a &#x60;pending&#x60; property is auto-approved, and the serving index is republished so its placements start serving. A failed check is not an error: it returns &#x60;verified: false&#x60; with the token and method to show the publisher.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherControllerVerify201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerVerifyWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PublisherControllerVerify201Response> publisherControllerVerifyWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerVerifyRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1527,17 +1574,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerVerify", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherControllerVerify201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerVerify201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1574,23 +1616,25 @@ public class PublisherApi {
   }
 
   /**
-   * 
-   * 
+   * Verify the first-party serving domain
+   * Checks that the serving domain CNAMEs to the serving edge (or, for flattened CNAME/ALIAS records, resolves to the same A records). Stores the result and refreshes the edge router config; once verified, generated tags load from &#x60;https://&lt;serving_domain&gt;&#x60; and the edge will issue TLS for it. 400 if no serving domain is set.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return PublisherControllerVerifyServingDomain201Response
    * @throws ApiException if fails to make API call
    */
-  public void publisherControllerVerifyServingDomain(String id) throws ApiException {
-    publisherControllerVerifyServingDomainWithHttpInfo(id);
+  public PublisherControllerVerifyServingDomain201Response publisherControllerVerifyServingDomain(String id) throws ApiException {
+    ApiResponse<PublisherControllerVerifyServingDomain201Response> localVarResponse = publisherControllerVerifyServingDomainWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Verify the first-party serving domain
+   * Checks that the serving domain CNAMEs to the serving edge (or, for flattened CNAME/ALIAS records, resolves to the same A records). Stores the result and refreshes the edge router config; once verified, generated tags load from &#x60;https://&lt;serving_domain&gt;&#x60; and the edge will issue TLS for it. 400 if no serving domain is set.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PublisherControllerVerifyServingDomain201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> publisherControllerVerifyServingDomainWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PublisherControllerVerifyServingDomain201Response> publisherControllerVerifyServingDomainWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = publisherControllerVerifyServingDomainRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1603,17 +1647,12 @@ public class PublisherApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("publisherControllerVerifyServingDomain", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PublisherControllerVerifyServingDomain201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerVerifyServingDomain201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

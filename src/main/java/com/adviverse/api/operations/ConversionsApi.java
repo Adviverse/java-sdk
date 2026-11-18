@@ -17,6 +17,9 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.ConversionsControllerTrackGet200Response;
+import com.adviverse.api.models.ConversionsControllerTrackPost201Response;
+import com.adviverse.api.models.ConversionsControllerTrackRefund201Response;
 import com.adviverse.api.models.RefundDto;
 import com.adviverse.api.models.TrackConversionDto;
 
@@ -83,8 +86,8 @@ public class ConversionsApi {
   }
 
   /**
-   * 
-   * 
+   * Retargeting pixel: add the visitor to an audience
+   * Adds the visitor&#39;s &#x60;adnet_uid&#x60; first-party cookie (minted on first contact) to audience &#x60;aud&#x60;, plus an advertiser-supplied &#x60;uid&#x60; when given. Only existing audiences accept members, and each audience has a size cap. GPC or &#x60;ac&#x3D;0&#x60;/&#x60;ac&#x3D;n&#x60; opts the visitor out: no cookie is set and no membership is recorded. Always responds with a 1x1 GIF.  Auth: public, no credentials required.
    * @throws ApiException if fails to make API call
    */
   public void conversionsControllerTrackAudience() throws ApiException {
@@ -92,8 +95,8 @@ public class ConversionsApi {
   }
 
   /**
-   * 
-   * 
+   * Retargeting pixel: add the visitor to an audience
+   * Adds the visitor&#39;s &#x60;adnet_uid&#x60; first-party cookie (minted on first contact) to audience &#x60;aud&#x60;, plus an advertiser-supplied &#x60;uid&#x60; when given. Only existing audiences accept members, and each audience has a size cap. GPC or &#x60;ac&#x3D;0&#x60;/&#x60;ac&#x3D;n&#x60; opts the visitor out: no cookie is set and no membership is recorded. Always responds with a 1x1 GIF.  Auth: public, no credentials required.
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
@@ -152,21 +155,23 @@ public class ConversionsApi {
   }
 
   /**
-   * 
-   * 
+   * Record an S2S conversion postback (GET)
+   * Advertiser server-to-server postback keyed by &#x60;click_id&#x60;, with optional &#x60;value&#x60;, &#x60;order_id&#x60; and &#x60;order_value&#x60; query params. The click context cached by the ad engine resolves the campaign; the billed payout always comes from the campaign&#39;s server-side CPA config (flat or percent of order), never from the request. One conversion per click and one per (advertiser, order_id); orders below the configured minimum are rejected, and sponsored CPC clicks are skipped because they bill on the click. A recorded conversion emits the conversion event and fires the advertiser&#39;s outbound postback if one is configured.  Auth: public, no credentials required.
+   * @return ConversionsControllerTrackGet200Response
    * @throws ApiException if fails to make API call
    */
-  public void conversionsControllerTrackGet() throws ApiException {
-    conversionsControllerTrackGetWithHttpInfo();
+  public ConversionsControllerTrackGet200Response conversionsControllerTrackGet() throws ApiException {
+    ApiResponse<ConversionsControllerTrackGet200Response> localVarResponse = conversionsControllerTrackGetWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Record an S2S conversion postback (GET)
+   * Advertiser server-to-server postback keyed by &#x60;click_id&#x60;, with optional &#x60;value&#x60;, &#x60;order_id&#x60; and &#x60;order_value&#x60; query params. The click context cached by the ad engine resolves the campaign; the billed payout always comes from the campaign&#39;s server-side CPA config (flat or percent of order), never from the request. One conversion per click and one per (advertiser, order_id); orders below the configured minimum are rejected, and sponsored CPC clicks are skipped because they bill on the click. A recorded conversion emits the conversion event and fires the advertiser&#39;s outbound postback if one is configured.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;ConversionsControllerTrackGet200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> conversionsControllerTrackGetWithHttpInfo() throws ApiException {
+  public ApiResponse<ConversionsControllerTrackGet200Response> conversionsControllerTrackGetWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = conversionsControllerTrackGetRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -179,17 +184,12 @@ public class ConversionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("conversionsControllerTrackGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ConversionsControllerTrackGet200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ConversionsControllerTrackGet200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -221,23 +221,25 @@ public class ConversionsApi {
   }
 
   /**
-   * 
-   * 
+   * Record an S2S conversion postback (POST)
+   * JSON form of the conversion postback. Accepts &#x60;clickId&#x60;/&#x60;click_id&#x60;, &#x60;value&#x60;, &#x60;orderId&#x60;/&#x60;order_id&#x60; and &#x60;orderValue&#x60;/&#x60;order_value&#x60;, in camelCase or snake_case. Behaviour matches the GET form: dedup per click and per order, payout from the server-side CPA config, minimum-order check, and a &#x60;postbackId&#x60; returned when recorded. Unknown body fields are rejected with 400.  Auth: public, no credentials required.
    * @param trackConversionDto  (required)
+   * @return ConversionsControllerTrackPost201Response
    * @throws ApiException if fails to make API call
    */
-  public void conversionsControllerTrackPost(TrackConversionDto trackConversionDto) throws ApiException {
-    conversionsControllerTrackPostWithHttpInfo(trackConversionDto);
+  public ConversionsControllerTrackPost201Response conversionsControllerTrackPost(TrackConversionDto trackConversionDto) throws ApiException {
+    ApiResponse<ConversionsControllerTrackPost201Response> localVarResponse = conversionsControllerTrackPostWithHttpInfo(trackConversionDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Record an S2S conversion postback (POST)
+   * JSON form of the conversion postback. Accepts &#x60;clickId&#x60;/&#x60;click_id&#x60;, &#x60;value&#x60;, &#x60;orderId&#x60;/&#x60;order_id&#x60; and &#x60;orderValue&#x60;/&#x60;order_value&#x60;, in camelCase or snake_case. Behaviour matches the GET form: dedup per click and per order, payout from the server-side CPA config, minimum-order check, and a &#x60;postbackId&#x60; returned when recorded. Unknown body fields are rejected with 400.  Auth: public, no credentials required.
    * @param trackConversionDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ConversionsControllerTrackPost201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> conversionsControllerTrackPostWithHttpInfo(TrackConversionDto trackConversionDto) throws ApiException {
+  public ApiResponse<ConversionsControllerTrackPost201Response> conversionsControllerTrackPostWithHttpInfo(TrackConversionDto trackConversionDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = conversionsControllerTrackPostRequestBuilder(trackConversionDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -250,17 +252,12 @@ public class ConversionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("conversionsControllerTrackPost", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ConversionsControllerTrackPost201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ConversionsControllerTrackPost201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -302,23 +299,25 @@ public class ConversionsApi {
   }
 
   /**
-   * 
-   * 
+   * Report a refund or chargeback for an order
+   * Claws back a held or settled per-checkout CPA conversion identified by &#x60;orderId&#x60;/&#x60;order_id&#x60;, optionally narrowed by &#x60;advertiserId&#x60;/&#x60;advertiser_id&#x60;. Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns &#x60;error&#x60;, an unknown order &#x60;not_found&#x60;, and a repeat call &#x60;already_refunded&#x60;.  Auth: public, no credentials required.
    * @param refundDto  (required)
+   * @return ConversionsControllerTrackRefund201Response
    * @throws ApiException if fails to make API call
    */
-  public void conversionsControllerTrackRefund(RefundDto refundDto) throws ApiException {
-    conversionsControllerTrackRefundWithHttpInfo(refundDto);
+  public ConversionsControllerTrackRefund201Response conversionsControllerTrackRefund(RefundDto refundDto) throws ApiException {
+    ApiResponse<ConversionsControllerTrackRefund201Response> localVarResponse = conversionsControllerTrackRefundWithHttpInfo(refundDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Report a refund or chargeback for an order
+   * Claws back a held or settled per-checkout CPA conversion identified by &#x60;orderId&#x60;/&#x60;order_id&#x60;, optionally narrowed by &#x60;advertiserId&#x60;/&#x60;advertiser_id&#x60;. Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns &#x60;error&#x60;, an unknown order &#x60;not_found&#x60;, and a repeat call &#x60;already_refunded&#x60;.  Auth: public, no credentials required.
    * @param refundDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ConversionsControllerTrackRefund201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> conversionsControllerTrackRefundWithHttpInfo(RefundDto refundDto) throws ApiException {
+  public ApiResponse<ConversionsControllerTrackRefund201Response> conversionsControllerTrackRefundWithHttpInfo(RefundDto refundDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = conversionsControllerTrackRefundRequestBuilder(refundDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -331,17 +330,12 @@ public class ConversionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("conversionsControllerTrackRefund", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ConversionsControllerTrackRefund201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ConversionsControllerTrackRefund201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

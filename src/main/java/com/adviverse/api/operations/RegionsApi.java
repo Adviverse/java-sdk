@@ -18,6 +18,9 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.CreateRegionDto;
+import com.adviverse.api.models.RegionsControllerHealth200ResponseInner;
+import com.adviverse.api.models.RegionsControllerNearest200Response;
+import com.adviverse.api.models.RewRegion;
 import com.adviverse.api.models.UpdateRegionDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -83,23 +86,25 @@ public class RegionsApi {
   }
 
   /**
-   * 
-   * 
+   * Create a serving region
+   * Adds a region from &#x60;code&#x60; (lowercase slug, unique), &#x60;name&#x60;, &#x60;public_endpoint&#x60;, &#x60;lat&#x60;, &#x60;lng&#x60;, optional &#x60;country_codes&#x60; (uppercased), &#x60;status&#x60; (active, draining, disabled; default active) and &#x60;priority&#x60; (default 100, lower wins). Invalidates the region cache.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param createRegionDto  (required)
+   * @return RewRegion
    * @throws ApiException if fails to make API call
    */
-  public void regionsControllerCreate(CreateRegionDto createRegionDto) throws ApiException {
-    regionsControllerCreateWithHttpInfo(createRegionDto);
+  public RewRegion regionsControllerCreate(CreateRegionDto createRegionDto) throws ApiException {
+    ApiResponse<RewRegion> localVarResponse = regionsControllerCreateWithHttpInfo(createRegionDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a serving region
+   * Adds a region from &#x60;code&#x60; (lowercase slug, unique), &#x60;name&#x60;, &#x60;public_endpoint&#x60;, &#x60;lat&#x60;, &#x60;lng&#x60;, optional &#x60;country_codes&#x60; (uppercased), &#x60;status&#x60; (active, draining, disabled; default active) and &#x60;priority&#x60; (default 100, lower wins). Invalidates the region cache.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param createRegionDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewRegion&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> regionsControllerCreateWithHttpInfo(CreateRegionDto createRegionDto) throws ApiException {
+  public ApiResponse<RewRegion> regionsControllerCreateWithHttpInfo(CreateRegionDto createRegionDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = regionsControllerCreateRequestBuilder(createRegionDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -112,17 +117,12 @@ public class RegionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("regionsControllerCreate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewRegion>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewRegion>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -164,21 +164,23 @@ public class RegionsApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-region engine health
+   * Public. Probes every configured region&#39;s engine &#x60;/healthz&#x60; (1.5s timeout) and reports whether it is up with its indexed campaign and placement counts and version. Unreachable engines report &#x60;up: false&#x60; with null metrics.  Auth: public, no credentials required.
+   * @return List&lt;RegionsControllerHealth200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void regionsControllerHealth() throws ApiException {
-    regionsControllerHealthWithHttpInfo();
+  public List<RegionsControllerHealth200ResponseInner> regionsControllerHealth() throws ApiException {
+    ApiResponse<List<RegionsControllerHealth200ResponseInner>> localVarResponse = regionsControllerHealthWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get per-region engine health
+   * Public. Probes every configured region&#39;s engine &#x60;/healthz&#x60; (1.5s timeout) and reports whether it is up with its indexed campaign and placement counts and version. Unreachable engines report &#x60;up: false&#x60; with null metrics.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;List&lt;RegionsControllerHealth200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> regionsControllerHealthWithHttpInfo() throws ApiException {
+  public ApiResponse<List<RegionsControllerHealth200ResponseInner>> regionsControllerHealthWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = regionsControllerHealthRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -191,17 +193,12 @@ public class RegionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("regionsControllerHealth", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<RegionsControllerHealth200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<RegionsControllerHealth200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -233,21 +230,23 @@ public class RegionsApi {
   }
 
   /**
-   * 
-   * 
+   * List active serving regions
+   * Public. Returns the active ad-engine regions ordered by priority, served from a 30-second in-memory cache.  Auth: public, no credentials required.
+   * @return List&lt;RewRegion&gt;
    * @throws ApiException if fails to make API call
    */
-  public void regionsControllerList() throws ApiException {
-    regionsControllerListWithHttpInfo();
+  public List<RewRegion> regionsControllerList() throws ApiException {
+    ApiResponse<List<RewRegion>> localVarResponse = regionsControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List active serving regions
+   * Public. Returns the active ad-engine regions ordered by priority, served from a 30-second in-memory cache.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;List&lt;RewRegion&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> regionsControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<RewRegion>> regionsControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = regionsControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -260,17 +259,12 @@ public class RegionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("regionsControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<RewRegion>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<RewRegion>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -302,27 +296,29 @@ public class RegionsApi {
   }
 
   /**
-   * 
-   * 
+   * Resolve the best serving region
+   * Public and fail-soft; the SDK calls it before auth to choose an engine. Matches &#x60;?country&#x3D;&#x60; (ISO alpha-2) against region country lists, else picks the nearest region to &#x60;?lat&#x3D;&amp;lng&#x3D;&#x60;, else the highest-priority region. Falls back to a built-in default region if none are configured or lookup fails.  Auth: public, no credentials required.
    * @param country  (required)
    * @param lat  (required)
    * @param lng  (required)
+   * @return RegionsControllerNearest200Response
    * @throws ApiException if fails to make API call
    */
-  public void regionsControllerNearest(String country, String lat, String lng) throws ApiException {
-    regionsControllerNearestWithHttpInfo(country, lat, lng);
+  public RegionsControllerNearest200Response regionsControllerNearest(String country, String lat, String lng) throws ApiException {
+    ApiResponse<RegionsControllerNearest200Response> localVarResponse = regionsControllerNearestWithHttpInfo(country, lat, lng);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Resolve the best serving region
+   * Public and fail-soft; the SDK calls it before auth to choose an engine. Matches &#x60;?country&#x3D;&#x60; (ISO alpha-2) against region country lists, else picks the nearest region to &#x60;?lat&#x3D;&amp;lng&#x3D;&#x60;, else the highest-priority region. Falls back to a built-in default region if none are configured or lookup fails.  Auth: public, no credentials required.
    * @param country  (required)
    * @param lat  (required)
    * @param lng  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RegionsControllerNearest200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> regionsControllerNearestWithHttpInfo(String country, String lat, String lng) throws ApiException {
+  public ApiResponse<RegionsControllerNearest200Response> regionsControllerNearestWithHttpInfo(String country, String lat, String lng) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = regionsControllerNearestRequestBuilder(country, lat, lng);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -335,17 +331,12 @@ public class RegionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("regionsControllerNearest", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RegionsControllerNearest200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RegionsControllerNearest200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -408,25 +399,27 @@ public class RegionsApi {
   }
 
   /**
-   * 
-   * 
+   * Update a serving region
+   * Patches &#x60;status&#x60;, &#x60;public_endpoint&#x60;, &#x60;priority&#x60;, &#x60;country_codes&#x60; or &#x60;name&#x60; of the region with UUID &#x60;id&#x60; and invalidates the cache. 404 if the region does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param updateRegionDto  (required)
+   * @return RewRegion
    * @throws ApiException if fails to make API call
    */
-  public void regionsControllerUpdate(String id, UpdateRegionDto updateRegionDto) throws ApiException {
-    regionsControllerUpdateWithHttpInfo(id, updateRegionDto);
+  public RewRegion regionsControllerUpdate(String id, UpdateRegionDto updateRegionDto) throws ApiException {
+    ApiResponse<RewRegion> localVarResponse = regionsControllerUpdateWithHttpInfo(id, updateRegionDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a serving region
+   * Patches &#x60;status&#x60;, &#x60;public_endpoint&#x60;, &#x60;priority&#x60;, &#x60;country_codes&#x60; or &#x60;name&#x60; of the region with UUID &#x60;id&#x60; and invalidates the cache. 404 if the region does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param updateRegionDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewRegion&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> regionsControllerUpdateWithHttpInfo(String id, UpdateRegionDto updateRegionDto) throws ApiException {
+  public ApiResponse<RewRegion> regionsControllerUpdateWithHttpInfo(String id, UpdateRegionDto updateRegionDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = regionsControllerUpdateRequestBuilder(id, updateRegionDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -439,17 +432,12 @@ public class RegionsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("regionsControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewRegion>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewRegion>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

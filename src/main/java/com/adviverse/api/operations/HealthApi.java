@@ -17,6 +17,7 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.HealthControllerHealth200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +82,23 @@ public class HealthApi {
   }
 
   /**
-   * 
-   * 
+   * Control-plane health check
+   * Liveness check that also runs &#x60;SELECT 1&#x60; against Postgres. Returns &#x60;status: \&quot;ok\&quot;&#x60; when the database answers, otherwise &#x60;degraded&#x60; with &#x60;db: false&#x60; (still HTTP 200). No authentication.  Auth: public, no credentials required.
+   * @return HealthControllerHealth200Response
    * @throws ApiException if fails to make API call
    */
-  public void healthControllerHealth() throws ApiException {
-    healthControllerHealthWithHttpInfo();
+  public HealthControllerHealth200Response healthControllerHealth() throws ApiException {
+    ApiResponse<HealthControllerHealth200Response> localVarResponse = healthControllerHealthWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Control-plane health check
+   * Liveness check that also runs &#x60;SELECT 1&#x60; against Postgres. Returns &#x60;status: \&quot;ok\&quot;&#x60; when the database answers, otherwise &#x60;degraded&#x60; with &#x60;db: false&#x60; (still HTTP 200). No authentication.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;HealthControllerHealth200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> healthControllerHealthWithHttpInfo() throws ApiException {
+  public ApiResponse<HealthControllerHealth200Response> healthControllerHealthWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = healthControllerHealthRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +111,12 @@ public class HealthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("healthControllerHealth", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<HealthControllerHealth200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<HealthControllerHealth200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -150,21 +148,23 @@ public class HealthApi {
   }
 
   /**
-   * 
-   * 
+   * Prometheus metrics
+   * Prometheus text exposition of control-plane process metrics (prefixed &#x60;control_plane_&#x60;). When the server has a metrics token configured it must be sent as a Bearer token or &#x60;?token&#x3D;&#x60;, otherwise 403; without one the endpoint is open.  Auth: public, no credentials required.
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void healthControllerMetrics() throws ApiException {
-    healthControllerMetricsWithHttpInfo();
+  public String healthControllerMetrics() throws ApiException {
+    ApiResponse<String> localVarResponse = healthControllerMetricsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Prometheus metrics
+   * Prometheus text exposition of control-plane process metrics (prefixed &#x60;control_plane_&#x60;). When the server has a metrics token configured it must be sent as a Bearer token or &#x60;?token&#x3D;&#x60;, otherwise 403; without one the endpoint is open.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> healthControllerMetricsWithHttpInfo() throws ApiException {
+  public ApiResponse<String> healthControllerMetricsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = healthControllerMetricsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -177,17 +177,20 @@ public class HealthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("healthControllerMetrics", localVarResponse);
         }
-        return new ApiResponse<Void>(
-          localVarResponse.statusCode(),
-          localVarResponse.headers().map(),
-          null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
+        // for plain text response
+        if (localVarResponse.headers().map().containsKey("Content-Type") &&
+                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
+          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
+          String responseBodyText = s.hasNext() ? s.next() : "";
+          return new ApiResponse<String>(
+                  localVarResponse.statusCode(),
+                  localVarResponse.headers().map(),
+                  responseBodyText
+          );
+        } else {
+            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
         }
-        localVarResponse.body().close();
+      } finally {
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -206,7 +209,7 @@ public class HealthApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/plain");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {

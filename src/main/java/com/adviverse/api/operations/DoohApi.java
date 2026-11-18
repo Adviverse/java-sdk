@@ -17,10 +17,22 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AuthControllerResendVerification201Response;
 import com.adviverse.api.models.ClaimScreenDto;
+import com.adviverse.api.models.DoohControllerList200ResponseInner;
+import com.adviverse.api.models.DoohControllerSaveSetup201Response;
 import com.adviverse.api.models.DoohSetupDto;
 import com.adviverse.api.models.PairInitDto;
+import com.adviverse.api.models.ScreensControllerAdminScreens200ResponseInner;
+import com.adviverse.api.models.ScreensControllerAttest201Response;
+import com.adviverse.api.models.ScreensControllerList200ResponseInner;
+import com.adviverse.api.models.ScreensControllerPairInit201Response;
+import com.adviverse.api.models.ScreensControllerPairStatus200Response;
+import com.adviverse.api.models.ScreensControllerSetStatus201Response;
 import com.adviverse.api.models.SetScreenStatusDto;
+import com.adviverse.api.models.SupDoohPartner;
+import com.adviverse.api.models.SupDoohPlayReport;
+import com.adviverse.api.models.SupDoohScreen;
 import com.adviverse.api.models.UpdateScreenDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -86,21 +98,23 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Get your DOOH network registration
+   * Returns the account&#39;s DOOH partner registration (company, contact, screen count, venue types, integration, onboarding status), or null if it has not registered one.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, advertiser, admin.
+   * @return SupDoohPartner
    * @throws ApiException if fails to make API call
    */
-  public void doohControllerGetSetup() throws ApiException {
-    doohControllerGetSetupWithHttpInfo();
+  public SupDoohPartner doohControllerGetSetup() throws ApiException {
+    ApiResponse<SupDoohPartner> localVarResponse = doohControllerGetSetupWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get your DOOH network registration
+   * Returns the account&#39;s DOOH partner registration (company, contact, screen count, venue types, integration, onboarding status), or null if it has not registered one.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, advertiser, admin.
+   * @return ApiResponse&lt;SupDoohPartner&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> doohControllerGetSetupWithHttpInfo() throws ApiException {
+  public ApiResponse<SupDoohPartner> doohControllerGetSetupWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = doohControllerGetSetupRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -113,17 +127,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("doohControllerGetSetup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupDoohPartner>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupDoohPartner>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -155,23 +164,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * List DOOH partner registrations
+   * Admin view of up to 500 DOOH registrations, newest first, each with the registering account&#39;s email. Optional &#x60;?status&#x3D;&#x60; filters by new, contacted, onboarding, live or rejected (other values are ignored).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param status  (required)
+   * @return List&lt;DoohControllerList200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void doohControllerList(String status) throws ApiException {
-    doohControllerListWithHttpInfo(status);
+  public List<DoohControllerList200ResponseInner> doohControllerList(String status) throws ApiException {
+    ApiResponse<List<DoohControllerList200ResponseInner>> localVarResponse = doohControllerListWithHttpInfo(status);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List DOOH partner registrations
+   * Admin view of up to 500 DOOH registrations, newest first, each with the registering account&#39;s email. Optional &#x60;?status&#x3D;&#x60; filters by new, contacted, onboarding, live or rejected (other values are ignored).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param status  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;DoohControllerList200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> doohControllerListWithHttpInfo(String status) throws ApiException {
+  public ApiResponse<List<DoohControllerList200ResponseInner>> doohControllerListWithHttpInfo(String status) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = doohControllerListRequestBuilder(status);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -184,17 +195,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("doohControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<DoohControllerList200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<DoohControllerList200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -245,23 +251,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Create or update your DOOH network registration
+   * Upserts the account&#39;s single DOOH registration. &#x60;company&#x60; is required; &#x60;contactName&#x60;, &#x60;email&#x60;, &#x60;website&#x60;, &#x60;country&#x60;, &#x60;screenCount&#x60;, &#x60;venueTypes&#x60; (max 20), &#x60;integration&#x60; and &#x60;notes&#x60; are optional and trimmed to length limits. Returns the row id and its current onboarding status. 400 if &#x60;company&#x60; is empty.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, advertiser, admin.
    * @param doohSetupDto  (required)
+   * @return DoohControllerSaveSetup201Response
    * @throws ApiException if fails to make API call
    */
-  public void doohControllerSaveSetup(DoohSetupDto doohSetupDto) throws ApiException {
-    doohControllerSaveSetupWithHttpInfo(doohSetupDto);
+  public DoohControllerSaveSetup201Response doohControllerSaveSetup(DoohSetupDto doohSetupDto) throws ApiException {
+    ApiResponse<DoohControllerSaveSetup201Response> localVarResponse = doohControllerSaveSetupWithHttpInfo(doohSetupDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create or update your DOOH network registration
+   * Upserts the account&#39;s single DOOH registration. &#x60;company&#x60; is required; &#x60;contactName&#x60;, &#x60;email&#x60;, &#x60;website&#x60;, &#x60;country&#x60;, &#x60;screenCount&#x60;, &#x60;venueTypes&#x60; (max 20), &#x60;integration&#x60; and &#x60;notes&#x60; are optional and trimmed to length limits. Returns the row id and its current onboarding status. 400 if &#x60;company&#x60; is empty.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, advertiser, admin.
    * @param doohSetupDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;DoohControllerSaveSetup201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> doohControllerSaveSetupWithHttpInfo(DoohSetupDto doohSetupDto) throws ApiException {
+  public ApiResponse<DoohControllerSaveSetup201Response> doohControllerSaveSetupWithHttpInfo(DoohSetupDto doohSetupDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = doohControllerSaveSetupRequestBuilder(doohSetupDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -274,17 +282,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("doohControllerSaveSetup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<DoohControllerSaveSetup201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<DoohControllerSaveSetup201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -326,23 +329,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Set a DOOH registration&#39;s onboarding status
+   * Moves a registration to &#x60;status&#x60; new, contacted, onboarding, live or rejected. 400 for any other value. Returns ok even if the id does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void doohControllerSetStatus(String id) throws ApiException {
-    doohControllerSetStatusWithHttpInfo(id);
+  public AuthControllerResendVerification201Response doohControllerSetStatus(String id) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = doohControllerSetStatusWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set a DOOH registration&#39;s onboarding status
+   * Moves a registration to &#x60;status&#x60; new, contacted, onboarding, live or rejected. 400 for any other value. Returns ok even if the id does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> doohControllerSetStatusWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> doohControllerSetStatusWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = doohControllerSetStatusRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -355,17 +360,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("doohControllerSetStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -402,21 +402,23 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * List all paired DOOH screens
+   * Admin fleet overview: up to 2000 claimed screens across all accounts, newest first, with serving tag and owner email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return List&lt;ScreensControllerAdminScreens200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerAdminScreens() throws ApiException {
-    screensControllerAdminScreensWithHttpInfo();
+  public List<ScreensControllerAdminScreens200ResponseInner> screensControllerAdminScreens() throws ApiException {
+    ApiResponse<List<ScreensControllerAdminScreens200ResponseInner>> localVarResponse = screensControllerAdminScreensWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List all paired DOOH screens
+   * Admin fleet overview: up to 2000 claimed screens across all accounts, newest first, with serving tag and owner email.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;List&lt;ScreensControllerAdminScreens200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerAdminScreensWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ScreensControllerAdminScreens200ResponseInner>> screensControllerAdminScreensWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerAdminScreensRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -429,17 +431,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerAdminScreens", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ScreensControllerAdminScreens200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ScreensControllerAdminScreens200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -471,25 +468,27 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Get DOOH proof-of-play for your campaigns
+   * Advertiser verification report over your campaigns&#39; DOOH plays between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days), including venue name and any screenshot attestation per play. Same shape as the publisher report.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param from  (required)
    * @param to  (required)
+   * @return SupDoohPlayReport
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerAdvertiserPlays(String from, String to) throws ApiException {
-    screensControllerAdvertiserPlaysWithHttpInfo(from, to);
+  public SupDoohPlayReport screensControllerAdvertiserPlays(String from, String to) throws ApiException {
+    ApiResponse<SupDoohPlayReport> localVarResponse = screensControllerAdvertiserPlaysWithHttpInfo(from, to);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get DOOH proof-of-play for your campaigns
+   * Advertiser verification report over your campaigns&#39; DOOH plays between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days), including venue name and any screenshot attestation per play. Same shape as the publisher report.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param from  (required)
    * @param to  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupDoohPlayReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerAdvertiserPlaysWithHttpInfo(String from, String to) throws ApiException {
+  public ApiResponse<SupDoohPlayReport> screensControllerAdvertiserPlaysWithHttpInfo(String from, String to) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerAdvertiserPlaysRequestBuilder(from, to);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -502,17 +501,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerAdvertiserPlays", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupDoohPlayReport>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupDoohPlayReport>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -569,21 +563,23 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Upload a proof-of-play screenshot
+   * Public, rate-limited endpoint used by the native DOOH player, authenticated by the active screen&#39;s serving &#x60;tag&#x60;. Body &#x60;image&#x60; is a base64 JPEG (data-URL prefix allowed, max ~2.5 MB). The image is stored and attached to the play identified by &#x60;popToken&#x60;, or to the screen&#39;s most recent play if omitted, and also counts as a heartbeat. 400 if tag/image are missing or the image is invalid, 404 if the tag is not an active screen.  Auth: public, no credentials required.
+   * @return ScreensControllerAttest201Response
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerAttest() throws ApiException {
-    screensControllerAttestWithHttpInfo();
+  public ScreensControllerAttest201Response screensControllerAttest() throws ApiException {
+    ApiResponse<ScreensControllerAttest201Response> localVarResponse = screensControllerAttestWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Upload a proof-of-play screenshot
+   * Public, rate-limited endpoint used by the native DOOH player, authenticated by the active screen&#39;s serving &#x60;tag&#x60;. Body &#x60;image&#x60; is a base64 JPEG (data-URL prefix allowed, max ~2.5 MB). The image is stored and attached to the play identified by &#x60;popToken&#x60;, or to the screen&#39;s most recent play if omitted, and also counts as a heartbeat. 400 if tag/image are missing or the image is invalid, 404 if the tag is not an active screen.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;ScreensControllerAttest201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerAttestWithHttpInfo() throws ApiException {
+  public ApiResponse<ScreensControllerAttest201Response> screensControllerAttestWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerAttestRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -596,17 +592,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerAttest", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerAttest201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerAttest201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -638,23 +629,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Claim a DOOH screen by its pairing code
+   * Attaches the pending screen showing &#x60;code&#x60; to your account and starts serving: creates a &#x60;dooh&#x60; placement under your DOOH property (created on first use) and stores venue details (&#x60;venueName&#x60;, &#x60;venueType&#x60;, &#x60;orientation&#x60;, resolution, &#x60;lat&#x60;/&#x60;lng&#x60;, &#x60;timezone&#x60;, &#x60;loopSeconds&#x60; default 8, &#x60;floorCpm&#x60;, &#x60;audienceMultiplier&#x60; default 1). Republishes the serving index. 404 if no screen is waiting for that code.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param claimScreenDto  (required)
+   * @return SupDoohScreen
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerClaim(ClaimScreenDto claimScreenDto) throws ApiException {
-    screensControllerClaimWithHttpInfo(claimScreenDto);
+  public SupDoohScreen screensControllerClaim(ClaimScreenDto claimScreenDto) throws ApiException {
+    ApiResponse<SupDoohScreen> localVarResponse = screensControllerClaimWithHttpInfo(claimScreenDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Claim a DOOH screen by its pairing code
+   * Attaches the pending screen showing &#x60;code&#x60; to your account and starts serving: creates a &#x60;dooh&#x60; placement under your DOOH property (created on first use) and stores venue details (&#x60;venueName&#x60;, &#x60;venueType&#x60;, &#x60;orientation&#x60;, resolution, &#x60;lat&#x60;/&#x60;lng&#x60;, &#x60;timezone&#x60;, &#x60;loopSeconds&#x60; default 8, &#x60;floorCpm&#x60;, &#x60;audienceMultiplier&#x60; default 1). Republishes the serving index. 404 if no screen is waiting for that code.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param claimScreenDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupDoohScreen&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerClaimWithHttpInfo(ClaimScreenDto claimScreenDto) throws ApiException {
+  public ApiResponse<SupDoohScreen> screensControllerClaimWithHttpInfo(ClaimScreenDto claimScreenDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerClaimRequestBuilder(claimScreenDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -667,17 +660,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerClaim", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupDoohScreen>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupDoohScreen>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -719,23 +707,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Get a DOOH screen
+   * Returns one of your screens with its serving tag. 404 if it does not exist, 403 if another account owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
+   * @return SupDoohScreen
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerGet(String id) throws ApiException {
-    screensControllerGetWithHttpInfo(id);
+  public SupDoohScreen screensControllerGet(String id) throws ApiException {
+    ApiResponse<SupDoohScreen> localVarResponse = screensControllerGetWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a DOOH screen
+   * Returns one of your screens with its serving tag. 404 if it does not exist, 403 if another account owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupDoohScreen&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerGetWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SupDoohScreen> screensControllerGetWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerGetRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -748,17 +738,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupDoohScreen>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupDoohScreen>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -795,21 +780,23 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * List your DOOH screens
+   * Returns your screen fleet, newest first, with &#x60;online&#x60; (heartbeat within 5 minutes) and the latest heartbeat time and player version taken from live heartbeat data when available.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return List&lt;ScreensControllerList200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerList() throws ApiException {
-    screensControllerListWithHttpInfo();
+  public List<ScreensControllerList200ResponseInner> screensControllerList() throws ApiException {
+    ApiResponse<List<ScreensControllerList200ResponseInner>> localVarResponse = screensControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your DOOH screens
+   * Returns your screen fleet, newest first, with &#x60;online&#x60; (heartbeat within 5 minutes) and the latest heartbeat time and player version taken from live heartbeat data when available.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;List&lt;ScreensControllerList200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ScreensControllerList200ResponseInner>> screensControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -822,17 +809,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ScreensControllerList200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ScreensControllerList200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -864,23 +846,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Start pairing a DOOH screen
+   * Public, rate-limited endpoint the DOOH player calls on first boot. Creates a pending screen and returns a human-readable &#x60;pairingCode&#x60; to show on the display plus a secret &#x60;pollToken&#x60;. Optional body &#x60;version&#x60; records the player version.  Auth: public, no credentials required.
    * @param pairInitDto  (required)
+   * @return ScreensControllerPairInit201Response
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerPairInit(PairInitDto pairInitDto) throws ApiException {
-    screensControllerPairInitWithHttpInfo(pairInitDto);
+  public ScreensControllerPairInit201Response screensControllerPairInit(PairInitDto pairInitDto) throws ApiException {
+    ApiResponse<ScreensControllerPairInit201Response> localVarResponse = screensControllerPairInitWithHttpInfo(pairInitDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start pairing a DOOH screen
+   * Public, rate-limited endpoint the DOOH player calls on first boot. Creates a pending screen and returns a human-readable &#x60;pairingCode&#x60; to show on the display plus a secret &#x60;pollToken&#x60;. Optional body &#x60;version&#x60; records the player version.  Auth: public, no credentials required.
    * @param pairInitDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ScreensControllerPairInit201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerPairInitWithHttpInfo(PairInitDto pairInitDto) throws ApiException {
+  public ApiResponse<ScreensControllerPairInit201Response> screensControllerPairInitWithHttpInfo(PairInitDto pairInitDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerPairInitRequestBuilder(pairInitDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -893,17 +877,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerPairInit", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerPairInit201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerPairInit201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -945,23 +924,25 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Poll a DOOH screen&#39;s pairing status
+   * Public, rate-limited. The player polls with &#x60;?pollToken&#x3D;&#x60; until a publisher claims its code; then it receives its serving &#x60;tag&#x60; and &#x60;servingBase&#x60;. 404 for an unknown poll token.  Auth: public, no credentials required.
    * @param pollToken  (required)
+   * @return ScreensControllerPairStatus200Response
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerPairStatus(String pollToken) throws ApiException {
-    screensControllerPairStatusWithHttpInfo(pollToken);
+  public ScreensControllerPairStatus200Response screensControllerPairStatus(String pollToken) throws ApiException {
+    ApiResponse<ScreensControllerPairStatus200Response> localVarResponse = screensControllerPairStatusWithHttpInfo(pollToken);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Poll a DOOH screen&#39;s pairing status
+   * Public, rate-limited. The player polls with &#x60;?pollToken&#x3D;&#x60; until a publisher claims its code; then it receives its serving &#x60;tag&#x60; and &#x60;servingBase&#x60;. 404 for an unknown poll token.  Auth: public, no credentials required.
    * @param pollToken  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ScreensControllerPairStatus200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerPairStatusWithHttpInfo(String pollToken) throws ApiException {
+  public ApiResponse<ScreensControllerPairStatus200Response> screensControllerPairStatusWithHttpInfo(String pollToken) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerPairStatusRequestBuilder(pollToken);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -974,17 +955,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerPairStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerPairStatus200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerPairStatus200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1035,25 +1011,27 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Get your DOOH proof-of-play report
+   * Summarizes and lists (up to 2000) plays on your screens between &#x60;from&#x60; and &#x60;to&#x60; (ISO dates; default last 30 days): play and completion counts, completion rate (0-1), spend on completed plays, and distinct screens.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param from  (required)
    * @param to  (required)
+   * @return SupDoohPlayReport
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerPublisherPlays(String from, String to) throws ApiException {
-    screensControllerPublisherPlaysWithHttpInfo(from, to);
+  public SupDoohPlayReport screensControllerPublisherPlays(String from, String to) throws ApiException {
+    ApiResponse<SupDoohPlayReport> localVarResponse = screensControllerPublisherPlaysWithHttpInfo(from, to);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get your DOOH proof-of-play report
+   * Summarizes and lists (up to 2000) plays on your screens between &#x60;from&#x60; and &#x60;to&#x60; (ISO dates; default last 30 days): play and completion counts, completion rate (0-1), spend on completed plays, and distinct screens.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param from  (required)
    * @param to  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupDoohPlayReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerPublisherPlaysWithHttpInfo(String from, String to) throws ApiException {
+  public ApiResponse<SupDoohPlayReport> screensControllerPublisherPlaysWithHttpInfo(String from, String to) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerPublisherPlaysRequestBuilder(from, to);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1066,17 +1044,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerPublisherPlays", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupDoohPlayReport>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupDoohPlayReport>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1133,25 +1106,27 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Pause or activate a DOOH screen
+   * Sets &#x60;status&#x60; (&#x60;active&#x60; or &#x60;paused&#x60;) on both the screen and its placement, then republishes the index so serving stops or resumes. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param setScreenStatusDto  (required)
+   * @return ScreensControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerSetStatus(String id, SetScreenStatusDto setScreenStatusDto) throws ApiException {
-    screensControllerSetStatusWithHttpInfo(id, setScreenStatusDto);
+  public ScreensControllerSetStatus201Response screensControllerSetStatus(String id, SetScreenStatusDto setScreenStatusDto) throws ApiException {
+    ApiResponse<ScreensControllerSetStatus201Response> localVarResponse = screensControllerSetStatusWithHttpInfo(id, setScreenStatusDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Pause or activate a DOOH screen
+   * Sets &#x60;status&#x60; (&#x60;active&#x60; or &#x60;paused&#x60;) on both the screen and its placement, then republishes the index so serving stops or resumes. 400 if not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param setScreenStatusDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ScreensControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerSetStatusWithHttpInfo(String id, SetScreenStatusDto setScreenStatusDto) throws ApiException {
+  public ApiResponse<ScreensControllerSetStatus201Response> screensControllerSetStatusWithHttpInfo(String id, SetScreenStatusDto setScreenStatusDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerSetStatusRequestBuilder(id, setScreenStatusDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1164,17 +1139,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerSetStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ScreensControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ScreensControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1221,25 +1191,27 @@ public class DoohApi {
   }
 
   /**
-   * 
-   * 
+   * Update a DOOH screen
+   * Edits &#x60;venueName&#x60;, &#x60;venueType&#x60;, &#x60;orientation&#x60;, &#x60;loopSeconds&#x60;, &#x60;floorCpm&#x60; and &#x60;audienceMultiplier&#x60; on a paired screen, keeping its placement settings in sync, and republishes the index. 400 if the screen is not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param updateScreenDto  (required)
+   * @return SupDoohScreen
    * @throws ApiException if fails to make API call
    */
-  public void screensControllerUpdate(String id, UpdateScreenDto updateScreenDto) throws ApiException {
-    screensControllerUpdateWithHttpInfo(id, updateScreenDto);
+  public SupDoohScreen screensControllerUpdate(String id, UpdateScreenDto updateScreenDto) throws ApiException {
+    ApiResponse<SupDoohScreen> localVarResponse = screensControllerUpdateWithHttpInfo(id, updateScreenDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a DOOH screen
+   * Edits &#x60;venueName&#x60;, &#x60;venueType&#x60;, &#x60;orientation&#x60;, &#x60;loopSeconds&#x60;, &#x60;floorCpm&#x60; and &#x60;audienceMultiplier&#x60; on a paired screen, keeping its placement settings in sync, and republishes the index. 400 if the screen is not paired yet; 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param id  (required)
    * @param updateScreenDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SupDoohScreen&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> screensControllerUpdateWithHttpInfo(String id, UpdateScreenDto updateScreenDto) throws ApiException {
+  public ApiResponse<SupDoohScreen> screensControllerUpdateWithHttpInfo(String id, UpdateScreenDto updateScreenDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = screensControllerUpdateRequestBuilder(id, updateScreenDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1252,17 +1224,12 @@ public class DoohApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("screensControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SupDoohScreen>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SupDoohScreen>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

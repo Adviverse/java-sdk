@@ -20,6 +20,11 @@ import com.adviverse.api.Pair;
 import java.math.BigDecimal;
 import com.adviverse.api.models.SubscribeWebhookDto;
 import com.adviverse.api.models.UpdateWebhookDto;
+import com.adviverse.api.models.WebhookDelivery;
+import com.adviverse.api.models.WebhookDeliveryResult;
+import com.adviverse.api.models.WebhookEndpoint;
+import com.adviverse.api.models.WebhooksControllerEvents200Response;
+import com.adviverse.api.models.WebhooksControllerUnsubscribe200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,25 +89,27 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * List recent deliveries
+   * Lists delivery attempts for one endpoint, newest first. &#x60;limit&#x60; defaults to 50 (max 200). Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
    * @param limit  (optional)
+   * @return List&lt;WebhookDelivery&gt;
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerDeliveries(String id, BigDecimal limit) throws ApiException {
-    webhooksControllerDeliveriesWithHttpInfo(id, limit);
+  public List<WebhookDelivery> webhooksControllerDeliveries(String id, BigDecimal limit) throws ApiException {
+    ApiResponse<List<WebhookDelivery>> localVarResponse = webhooksControllerDeliveriesWithHttpInfo(id, limit);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List recent deliveries
+   * Lists delivery attempts for one endpoint, newest first. &#x60;limit&#x60; defaults to 50 (max 200). Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
    * @param limit  (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;WebhookDelivery&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerDeliveriesWithHttpInfo(String id, BigDecimal limit) throws ApiException {
+  public ApiResponse<List<WebhookDelivery>> webhooksControllerDeliveriesWithHttpInfo(String id, BigDecimal limit) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerDeliveriesRequestBuilder(id, limit);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -115,17 +122,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerDeliveries", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<WebhookDelivery>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<WebhookDelivery>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -177,21 +179,23 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * List webhook event types
+   * Returns the event type names a webhook endpoint can subscribe to.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return WebhooksControllerEvents200Response
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerEvents() throws ApiException {
-    webhooksControllerEventsWithHttpInfo();
+  public WebhooksControllerEvents200Response webhooksControllerEvents() throws ApiException {
+    ApiResponse<WebhooksControllerEvents200Response> localVarResponse = webhooksControllerEventsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List webhook event types
+   * Returns the event type names a webhook endpoint can subscribe to.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;WebhooksControllerEvents200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerEventsWithHttpInfo() throws ApiException {
+  public ApiResponse<WebhooksControllerEvents200Response> webhooksControllerEventsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerEventsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -204,17 +208,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerEvents", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhooksControllerEvents200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhooksControllerEvents200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -246,21 +245,23 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * List webhook endpoints
+   * Lists the account&#39;s webhook subscriptions, newest first. Includes each endpoint&#39;s HMAC signing &#x60;secret&#x60; so the dashboard can show it for verifying the &#x60;X-Adviverse-Signature&#x60; header.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;WebhookEndpoint&gt;
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerList() throws ApiException {
-    webhooksControllerListWithHttpInfo();
+  public List<WebhookEndpoint> webhooksControllerList() throws ApiException {
+    ApiResponse<List<WebhookEndpoint>> localVarResponse = webhooksControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List webhook endpoints
+   * Lists the account&#39;s webhook subscriptions, newest first. Includes each endpoint&#39;s HMAC signing &#x60;secret&#x60; so the dashboard can show it for verifying the &#x60;X-Adviverse-Signature&#x60; header.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;WebhookEndpoint&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<WebhookEndpoint>> webhooksControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -273,17 +274,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<WebhookEndpoint>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<WebhookEndpoint>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -315,23 +311,25 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * Send a test ping
+   * Synchronously delivers a signed &#x60;ping&#x60; event to the endpoint and reports the result. The attempt is logged as a delivery and retried later if it failed. Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
+   * @return WebhookDeliveryResult
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerPing(String id) throws ApiException {
-    webhooksControllerPingWithHttpInfo(id);
+  public WebhookDeliveryResult webhooksControllerPing(String id) throws ApiException {
+    ApiResponse<WebhookDeliveryResult> localVarResponse = webhooksControllerPingWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Send a test ping
+   * Synchronously delivers a signed &#x60;ping&#x60; event to the endpoint and reports the result. The attempt is logged as a delivery and retried later if it failed. Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;WebhookDeliveryResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerPingWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<WebhookDeliveryResult> webhooksControllerPingWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerPingRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -344,17 +342,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerPing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhookDeliveryResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhookDeliveryResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -391,23 +384,25 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * Redeliver a past webhook
+   * Re-sends the exact stored payload of a past delivery as a new attempt, with a signature computed from the endpoint&#39;s current secret. Returns 400 if the delivery does not belong to this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param deliveryId  (required)
+   * @return WebhookDeliveryResult
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerRedeliver(String deliveryId) throws ApiException {
-    webhooksControllerRedeliverWithHttpInfo(deliveryId);
+  public WebhookDeliveryResult webhooksControllerRedeliver(String deliveryId) throws ApiException {
+    ApiResponse<WebhookDeliveryResult> localVarResponse = webhooksControllerRedeliverWithHttpInfo(deliveryId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Redeliver a past webhook
+   * Re-sends the exact stored payload of a past delivery as a new attempt, with a signature computed from the endpoint&#39;s current secret. Returns 400 if the delivery does not belong to this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param deliveryId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;WebhookDeliveryResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerRedeliverWithHttpInfo(String deliveryId) throws ApiException {
+  public ApiResponse<WebhookDeliveryResult> webhooksControllerRedeliverWithHttpInfo(String deliveryId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerRedeliverRequestBuilder(deliveryId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -420,17 +415,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerRedeliver", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhookDeliveryResult>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhookDeliveryResult>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -467,23 +457,25 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * Rotate a webhook signing secret
+   * Generates a new &#x60;whsec_&#x60; signing secret. The old secret stops verifying immediately, so update the receiver right away. Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
+   * @return WebhookEndpoint
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerRotateSecret(String id) throws ApiException {
-    webhooksControllerRotateSecretWithHttpInfo(id);
+  public WebhookEndpoint webhooksControllerRotateSecret(String id) throws ApiException {
+    ApiResponse<WebhookEndpoint> localVarResponse = webhooksControllerRotateSecretWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Rotate a webhook signing secret
+   * Generates a new &#x60;whsec_&#x60; signing secret. The old secret stops verifying immediately, so update the receiver right away. Returns 400 if the endpoint is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;WebhookEndpoint&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerRotateSecretWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<WebhookEndpoint> webhooksControllerRotateSecretWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerRotateSecretRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -496,17 +488,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerRotateSecret", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhookEndpoint>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhookEndpoint>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -543,23 +530,25 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * Create a webhook endpoint
+   * Registers &#x60;url&#x60; to receive the listed &#x60;events&#x60; (non-empty array). The URL is checked by the SSRF guard (localhost, private and metadata addresses are rejected with 400). A &#x60;whsec_&#x60; signing secret is generated and returned. Deliveries are JSON &#x60;{ event, data, ts }&#x60; POSTs signed with HMAC-SHA256 of the body in &#x60;X-Adviverse-Signature&#x60;; failures are retried with backoff.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param subscribeWebhookDto  (required)
+   * @return WebhookEndpoint
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerSubscribe(SubscribeWebhookDto subscribeWebhookDto) throws ApiException {
-    webhooksControllerSubscribeWithHttpInfo(subscribeWebhookDto);
+  public WebhookEndpoint webhooksControllerSubscribe(SubscribeWebhookDto subscribeWebhookDto) throws ApiException {
+    ApiResponse<WebhookEndpoint> localVarResponse = webhooksControllerSubscribeWithHttpInfo(subscribeWebhookDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a webhook endpoint
+   * Registers &#x60;url&#x60; to receive the listed &#x60;events&#x60; (non-empty array). The URL is checked by the SSRF guard (localhost, private and metadata addresses are rejected with 400). A &#x60;whsec_&#x60; signing secret is generated and returned. Deliveries are JSON &#x60;{ event, data, ts }&#x60; POSTs signed with HMAC-SHA256 of the body in &#x60;X-Adviverse-Signature&#x60;; failures are retried with backoff.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param subscribeWebhookDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;WebhookEndpoint&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerSubscribeWithHttpInfo(SubscribeWebhookDto subscribeWebhookDto) throws ApiException {
+  public ApiResponse<WebhookEndpoint> webhooksControllerSubscribeWithHttpInfo(SubscribeWebhookDto subscribeWebhookDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerSubscribeRequestBuilder(subscribeWebhookDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -572,17 +561,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerSubscribe", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhookEndpoint>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhookEndpoint>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -624,23 +608,25 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a webhook endpoint
+   * Deletes the subscription. Unknown or foreign ids are a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
+   * @return WebhooksControllerUnsubscribe200Response
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerUnsubscribe(String id) throws ApiException {
-    webhooksControllerUnsubscribeWithHttpInfo(id);
+  public WebhooksControllerUnsubscribe200Response webhooksControllerUnsubscribe(String id) throws ApiException {
+    ApiResponse<WebhooksControllerUnsubscribe200Response> localVarResponse = webhooksControllerUnsubscribeWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a webhook endpoint
+   * Deletes the subscription. Unknown or foreign ids are a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;WebhooksControllerUnsubscribe200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerUnsubscribeWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<WebhooksControllerUnsubscribe200Response> webhooksControllerUnsubscribeWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerUnsubscribeRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -653,17 +639,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerUnsubscribe", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhooksControllerUnsubscribe200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhooksControllerUnsubscribe200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -700,25 +681,27 @@ public class WebhooksApi {
   }
 
   /**
-   * 
-   * 
+   * Update a webhook endpoint
+   * Changes an endpoint&#39;s &#x60;url&#x60;, &#x60;events&#x60; and/or &#x60;active&#x60; flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
    * @param updateWebhookDto  (required)
+   * @return WebhookEndpoint
    * @throws ApiException if fails to make API call
    */
-  public void webhooksControllerUpdate(String id, UpdateWebhookDto updateWebhookDto) throws ApiException {
-    webhooksControllerUpdateWithHttpInfo(id, updateWebhookDto);
+  public WebhookEndpoint webhooksControllerUpdate(String id, UpdateWebhookDto updateWebhookDto) throws ApiException {
+    ApiResponse<WebhookEndpoint> localVarResponse = webhooksControllerUpdateWithHttpInfo(id, updateWebhookDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a webhook endpoint
+   * Changes an endpoint&#39;s &#x60;url&#x60;, &#x60;events&#x60; and/or &#x60;active&#x60; flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
    * @param updateWebhookDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;WebhookEndpoint&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> webhooksControllerUpdateWithHttpInfo(String id, UpdateWebhookDto updateWebhookDto) throws ApiException {
+  public ApiResponse<WebhookEndpoint> webhooksControllerUpdateWithHttpInfo(String id, UpdateWebhookDto updateWebhookDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = webhooksControllerUpdateRequestBuilder(id, updateWebhookDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -731,17 +714,12 @@ public class WebhooksApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("webhooksControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<WebhookEndpoint>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhookEndpoint>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

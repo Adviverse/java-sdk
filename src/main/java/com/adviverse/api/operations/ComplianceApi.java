@@ -17,6 +17,13 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AdminControllerSetStatus201Response;
+import com.adviverse.api.models.ComplianceConsentConfig;
+import com.adviverse.api.models.ComplianceControllerConsent201Response;
+import com.adviverse.api.models.ComplianceControllerConsentLog200ResponseInner;
+import com.adviverse.api.models.ComplianceControllerSellers200Response;
+import com.adviverse.api.models.ComplianceDsar;
+import com.adviverse.api.models.ComplianceSellerListing;
 import com.adviverse.api.models.ConsentConfigDto;
 import com.adviverse.api.models.ConsentDto;
 import com.adviverse.api.models.DsarDto;
@@ -85,21 +92,23 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Get the ads.txt line
+   * Public. Returns the single ads.txt line (&#x60;&lt;domain&gt;, &lt;seller id&gt;, DIRECT&#x60;) publishers add to their own ads.txt to authorize Adviverse to sell their inventory.  Auth: public, no credentials required.
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerAdsTxt() throws ApiException {
-    complianceControllerAdsTxtWithHttpInfo();
+  public String complianceControllerAdsTxt() throws ApiException {
+    ApiResponse<String> localVarResponse = complianceControllerAdsTxtWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the ads.txt line
+   * Public. Returns the single ads.txt line (&#x60;&lt;domain&gt;, &lt;seller id&gt;, DIRECT&#x60;) publishers add to their own ads.txt to authorize Adviverse to sell their inventory.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerAdsTxtWithHttpInfo() throws ApiException {
+  public ApiResponse<String> complianceControllerAdsTxtWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerAdsTxtRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -112,17 +121,20 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerAdsTxt", localVarResponse);
         }
-        return new ApiResponse<Void>(
-          localVarResponse.statusCode(),
-          localVarResponse.headers().map(),
-          null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
+        // for plain text response
+        if (localVarResponse.headers().map().containsKey("Content-Type") &&
+                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
+          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
+          String responseBodyText = s.hasNext() ? s.next() : "";
+          return new ApiResponse<String>(
+                  localVarResponse.statusCode(),
+                  localVarResponse.headers().map(),
+                  responseBodyText
+          );
+        } else {
+            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
         }
-        localVarResponse.body().close();
+      } finally {
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -141,7 +153,7 @@ public class ComplianceApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/plain");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -154,23 +166,25 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Complete a data-subject request
+   * Marks a DSAR completed. For delete requests it also deletes consent-log rows matching the subject hash. Returns &#x60;{ ok: false }&#x60; for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerComplete(String id) throws ApiException {
-    complianceControllerCompleteWithHttpInfo(id);
+  public AdminControllerSetStatus201Response complianceControllerComplete(String id) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = complianceControllerCompleteWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Complete a data-subject request
+   * Marks a DSAR completed. For delete requests it also deletes consent-log rows matching the subject hash. Returns &#x60;{ ok: false }&#x60; for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerCompleteWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> complianceControllerCompleteWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerCompleteRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -183,17 +197,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerComplete", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -230,23 +239,25 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Log a consent signal
+   * Public, rate-limited; called by the SDK/CMP bridge. Stores a consent record with a SHA-256 hash of &#x60;userId&#x60;, plus optional &#x60;tcf&#x60;, &#x60;gpp&#x60;, &#x60;gpc&#x60;, &#x60;purposes&#x60; and &#x60;mode&#x60;. &#x60;publisherId&#x60; and &#x60;propertyId&#x60; attribute the record and are kept only when they are well-formed UUIDs.  Auth: public, no credentials required.
    * @param consentDto  (required)
+   * @return ComplianceControllerConsent201Response
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerConsent(ConsentDto consentDto) throws ApiException {
-    complianceControllerConsentWithHttpInfo(consentDto);
+  public ComplianceControllerConsent201Response complianceControllerConsent(ConsentDto consentDto) throws ApiException {
+    ApiResponse<ComplianceControllerConsent201Response> localVarResponse = complianceControllerConsentWithHttpInfo(consentDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Log a consent signal
+   * Public, rate-limited; called by the SDK/CMP bridge. Stores a consent record with a SHA-256 hash of &#x60;userId&#x60;, plus optional &#x60;tcf&#x60;, &#x60;gpp&#x60;, &#x60;gpc&#x60;, &#x60;purposes&#x60; and &#x60;mode&#x60;. &#x60;publisherId&#x60; and &#x60;propertyId&#x60; attribute the record and are kept only when they are well-formed UUIDs.  Auth: public, no credentials required.
    * @param consentDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComplianceControllerConsent201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerConsentWithHttpInfo(ConsentDto consentDto) throws ApiException {
+  public ApiResponse<ComplianceControllerConsent201Response> complianceControllerConsentWithHttpInfo(ConsentDto consentDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerConsentRequestBuilder(consentDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -259,17 +270,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerConsent", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceControllerConsent201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerConsent201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -311,21 +317,23 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * List recent consent records
+   * Returns the 100 most recent consent-log entries forwarded by this publisher&#39;s snippet.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return List&lt;ComplianceControllerConsentLog200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerConsentLog() throws ApiException {
-    complianceControllerConsentLogWithHttpInfo();
+  public List<ComplianceControllerConsentLog200ResponseInner> complianceControllerConsentLog() throws ApiException {
+    ApiResponse<List<ComplianceControllerConsentLog200ResponseInner>> localVarResponse = complianceControllerConsentLogWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List recent consent records
+   * Returns the 100 most recent consent-log entries forwarded by this publisher&#39;s snippet.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;List&lt;ComplianceControllerConsentLog200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerConsentLogWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ComplianceControllerConsentLog200ResponseInner>> complianceControllerConsentLogWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerConsentLogRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -338,17 +346,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerConsentLog", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ComplianceControllerConsentLog200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ComplianceControllerConsentLog200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -380,8 +383,8 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Get the DomainConnect verification template
+   * Public. Serves the DomainConnect template for publisher domain verification at the standard service-provider path. The template applies one TXT record at the verification host carrying the &#x60;%txt%&#x60; token. Any other provider/service id returns 404.  Auth: public, no credentials required.
    * @param providerId  (required)
    * @param serviceId  (required)
    * @throws ApiException if fails to make API call
@@ -391,8 +394,8 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Get the DomainConnect verification template
+   * Public. Serves the DomainConnect template for publisher domain verification at the standard service-provider path. The template applies one TXT record at the verification host carrying the &#x60;%txt%&#x60; token. Any other provider/service id returns 404.  Auth: public, no credentials required.
    * @param providerId  (required)
    * @param serviceId  (required)
    * @return ApiResponse&lt;Void&gt;
@@ -463,23 +466,25 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Submit a data-subject request
+   * Public, rate-limited. Files an &#x60;access&#x60; or &#x60;delete&#x60; request for &#x60;email&#x60;; only a hash of the subject is stored. A delete request starts erasing the subject from identity maps, CDP traits, segment memberships and event history and suppresses re-collection (fail-soft, in the background). An access request returns the stored request plus an &#x60;export&#x60; of the data held on the subject.  Auth: public, no credentials required.
    * @param dsarDto  (required)
+   * @return ComplianceDsar
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerDsar(DsarDto dsarDto) throws ApiException {
-    complianceControllerDsarWithHttpInfo(dsarDto);
+  public ComplianceDsar complianceControllerDsar(DsarDto dsarDto) throws ApiException {
+    ApiResponse<ComplianceDsar> localVarResponse = complianceControllerDsarWithHttpInfo(dsarDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Submit a data-subject request
+   * Public, rate-limited. Files an &#x60;access&#x60; or &#x60;delete&#x60; request for &#x60;email&#x60;; only a hash of the subject is stored. A delete request starts erasing the subject from identity maps, CDP traits, segment memberships and event history and suppresses re-collection (fail-soft, in the background). An access request returns the stored request plus an &#x60;export&#x60; of the data held on the subject.  Auth: public, no credentials required.
    * @param dsarDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComplianceDsar&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerDsarWithHttpInfo(DsarDto dsarDto) throws ApiException {
+  public ApiResponse<ComplianceDsar> complianceControllerDsarWithHttpInfo(DsarDto dsarDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerDsarRequestBuilder(dsarDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -492,17 +497,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerDsar", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceDsar>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceDsar>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -544,23 +544,25 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Get consent configuration
+   * Returns the consent config for &#x60;propertyId&#x60;, falling back to the account-wide default and then to built-in defaults (TCF v2, no default consent, all collection on). Without &#x60;propertyId&#x60; the account default is returned. The property must belong to the caller (400).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param propertyId  (required)
+   * @return ComplianceConsentConfig
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerGetConsentConfig(String propertyId) throws ApiException {
-    complianceControllerGetConsentConfigWithHttpInfo(propertyId);
+  public ComplianceConsentConfig complianceControllerGetConsentConfig(String propertyId) throws ApiException {
+    ApiResponse<ComplianceConsentConfig> localVarResponse = complianceControllerGetConsentConfigWithHttpInfo(propertyId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get consent configuration
+   * Returns the consent config for &#x60;propertyId&#x60;, falling back to the account-wide default and then to built-in defaults (TCF v2, no default consent, all collection on). Without &#x60;propertyId&#x60; the account default is returned. The property must belong to the caller (400).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param propertyId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComplianceConsentConfig&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerGetConsentConfigWithHttpInfo(String propertyId) throws ApiException {
+  public ApiResponse<ComplianceConsentConfig> complianceControllerGetConsentConfigWithHttpInfo(String propertyId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerGetConsentConfigRequestBuilder(propertyId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -573,17 +575,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerGetConsentConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceConsentConfig>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceConsentConfig>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -634,21 +631,23 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Get sellers.json listing preference
+   * Returns whether the publisher is listed publicly in sellers.json and its declared seller domain. Defaults to confidential.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ComplianceSellerListing
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerGetSellerListing() throws ApiException {
-    complianceControllerGetSellerListingWithHttpInfo();
+  public ComplianceSellerListing complianceControllerGetSellerListing() throws ApiException {
+    ApiResponse<ComplianceSellerListing> localVarResponse = complianceControllerGetSellerListingWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get sellers.json listing preference
+   * Returns whether the publisher is listed publicly in sellers.json and its declared seller domain. Defaults to confidential.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;ComplianceSellerListing&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerGetSellerListingWithHttpInfo() throws ApiException {
+  public ApiResponse<ComplianceSellerListing> complianceControllerGetSellerListingWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerGetSellerListingRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -661,17 +660,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerGetSellerListing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceSellerListing>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceSellerListing>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -703,21 +697,23 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * List data-subject requests
+   * Returns the 200 most recent DSAR requests, newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return List&lt;ComplianceDsar&gt;
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerListDsar() throws ApiException {
-    complianceControllerListDsarWithHttpInfo();
+  public List<ComplianceDsar> complianceControllerListDsar() throws ApiException {
+    ApiResponse<List<ComplianceDsar>> localVarResponse = complianceControllerListDsarWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List data-subject requests
+   * Returns the 200 most recent DSAR requests, newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;List&lt;ComplianceDsar&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerListDsarWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ComplianceDsar>> complianceControllerListDsarWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerListDsarRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -730,17 +726,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerListDsar", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ComplianceDsar>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ComplianceDsar>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -772,23 +763,25 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Save consent configuration
+   * Upserts the consent config for &#x60;propertyId&#x60;, or the account default when omitted. Requires &#x60;mode&#x60; (&#x60;tcf_v2&#x60;, &#x60;gpp&#x60;, &#x60;custom&#x60;) and &#x60;defaultConsent&#x60;; snippet controls default to true. For a custom CMP, &#x60;consentSource&#x60; &#x60;cookie&#x60; or &#x60;global&#x60; requires &#x60;consentKey&#x60; (cookie name or JS global path), and &#x60;consentGrantValue&#x60; defaults to &#x60;true&#x60;. &#x60;tcfPurpose&#x60; (1-11, default 1) and &#x60;tcfVendorId&#x60; are range-checked. Invalid mode, source or key returns 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param consentConfigDto  (required)
+   * @return ComplianceConsentConfig
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerSaveConsentConfig(ConsentConfigDto consentConfigDto) throws ApiException {
-    complianceControllerSaveConsentConfigWithHttpInfo(consentConfigDto);
+  public ComplianceConsentConfig complianceControllerSaveConsentConfig(ConsentConfigDto consentConfigDto) throws ApiException {
+    ApiResponse<ComplianceConsentConfig> localVarResponse = complianceControllerSaveConsentConfigWithHttpInfo(consentConfigDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Save consent configuration
+   * Upserts the consent config for &#x60;propertyId&#x60;, or the account default when omitted. Requires &#x60;mode&#x60; (&#x60;tcf_v2&#x60;, &#x60;gpp&#x60;, &#x60;custom&#x60;) and &#x60;defaultConsent&#x60;; snippet controls default to true. For a custom CMP, &#x60;consentSource&#x60; &#x60;cookie&#x60; or &#x60;global&#x60; requires &#x60;consentKey&#x60; (cookie name or JS global path), and &#x60;consentGrantValue&#x60; defaults to &#x60;true&#x60;. &#x60;tcfPurpose&#x60; (1-11, default 1) and &#x60;tcfVendorId&#x60; are range-checked. Invalid mode, source or key returns 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param consentConfigDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComplianceConsentConfig&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerSaveConsentConfigWithHttpInfo(ConsentConfigDto consentConfigDto) throws ApiException {
+  public ApiResponse<ComplianceConsentConfig> complianceControllerSaveConsentConfigWithHttpInfo(ConsentConfigDto consentConfigDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerSaveConsentConfigRequestBuilder(consentConfigDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -801,17 +794,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerSaveConsentConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceConsentConfig>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceConsentConfig>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -853,23 +841,25 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Set sellers.json listing preference
+   * Sets &#x60;sellerPublic&#x60; and an optional &#x60;sellerDomain&#x60;. The domain is normalized (scheme, path and &#x60;www.&#x60; stripped, lowercased) and must be a valid hostname (400 otherwise). A public listing exposes the company name and domain in sellers.json.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param sellerListingDto  (required)
+   * @return ComplianceSellerListing
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerSaveSellerListing(SellerListingDto sellerListingDto) throws ApiException {
-    complianceControllerSaveSellerListingWithHttpInfo(sellerListingDto);
+  public ComplianceSellerListing complianceControllerSaveSellerListing(SellerListingDto sellerListingDto) throws ApiException {
+    ApiResponse<ComplianceSellerListing> localVarResponse = complianceControllerSaveSellerListingWithHttpInfo(sellerListingDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set sellers.json listing preference
+   * Sets &#x60;sellerPublic&#x60; and an optional &#x60;sellerDomain&#x60;. The domain is normalized (scheme, path and &#x60;www.&#x60; stripped, lowercased) and must be a valid hostname (400 otherwise). A public listing exposes the company name and domain in sellers.json.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param sellerListingDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ComplianceSellerListing&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerSaveSellerListingWithHttpInfo(SellerListingDto sellerListingDto) throws ApiException {
+  public ApiResponse<ComplianceSellerListing> complianceControllerSaveSellerListingWithHttpInfo(SellerListingDto sellerListingDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerSaveSellerListingRequestBuilder(sellerListingDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -882,17 +872,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerSaveSellerListing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceSellerListing>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceSellerListing>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -934,21 +919,23 @@ public class ComplianceApi {
   }
 
   /**
-   * 
-   * 
+   * Get sellers.json
+   * Public IAB sellers.json listing active publisher accounts as PUBLISHER sellers. Advertisers are not listed. Sellers are confidential (&#x60;is_confidential: 1&#x60;, no name/domain) unless the publisher opted into a public listing, which exposes their company name and seller domain.  Auth: public, no credentials required.
+   * @return ComplianceControllerSellers200Response
    * @throws ApiException if fails to make API call
    */
-  public void complianceControllerSellers() throws ApiException {
-    complianceControllerSellersWithHttpInfo();
+  public ComplianceControllerSellers200Response complianceControllerSellers() throws ApiException {
+    ApiResponse<ComplianceControllerSellers200Response> localVarResponse = complianceControllerSellersWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get sellers.json
+   * Public IAB sellers.json listing active publisher accounts as PUBLISHER sellers. Advertisers are not listed. Sellers are confidential (&#x60;is_confidential: 1&#x60;, no name/domain) unless the publisher opted into a public listing, which exposes their company name and seller domain.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;ComplianceControllerSellers200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> complianceControllerSellersWithHttpInfo() throws ApiException {
+  public ApiResponse<ComplianceControllerSellers200Response> complianceControllerSellersWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = complianceControllerSellersRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -961,17 +948,12 @@ public class ComplianceApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("complianceControllerSellers", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ComplianceControllerSellers200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerSellers200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

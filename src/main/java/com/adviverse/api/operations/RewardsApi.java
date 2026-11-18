@@ -19,6 +19,12 @@ import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.CreateOnchainPoolDto;
 import com.adviverse.api.models.FundPoolDto;
+import com.adviverse.api.models.RewPool;
+import com.adviverse.api.models.RewardsControllerAdminPayouts200ResponseInner;
+import com.adviverse.api.models.RewardsControllerReport200Response;
+import com.adviverse.api.models.RewardsControllerSetPoolStatus201Response;
+import com.adviverse.api.models.RewardsControllerSetWorldWebhook201Response;
+import com.adviverse.api.models.RewardsControllerVoucherSecret200Response;
 import com.adviverse.api.models.SetPoolStatusDto;
 import com.adviverse.api.models.SetWorldWebhookDto;
 
@@ -85,23 +91,25 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * List recent reward payouts
+   * Admin view of the most recent reward payouts across all pools, including delivery attempts and last error. &#x60;?limit&#x3D;&#x60; defaults to 200 (max 1000).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param limit  (required)
+   * @return List&lt;RewardsControllerAdminPayouts200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerAdminPayouts(String limit) throws ApiException {
-    rewardsControllerAdminPayoutsWithHttpInfo(limit);
+  public List<RewardsControllerAdminPayouts200ResponseInner> rewardsControllerAdminPayouts(String limit) throws ApiException {
+    ApiResponse<List<RewardsControllerAdminPayouts200ResponseInner>> localVarResponse = rewardsControllerAdminPayoutsWithHttpInfo(limit);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List recent reward payouts
+   * Admin view of the most recent reward payouts across all pools, including delivery attempts and last error. &#x60;?limit&#x3D;&#x60; defaults to 200 (max 1000).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param limit  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;RewardsControllerAdminPayouts200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerAdminPayoutsWithHttpInfo(String limit) throws ApiException {
+  public ApiResponse<List<RewardsControllerAdminPayouts200ResponseInner>> rewardsControllerAdminPayoutsWithHttpInfo(String limit) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerAdminPayoutsRequestBuilder(limit);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -114,17 +122,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerAdminPayouts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<RewardsControllerAdminPayouts200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<RewardsControllerAdminPayouts200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -175,23 +178,25 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Create an on-chain (advertiser-custodied) reward pool
+   * Creates or converts a campaign&#39;s pool to &#x60;onchain_creative&#x60; mode: no escrow and no ledger movement, because your own contract pays users on-chain. Adviverse verifies each completion and issues the creative a signed single-use eligibility voucher. &#x60;perCompletion&#x60;, &#x60;token&#x60; and optional &#x60;chain&#x60; are display/report values. The response includes &#x60;voucher_secret&#x60;, used to verify vouchers before disbursing (empty if the platform voucher key is not configured). 404 if the campaign is not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createOnchainPoolDto  (required)
+   * @return RewPool
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerCreateOnchainPool(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
-    rewardsControllerCreateOnchainPoolWithHttpInfo(createOnchainPoolDto);
+  public RewPool rewardsControllerCreateOnchainPool(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
+    ApiResponse<RewPool> localVarResponse = rewardsControllerCreateOnchainPoolWithHttpInfo(createOnchainPoolDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create an on-chain (advertiser-custodied) reward pool
+   * Creates or converts a campaign&#39;s pool to &#x60;onchain_creative&#x60; mode: no escrow and no ledger movement, because your own contract pays users on-chain. Adviverse verifies each completion and issues the creative a signed single-use eligibility voucher. &#x60;perCompletion&#x60;, &#x60;token&#x60; and optional &#x60;chain&#x60; are display/report values. The response includes &#x60;voucher_secret&#x60;, used to verify vouchers before disbursing (empty if the platform voucher key is not configured). 404 if the campaign is not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createOnchainPoolDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewPool&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerCreateOnchainPoolWithHttpInfo(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
+  public ApiResponse<RewPool> rewardsControllerCreateOnchainPoolWithHttpInfo(CreateOnchainPoolDto createOnchainPoolDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerCreateOnchainPoolRequestBuilder(createOnchainPoolDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -204,17 +209,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerCreateOnchainPool", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewPool>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewPool>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -256,23 +256,25 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Fund or top up a campaign reward pool
+   * Creates the reward pool for one of your campaigns, or adds to it, and escrows &#x60;amount&#x60; from your available balance in the same transaction (a &#x60;reward_fund&#x60; ledger entry). &#x60;perCompletion&#x60; is the fixed reward per verified completion; &#x60;token&#x60; defaults to your account currency; &#x60;perUserDailyCap&#x60;/&#x60;perWalletDailyCap&#x60; default to 5. 404 if the campaign is not yours; fails with insufficient funds if your balance cannot cover &#x60;amount&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param fundPoolDto  (required)
+   * @return RewPool
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerFundPool(FundPoolDto fundPoolDto) throws ApiException {
-    rewardsControllerFundPoolWithHttpInfo(fundPoolDto);
+  public RewPool rewardsControllerFundPool(FundPoolDto fundPoolDto) throws ApiException {
+    ApiResponse<RewPool> localVarResponse = rewardsControllerFundPoolWithHttpInfo(fundPoolDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Fund or top up a campaign reward pool
+   * Creates the reward pool for one of your campaigns, or adds to it, and escrows &#x60;amount&#x60; from your available balance in the same transaction (a &#x60;reward_fund&#x60; ledger entry). &#x60;perCompletion&#x60; is the fixed reward per verified completion; &#x60;token&#x60; defaults to your account currency; &#x60;perUserDailyCap&#x60;/&#x60;perWalletDailyCap&#x60; default to 5. 404 if the campaign is not yours; fails with insufficient funds if your balance cannot cover &#x60;amount&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param fundPoolDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewPool&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerFundPoolWithHttpInfo(FundPoolDto fundPoolDto) throws ApiException {
+  public ApiResponse<RewPool> rewardsControllerFundPoolWithHttpInfo(FundPoolDto fundPoolDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerFundPoolRequestBuilder(fundPoolDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -285,17 +287,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerFundPool", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewPool>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewPool>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -337,23 +334,25 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Get a campaign reward pool
+   * Returns the reward pool for &#x60;campaignId&#x60;; on-chain pools also include &#x60;voucher_secret&#x60;. 404 if you have no pool for that campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
+   * @return RewPool
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerGetPool(String campaignId) throws ApiException {
-    rewardsControllerGetPoolWithHttpInfo(campaignId);
+  public RewPool rewardsControllerGetPool(String campaignId) throws ApiException {
+    ApiResponse<RewPool> localVarResponse = rewardsControllerGetPoolWithHttpInfo(campaignId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a campaign reward pool
+   * Returns the reward pool for &#x60;campaignId&#x60;; on-chain pools also include &#x60;voucher_secret&#x60;. 404 if you have no pool for that campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewPool&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerGetPoolWithHttpInfo(String campaignId) throws ApiException {
+  public ApiResponse<RewPool> rewardsControllerGetPoolWithHttpInfo(String campaignId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerGetPoolRequestBuilder(campaignId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -366,17 +365,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerGetPool", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewPool>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewPool>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -413,21 +407,23 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * List your reward pools
+   * Returns all of your campaign reward pools, newest first. Voucher secrets are not included here.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;RewPool&gt;
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerListPools() throws ApiException {
-    rewardsControllerListPoolsWithHttpInfo();
+  public List<RewPool> rewardsControllerListPools() throws ApiException {
+    ApiResponse<List<RewPool>> localVarResponse = rewardsControllerListPoolsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List your reward pools
+   * Returns all of your campaign reward pools, newest first. Voucher secrets are not included here.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;RewPool&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerListPoolsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<RewPool>> rewardsControllerListPoolsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerListPoolsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -440,17 +436,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerListPools", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<RewPool>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<RewPool>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -482,25 +473,27 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Get your reward payout report
+   * Reports reward payouts on your pools between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days): totals by status (sent, pending, failed, on-chain, on-chain with a tx hash), amount paid and distinct recipient wallets, a per-campaign breakdown, current pool balances, and up to 2000 payout rows.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param from  (required)
    * @param to  (required)
+   * @return RewardsControllerReport200Response
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerReport(String from, String to) throws ApiException {
-    rewardsControllerReportWithHttpInfo(from, to);
+  public RewardsControllerReport200Response rewardsControllerReport(String from, String to) throws ApiException {
+    ApiResponse<RewardsControllerReport200Response> localVarResponse = rewardsControllerReportWithHttpInfo(from, to);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get your reward payout report
+   * Reports reward payouts on your pools between &#x60;from&#x60; and &#x60;to&#x60; (default last 30 days): totals by status (sent, pending, failed, on-chain, on-chain with a tx hash), amount paid and distinct recipient wallets, a per-campaign breakdown, current pool balances, and up to 2000 payout rows.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param from  (required)
    * @param to  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewardsControllerReport200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerReportWithHttpInfo(String from, String to) throws ApiException {
+  public ApiResponse<RewardsControllerReport200Response> rewardsControllerReportWithHttpInfo(String from, String to) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerReportRequestBuilder(from, to);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -513,17 +506,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerReport", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewardsControllerReport200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewardsControllerReport200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -580,25 +568,27 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Pause or resume a reward pool
+   * Sets the pool &#x60;status&#x60; to &#x60;paused&#x60; (stops accruing completions) or &#x60;active&#x60;. 404 if you have no pool for that campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
    * @param setPoolStatusDto  (required)
+   * @return RewardsControllerSetPoolStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerSetPoolStatus(String campaignId, SetPoolStatusDto setPoolStatusDto) throws ApiException {
-    rewardsControllerSetPoolStatusWithHttpInfo(campaignId, setPoolStatusDto);
+  public RewardsControllerSetPoolStatus201Response rewardsControllerSetPoolStatus(String campaignId, SetPoolStatusDto setPoolStatusDto) throws ApiException {
+    ApiResponse<RewardsControllerSetPoolStatus201Response> localVarResponse = rewardsControllerSetPoolStatusWithHttpInfo(campaignId, setPoolStatusDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Pause or resume a reward pool
+   * Sets the pool &#x60;status&#x60; to &#x60;paused&#x60; (stops accruing completions) or &#x60;active&#x60;. 404 if you have no pool for that campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
    * @param setPoolStatusDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewardsControllerSetPoolStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerSetPoolStatusWithHttpInfo(String campaignId, SetPoolStatusDto setPoolStatusDto) throws ApiException {
+  public ApiResponse<RewardsControllerSetPoolStatus201Response> rewardsControllerSetPoolStatusWithHttpInfo(String campaignId, SetPoolStatusDto setPoolStatusDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerSetPoolStatusRequestBuilder(campaignId, setPoolStatusDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -611,17 +601,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerSetPoolStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewardsControllerSetPoolStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewardsControllerSetPoolStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -668,23 +653,25 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Set a world&#39;s reward-payout webhook
+   * Points one of your world integrations at &#x60;url&#x60;. Pending reward payouts for that operator are POSTed there as signed &#x60;reward.payout&#x60; webhooks (HMAC with the world&#39;s signing secret) so the operator can pay the user; delivery is retried up to 8 times. 404 if the world is not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param setWorldWebhookDto  (required)
+   * @return RewardsControllerSetWorldWebhook201Response
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerSetWorldWebhook(SetWorldWebhookDto setWorldWebhookDto) throws ApiException {
-    rewardsControllerSetWorldWebhookWithHttpInfo(setWorldWebhookDto);
+  public RewardsControllerSetWorldWebhook201Response rewardsControllerSetWorldWebhook(SetWorldWebhookDto setWorldWebhookDto) throws ApiException {
+    ApiResponse<RewardsControllerSetWorldWebhook201Response> localVarResponse = rewardsControllerSetWorldWebhookWithHttpInfo(setWorldWebhookDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set a world&#39;s reward-payout webhook
+   * Points one of your world integrations at &#x60;url&#x60;. Pending reward payouts for that operator are POSTed there as signed &#x60;reward.payout&#x60; webhooks (HMAC with the world&#39;s signing secret) so the operator can pay the user; delivery is retried up to 8 times. 404 if the world is not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param setWorldWebhookDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewardsControllerSetWorldWebhook201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerSetWorldWebhookWithHttpInfo(SetWorldWebhookDto setWorldWebhookDto) throws ApiException {
+  public ApiResponse<RewardsControllerSetWorldWebhook201Response> rewardsControllerSetWorldWebhookWithHttpInfo(SetWorldWebhookDto setWorldWebhookDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerSetWorldWebhookRequestBuilder(setWorldWebhookDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -697,17 +684,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerSetWorldWebhook", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewardsControllerSetWorldWebhook201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewardsControllerSetWorldWebhook201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -749,23 +731,25 @@ public class RewardsApi {
   }
 
   /**
-   * 
-   * 
+   * Get the voucher secret for an on-chain pool
+   * Returns the HMAC voucher secret for the campaign&#39;s on-chain reward pool. 404 if you have no pool for the campaign, 400 if the pool is not in on-chain mode.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
+   * @return RewardsControllerVoucherSecret200Response
    * @throws ApiException if fails to make API call
    */
-  public void rewardsControllerVoucherSecret(String campaignId) throws ApiException {
-    rewardsControllerVoucherSecretWithHttpInfo(campaignId);
+  public RewardsControllerVoucherSecret200Response rewardsControllerVoucherSecret(String campaignId) throws ApiException {
+    ApiResponse<RewardsControllerVoucherSecret200Response> localVarResponse = rewardsControllerVoucherSecretWithHttpInfo(campaignId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the voucher secret for an on-chain pool
+   * Returns the HMAC voucher secret for the campaign&#39;s on-chain reward pool. 404 if you have no pool for the campaign, 400 if the pool is not in on-chain mode.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param campaignId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;RewardsControllerVoucherSecret200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> rewardsControllerVoucherSecretWithHttpInfo(String campaignId) throws ApiException {
+  public ApiResponse<RewardsControllerVoucherSecret200Response> rewardsControllerVoucherSecretWithHttpInfo(String campaignId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = rewardsControllerVoucherSecretRequestBuilder(campaignId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -778,17 +762,12 @@ public class RewardsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("rewardsControllerVoucherSecret", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<RewardsControllerVoucherSecret200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<RewardsControllerVoucherSecret200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

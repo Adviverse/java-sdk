@@ -17,6 +17,8 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.MfaControllerOwn200Response;
+import com.adviverse.api.models.MfaControllerRanked200ResponseInner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,23 +83,25 @@ public class MfaApi {
   }
 
   /**
-   * 
-   * 
+   * Get my property&#39;s MFA score
+   * Returns the latest MFA score for one of the caller&#39;s properties, whether it crosses the flag threshold, the reasons, raw signals and improvement tips. If no score has been stored yet it is computed on the fly (not persisted) and &#x60;computedAt&#x60; is null. Returns 404 for an unknown property and 403 if it belongs to another publisher.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
+   * @return MfaControllerOwn200Response
    * @throws ApiException if fails to make API call
    */
-  public void mfaControllerOwn(String id) throws ApiException {
-    mfaControllerOwnWithHttpInfo(id);
+  public MfaControllerOwn200Response mfaControllerOwn(String id) throws ApiException {
+    ApiResponse<MfaControllerOwn200Response> localVarResponse = mfaControllerOwnWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get my property&#39;s MFA score
+   * Returns the latest MFA score for one of the caller&#39;s properties, whether it crosses the flag threshold, the reasons, raw signals and improvement tips. If no score has been stored yet it is computed on the fly (not persisted) and &#x60;computedAt&#x60; is null. Returns 404 for an unknown property and 403 if it belongs to another publisher.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;MfaControllerOwn200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> mfaControllerOwnWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<MfaControllerOwn200Response> mfaControllerOwnWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = mfaControllerOwnRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -110,17 +114,12 @@ public class MfaApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("mfaControllerOwn", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<MfaControllerOwn200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<MfaControllerOwn200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -157,23 +156,25 @@ public class MfaApi {
   }
 
   /**
-   * 
-   * 
+   * Rank properties by MFA score (admin)
+   * Lists properties with their latest made-for-advertising (MFA) score, highest first, including the stored signal breakdown and manual &#x60;mfa_flag&#x60;. &#x60;limit&#x60; defaults to 200 (max 1000). Properties never scored are omitted.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param limit  (required)
+   * @return List&lt;MfaControllerRanked200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void mfaControllerRanked(String limit) throws ApiException {
-    mfaControllerRankedWithHttpInfo(limit);
+  public List<MfaControllerRanked200ResponseInner> mfaControllerRanked(String limit) throws ApiException {
+    ApiResponse<List<MfaControllerRanked200ResponseInner>> localVarResponse = mfaControllerRankedWithHttpInfo(limit);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Rank properties by MFA score (admin)
+   * Lists properties with their latest made-for-advertising (MFA) score, highest first, including the stored signal breakdown and manual &#x60;mfa_flag&#x60;. &#x60;limit&#x60; defaults to 200 (max 1000). Properties never scored are omitted.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param limit  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;MfaControllerRanked200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> mfaControllerRankedWithHttpInfo(String limit) throws ApiException {
+  public ApiResponse<List<MfaControllerRanked200ResponseInner>> mfaControllerRankedWithHttpInfo(String limit) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = mfaControllerRankedRequestBuilder(limit);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -186,17 +187,12 @@ public class MfaApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("mfaControllerRanked", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<MfaControllerRanked200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<MfaControllerRanked200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

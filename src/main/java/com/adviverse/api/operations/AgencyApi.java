@@ -17,6 +17,18 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AgencyClient;
+import com.adviverse.api.models.AgencyControllerAcceptTransfer201Response;
+import com.adviverse.api.models.AgencyControllerCancelTransfer201Response;
+import com.adviverse.api.models.AgencyControllerClientSpend200Response;
+import com.adviverse.api.models.AgencyControllerPayInfo200Response;
+import com.adviverse.api.models.AgencyControllerStartPayment201Response;
+import com.adviverse.api.models.AgencyControllerTagCampaign201Response;
+import com.adviverse.api.models.AgencyControllerTaggable200ResponseInner;
+import com.adviverse.api.models.AgencyControllerTransferInfo200Response;
+import com.adviverse.api.models.AgencyInvoice;
+import com.adviverse.api.models.AgencyTransfer;
+import com.adviverse.api.models.PixelControllerDeletePixel200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +93,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Accept a pixel transfer
+   * The recipient, signed in to their own account, accepts with &#x60;token&#x60;. In one transaction the pixel, its pixel-scoped audiences and their sync destinations move to the accepting account, and the sender&#39;s campaigns tagged to a client linked to that pixel are untagged. Audience membership keys are unchanged, so serving continues; historical analytics stay with the sender. Returns 400 if the transfer is not pending, has expired, is your own, or the pixel is gone.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return AgencyControllerAcceptTransfer201Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerAcceptTransfer() throws ApiException {
-    agencyControllerAcceptTransferWithHttpInfo();
+  public AgencyControllerAcceptTransfer201Response agencyControllerAcceptTransfer() throws ApiException {
+    ApiResponse<AgencyControllerAcceptTransfer201Response> localVarResponse = agencyControllerAcceptTransferWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Accept a pixel transfer
+   * The recipient, signed in to their own account, accepts with &#x60;token&#x60;. In one transaction the pixel, its pixel-scoped audiences and their sync destinations move to the accepting account, and the sender&#39;s campaigns tagged to a client linked to that pixel are untagged. Audience membership keys are unchanged, so serving continues; historical analytics stay with the sender. Returns 400 if the transfer is not pending, has expired, is your own, or the pixel is gone.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;AgencyControllerAcceptTransfer201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerAcceptTransferWithHttpInfo() throws ApiException {
+  public ApiResponse<AgencyControllerAcceptTransfer201Response> agencyControllerAcceptTransferWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerAcceptTransferRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +122,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerAcceptTransfer", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerAcceptTransfer201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerAcceptTransfer201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -150,23 +159,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Add a line item to a draft invoice
+   * Appends a line with &#x60;description&#x60; (required), optional &#x60;kind&#x60; (default &#x60;fee&#x60;), &#x60;quantity&#x60; (default 1) and &#x60;unitAmount&#x60;. &#x60;amount&#x60; defaults to quantity x unitAmount, rounded to cents. Draft invoices only (400 otherwise); totals are recomputed.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerAddItem(String id) throws ApiException {
-    agencyControllerAddItemWithHttpInfo(id);
+  public AgencyInvoice agencyControllerAddItem(String id) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerAddItemWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Add a line item to a draft invoice
+   * Appends a line with &#x60;description&#x60; (required), optional &#x60;kind&#x60; (default &#x60;fee&#x60;), &#x60;quantity&#x60; (default 1) and &#x60;unitAmount&#x60;. &#x60;amount&#x60; defaults to quantity x unitAmount, rounded to cents. Draft invoices only (400 otherwise); totals are recomputed.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerAddItemWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerAddItemWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerAddItemRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -179,17 +190,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerAddItem", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -226,23 +232,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Cancel a pending pixel transfer
+   * Cancels a transfer this account started. Only &#x60;pending&#x60; transfers can be cancelled (400 otherwise); 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyControllerCancelTransfer201Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerCancelTransfer(String id) throws ApiException {
-    agencyControllerCancelTransferWithHttpInfo(id);
+  public AgencyControllerCancelTransfer201Response agencyControllerCancelTransfer(String id) throws ApiException {
+    ApiResponse<AgencyControllerCancelTransfer201Response> localVarResponse = agencyControllerCancelTransferWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Cancel a pending pixel transfer
+   * Cancels a transfer this account started. Only &#x60;pending&#x60; transfers can be cancelled (400 otherwise); 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyControllerCancelTransfer201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerCancelTransferWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyControllerCancelTransfer201Response> agencyControllerCancelTransferWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerCancelTransferRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -255,17 +263,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerCancelTransfer", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerCancelTransfer201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerCancelTransfer201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -302,27 +305,29 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Get spend and delivery for a client
+   * Sums spend, impressions, clicks and conversions from the ClickHouse hourly rollup across the client&#39;s tagged campaigns for the inclusive date range &#x60;from&#x60;..&#x60;to&#x60; (YYYY-MM-DD). Defaults to the last 30 days. Returns zeros when no campaigns are tagged. 404 for an unknown client.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
    * @param from  (required)
    * @param to  (required)
+   * @return AgencyControllerClientSpend200Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerClientSpend(String id, String from, String to) throws ApiException {
-    agencyControllerClientSpendWithHttpInfo(id, from, to);
+  public AgencyControllerClientSpend200Response agencyControllerClientSpend(String id, String from, String to) throws ApiException {
+    ApiResponse<AgencyControllerClientSpend200Response> localVarResponse = agencyControllerClientSpendWithHttpInfo(id, from, to);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get spend and delivery for a client
+   * Sums spend, impressions, clicks and conversions from the ClickHouse hourly rollup across the client&#39;s tagged campaigns for the inclusive date range &#x60;from&#x60;..&#x60;to&#x60; (YYYY-MM-DD). Defaults to the last 30 days. Returns zeros when no campaigns are tagged. 404 for an unknown client.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
    * @param from  (required)
    * @param to  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyControllerClientSpend200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerClientSpendWithHttpInfo(String id, String from, String to) throws ApiException {
+  public ApiResponse<AgencyControllerClientSpend200Response> agencyControllerClientSpendWithHttpInfo(String id, String from, String to) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerClientSpendRequestBuilder(id, from, to);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -335,17 +340,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerClientSpend", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerClientSpend200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerClientSpend200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -407,21 +407,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Create an agency client
+   * Creates a client with &#x60;name&#x60; (required, truncated to 160 chars), optional &#x60;billingEmail&#x60; (lowercased; used when sending invoices), &#x60;pixelId&#x60; and &#x60;notes&#x60; (truncated to 2000 chars). A supplied &#x60;pixelId&#x60; must belong to the calling account, otherwise 400. A missing name also returns 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AgencyClient
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerCreateClient() throws ApiException {
-    agencyControllerCreateClientWithHttpInfo();
+  public AgencyClient agencyControllerCreateClient() throws ApiException {
+    ApiResponse<AgencyClient> localVarResponse = agencyControllerCreateClientWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Create an agency client
+   * Creates a client with &#x60;name&#x60; (required, truncated to 160 chars), optional &#x60;billingEmail&#x60; (lowercased; used when sending invoices), &#x60;pixelId&#x60; and &#x60;notes&#x60; (truncated to 2000 chars). A supplied &#x60;pixelId&#x60; must belong to the calling account, otherwise 400. A missing name also returns 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AgencyClient&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerCreateClientWithHttpInfo() throws ApiException {
+  public ApiResponse<AgencyClient> agencyControllerCreateClientWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerCreateClientRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -434,17 +436,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerCreateClient", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyClient>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyClient>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -476,21 +473,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Create a draft invoice for a client
+   * Creates a draft invoice numbered &#x60;INV-NNNN&#x60; for &#x60;clientId&#x60; (required, must be owned). When &#x60;periodStart&#x60; and &#x60;periodEnd&#x60; are set and &#x60;includeSpend&#x60; is not false, an \&quot;Ad spend\&quot; line is added from the client&#39;s tagged-campaign spend, plus an agency fee line of &#x60;markupPct&#x60; percent of it. Optional &#x60;items&#x60; (description, kind, quantity, unitAmount, amount) are appended; &#x60;currency&#x60; defaults to USD. Totals are recomputed from the lines.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerCreateInvoice() throws ApiException {
-    agencyControllerCreateInvoiceWithHttpInfo();
+  public AgencyInvoice agencyControllerCreateInvoice() throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerCreateInvoiceWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Create a draft invoice for a client
+   * Creates a draft invoice numbered &#x60;INV-NNNN&#x60; for &#x60;clientId&#x60; (required, must be owned). When &#x60;periodStart&#x60; and &#x60;periodEnd&#x60; are set and &#x60;includeSpend&#x60; is not false, an \&quot;Ad spend\&quot; line is added from the client&#39;s tagged-campaign spend, plus an agency fee line of &#x60;markupPct&#x60; percent of it. Optional &#x60;items&#x60; (description, kind, quantity, unitAmount, amount) are appended; &#x60;currency&#x60; defaults to USD. Totals are recomputed from the lines.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerCreateInvoiceWithHttpInfo() throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerCreateInvoiceWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerCreateInvoiceRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -503,17 +502,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerCreateInvoice", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -545,23 +539,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Get an agency client
+   * Returns one client owned by the calling account. 404 if it does not exist or belongs to another account. The single-client view reports &#x60;taggedCampaigns&#x60; as 0; use the list endpoint for counts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyClient
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerGetClient(String id) throws ApiException {
-    agencyControllerGetClientWithHttpInfo(id);
+  public AgencyClient agencyControllerGetClient(String id) throws ApiException {
+    ApiResponse<AgencyClient> localVarResponse = agencyControllerGetClientWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get an agency client
+   * Returns one client owned by the calling account. 404 if it does not exist or belongs to another account. The single-client view reports &#x60;taggedCampaigns&#x60; as 0; use the list endpoint for counts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyClient&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerGetClientWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyClient> agencyControllerGetClientWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerGetClientRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -574,17 +570,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerGetClient", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyClient>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyClient>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -621,23 +612,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Get an invoice with line items
+   * Returns one invoice owned by the calling account, including its line items ordered by sort position. 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerGetInvoice(String id) throws ApiException {
-    agencyControllerGetInvoiceWithHttpInfo(id);
+  public AgencyInvoice agencyControllerGetInvoice(String id) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerGetInvoiceWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get an invoice with line items
+   * Returns one invoice owned by the calling account, including its line items ordered by sort position. 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerGetInvoiceWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerGetInvoiceWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerGetInvoiceRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -650,17 +643,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerGetInvoice", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -697,21 +685,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Start a pixel ownership transfer
+   * Offers one of the account&#39;s pixels (&#x60;pixelId&#x60;), with its pixel-scoped audiences, to the account at &#x60;email&#x60;. The recipient is emailed a link that expires in 14 days. Returns 400 for an invalid email, a transfer to yourself, or a pixel that already has a pending transfer, and 404 for an unknown pixel. Not available to manager/analyst team seats.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AgencyTransfer
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerInitiateTransfer() throws ApiException {
-    agencyControllerInitiateTransferWithHttpInfo();
+  public AgencyTransfer agencyControllerInitiateTransfer() throws ApiException {
+    ApiResponse<AgencyTransfer> localVarResponse = agencyControllerInitiateTransferWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Start a pixel ownership transfer
+   * Offers one of the account&#39;s pixels (&#x60;pixelId&#x60;), with its pixel-scoped audiences, to the account at &#x60;email&#x60;. The recipient is emailed a link that expires in 14 days. Returns 400 for an invalid email, a transfer to yourself, or a pixel that already has a pending transfer, and 404 for an unknown pixel. Not available to manager/analyst team seats.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AgencyTransfer&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerInitiateTransferWithHttpInfo() throws ApiException {
+  public ApiResponse<AgencyTransfer> agencyControllerInitiateTransferWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerInitiateTransferRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -724,17 +714,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerInitiateTransfer", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyTransfer>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyTransfer>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -766,21 +751,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * List agency clients
+   * Returns the billable clients this agency account runs campaigns and pixels for, newest first. Each client includes &#x60;taggedCampaigns&#x60;, the number of non-deleted campaigns currently tagged to it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;AgencyClient&gt;
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerListClients() throws ApiException {
-    agencyControllerListClientsWithHttpInfo();
+  public List<AgencyClient> agencyControllerListClients() throws ApiException {
+    ApiResponse<List<AgencyClient>> localVarResponse = agencyControllerListClientsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List agency clients
+   * Returns the billable clients this agency account runs campaigns and pixels for, newest first. Each client includes &#x60;taggedCampaigns&#x60;, the number of non-deleted campaigns currently tagged to it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;AgencyClient&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerListClientsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AgencyClient>> agencyControllerListClientsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerListClientsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -793,17 +780,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerListClients", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AgencyClient>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AgencyClient>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -835,23 +817,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * List agency invoices
+   * Returns the account&#39;s client invoices, newest first, optionally filtered by &#x60;clientId&#x60;. List entries carry an empty &#x60;items&#x60; array; fetch a single invoice for its line items.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param clientId  (required)
+   * @return List&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerListInvoices(String clientId) throws ApiException {
-    agencyControllerListInvoicesWithHttpInfo(clientId);
+  public List<AgencyInvoice> agencyControllerListInvoices(String clientId) throws ApiException {
+    ApiResponse<List<AgencyInvoice>> localVarResponse = agencyControllerListInvoicesWithHttpInfo(clientId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List agency invoices
+   * Returns the account&#39;s client invoices, newest first, optionally filtered by &#x60;clientId&#x60;. List entries carry an empty &#x60;items&#x60; array; fetch a single invoice for its line items.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param clientId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;AgencyInvoice&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerListInvoicesWithHttpInfo(String clientId) throws ApiException {
+  public ApiResponse<List<AgencyInvoice>> agencyControllerListInvoicesWithHttpInfo(String clientId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerListInvoicesRequestBuilder(clientId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -864,17 +848,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerListInvoices", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AgencyInvoice>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AgencyInvoice>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -925,21 +904,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * List outgoing pixel transfers
+   * Returns up to 100 transfers this account has started, newest first, with pixel names and current status.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;AgencyTransfer&gt;
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerListTransfers() throws ApiException {
-    agencyControllerListTransfersWithHttpInfo();
+  public List<AgencyTransfer> agencyControllerListTransfers() throws ApiException {
+    ApiResponse<List<AgencyTransfer>> localVarResponse = agencyControllerListTransfersWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List outgoing pixel transfers
+   * Returns up to 100 transfers this account has started, newest first, with pixel names and current status.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;AgencyTransfer&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerListTransfersWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AgencyTransfer>> agencyControllerListTransfersWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerListTransfersRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -952,17 +933,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerListTransfers", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AgencyTransfer>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AgencyTransfer>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -994,23 +970,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Mark an invoice paid manually
+   * Records an offline payment by setting the status to &#x60;paid&#x60; and stamping &#x60;paidAt&#x60;. No ledger entry is posted. Void invoices return 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerMarkPaid(String id) throws ApiException {
-    agencyControllerMarkPaidWithHttpInfo(id);
+  public AgencyInvoice agencyControllerMarkPaid(String id) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerMarkPaidWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Mark an invoice paid manually
+   * Records an offline payment by setting the status to &#x60;paid&#x60; and stamping &#x60;paidAt&#x60;. No ledger entry is posted. Void invoices return 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerMarkPaidWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerMarkPaidWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerMarkPaidRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1023,17 +1001,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerMarkPaid", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1070,23 +1043,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Get the public view of an invoice
+   * Unauthenticated: the pay token in the path grants access. Returns what the client needs to review an invoice: number, status, total, agency and client names, period, notes, due/paid dates and line descriptions with amounts. 404 for an unknown token.  Auth: public, no credentials required.
    * @param token  (required)
+   * @return AgencyControllerPayInfo200Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerPayInfo(String token) throws ApiException {
-    agencyControllerPayInfoWithHttpInfo(token);
+  public AgencyControllerPayInfo200Response agencyControllerPayInfo(String token) throws ApiException {
+    ApiResponse<AgencyControllerPayInfo200Response> localVarResponse = agencyControllerPayInfoWithHttpInfo(token);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the public view of an invoice
+   * Unauthenticated: the pay token in the path grants access. Returns what the client needs to review an invoice: number, status, total, agency and client names, period, notes, due/paid dates and line descriptions with amounts. 404 for an unknown token.  Auth: public, no credentials required.
    * @param token  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyControllerPayInfo200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerPayInfoWithHttpInfo(String token) throws ApiException {
+  public ApiResponse<AgencyControllerPayInfo200Response> agencyControllerPayInfoWithHttpInfo(String token) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerPayInfoRequestBuilder(token);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1099,17 +1074,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerPayInfo", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerPayInfo200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerPayInfo200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1146,23 +1116,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Delete an agency client
+   * Deletes the client if it belongs to the calling account. Campaigns tagged to it are untagged by the database (ON DELETE SET NULL). Returns &#x60;{ deleted: true }&#x60; even when no matching client existed.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return PixelControllerDeletePixel200Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerRemoveClient(String id) throws ApiException {
-    agencyControllerRemoveClientWithHttpInfo(id);
+  public PixelControllerDeletePixel200Response agencyControllerRemoveClient(String id) throws ApiException {
+    ApiResponse<PixelControllerDeletePixel200Response> localVarResponse = agencyControllerRemoveClientWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete an agency client
+   * Deletes the client if it belongs to the calling account. Campaigns tagged to it are untagged by the database (ON DELETE SET NULL). Returns &#x60;{ deleted: true }&#x60; even when no matching client existed.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PixelControllerDeletePixel200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerRemoveClientWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PixelControllerDeletePixel200Response> agencyControllerRemoveClientWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerRemoveClientRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1175,17 +1147,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerRemoveClient", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerDeletePixel200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerDeletePixel200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1222,25 +1189,27 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Remove a line item from a draft invoice
+   * Deletes the line item &#x60;itemId&#x60; from a draft invoice and recomputes the totals. Returns 400 if the invoice is not a draft.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
    * @param itemId  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerRemoveItem(String id, String itemId) throws ApiException {
-    agencyControllerRemoveItemWithHttpInfo(id, itemId);
+  public AgencyInvoice agencyControllerRemoveItem(String id, String itemId) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerRemoveItemWithHttpInfo(id, itemId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Remove a line item from a draft invoice
+   * Deletes the line item &#x60;itemId&#x60; from a draft invoice and recomputes the totals. Returns 400 if the invoice is not a draft.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
    * @param itemId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerRemoveItemWithHttpInfo(String id, String itemId) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerRemoveItemWithHttpInfo(String id, String itemId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerRemoveItemRequestBuilder(id, itemId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1253,17 +1222,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerRemoveItem", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1305,23 +1269,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Send an invoice and mint its pay link
+   * Moves the invoice to &#x60;sent&#x60;, mints a public pay token (reused if already set) and stamps &#x60;issuedAt&#x60;. If the client has a billing email, it is emailed a link to the hosted pay page. Fails with 400 for paid or void invoices or a non-positive total. The response adds &#x60;payLink&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerSendInvoice(String id) throws ApiException {
-    agencyControllerSendInvoiceWithHttpInfo(id);
+  public AgencyInvoice agencyControllerSendInvoice(String id) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerSendInvoiceWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Send an invoice and mint its pay link
+   * Moves the invoice to &#x60;sent&#x60;, mints a public pay token (reused if already set) and stamps &#x60;issuedAt&#x60;. If the client has a billing email, it is emailed a link to the hosted pay page. Fails with 400 for paid or void invoices or a non-positive total. The response adds &#x60;payLink&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerSendInvoiceWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerSendInvoiceWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerSendInvoiceRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1334,17 +1300,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerSendInvoice", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1381,23 +1342,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Start paying an invoice
+   * Unauthenticated (pay token in the path). Creates a pending deposit on the agency&#39;s account linked to the invoice and starts checkout with &#x60;provider&#x60; (&#x60;crypto&#x60;, anything else means Stripe). When the provider confirms, the deposit credits the agency balance and marks the invoice paid. Only &#x60;sent&#x60; invoices can be paid (400 otherwise).  Auth: public, no credentials required.
    * @param token  (required)
+   * @return AgencyControllerStartPayment201Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerStartPayment(String token) throws ApiException {
-    agencyControllerStartPaymentWithHttpInfo(token);
+  public AgencyControllerStartPayment201Response agencyControllerStartPayment(String token) throws ApiException {
+    ApiResponse<AgencyControllerStartPayment201Response> localVarResponse = agencyControllerStartPaymentWithHttpInfo(token);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start paying an invoice
+   * Unauthenticated (pay token in the path). Creates a pending deposit on the agency&#39;s account linked to the invoice and starts checkout with &#x60;provider&#x60; (&#x60;crypto&#x60;, anything else means Stripe). When the provider confirms, the deposit credits the agency balance and marks the invoice paid. Only &#x60;sent&#x60; invoices can be paid (400 otherwise).  Auth: public, no credentials required.
    * @param token  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyControllerStartPayment201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerStartPaymentWithHttpInfo(String token) throws ApiException {
+  public ApiResponse<AgencyControllerStartPayment201Response> agencyControllerStartPaymentWithHttpInfo(String token) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerStartPaymentRequestBuilder(token);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1410,17 +1373,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerStartPayment", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerStartPayment201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerStartPayment201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1457,21 +1415,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Tag or untag a campaign to a client
+   * Sets &#x60;campaignId&#x60;&#39;s client tag to &#x60;clientId&#x60;, or clears it when &#x60;clientId&#x60; is null. Both the campaign and the client must belong to the calling account (404 otherwise). Tagged campaigns&#39; spend is what client spend reports and auto-generated invoices bill.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AgencyControllerTagCampaign201Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerTagCampaign() throws ApiException {
-    agencyControllerTagCampaignWithHttpInfo();
+  public AgencyControllerTagCampaign201Response agencyControllerTagCampaign() throws ApiException {
+    ApiResponse<AgencyControllerTagCampaign201Response> localVarResponse = agencyControllerTagCampaignWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Tag or untag a campaign to a client
+   * Sets &#x60;campaignId&#x60;&#39;s client tag to &#x60;clientId&#x60;, or clears it when &#x60;clientId&#x60; is null. Both the campaign and the client must belong to the calling account (404 otherwise). Tagged campaigns&#39; spend is what client spend reports and auto-generated invoices bill.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AgencyControllerTagCampaign201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerTagCampaignWithHttpInfo() throws ApiException {
+  public ApiResponse<AgencyControllerTagCampaign201Response> agencyControllerTagCampaignWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerTagCampaignRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1484,17 +1444,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerTagCampaign", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerTagCampaign201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerTagCampaign201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1526,21 +1481,23 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * List campaigns available for client tagging
+   * Returns up to 500 of the account&#39;s non-deleted campaigns (ad sets) with their current &#x60;client_id&#x60; tag, newest first. Used by the tagging UI to assign campaign spend to a client.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;AgencyControllerTaggable200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerTaggable() throws ApiException {
-    agencyControllerTaggableWithHttpInfo();
+  public List<AgencyControllerTaggable200ResponseInner> agencyControllerTaggable() throws ApiException {
+    ApiResponse<List<AgencyControllerTaggable200ResponseInner>> localVarResponse = agencyControllerTaggableWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List campaigns available for client tagging
+   * Returns up to 500 of the account&#39;s non-deleted campaigns (ad sets) with their current &#x60;client_id&#x60; tag, newest first. Used by the tagging UI to assign campaign spend to a client.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;AgencyControllerTaggable200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerTaggableWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AgencyControllerTaggable200ResponseInner>> agencyControllerTaggableWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerTaggableRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1553,17 +1510,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerTaggable", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AgencyControllerTaggable200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AgencyControllerTaggable200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1595,23 +1547,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Preview a pixel transfer by token
+   * Looks up a transfer by the &#x60;token&#x60; query parameter from the email link, so the recipient can review it before accepting. A pending transfer past its expiry is reported as &#x60;expired&#x60;. 404 for an unknown token.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param token  (required)
+   * @return AgencyControllerTransferInfo200Response
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerTransferInfo(String token) throws ApiException {
-    agencyControllerTransferInfoWithHttpInfo(token);
+  public AgencyControllerTransferInfo200Response agencyControllerTransferInfo(String token) throws ApiException {
+    ApiResponse<AgencyControllerTransferInfo200Response> localVarResponse = agencyControllerTransferInfoWithHttpInfo(token);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Preview a pixel transfer by token
+   * Looks up a transfer by the &#x60;token&#x60; query parameter from the email link, so the recipient can review it before accepting. A pending transfer past its expiry is reported as &#x60;expired&#x60;. 404 for an unknown token.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
    * @param token  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyControllerTransferInfo200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerTransferInfoWithHttpInfo(String token) throws ApiException {
+  public ApiResponse<AgencyControllerTransferInfo200Response> agencyControllerTransferInfoWithHttpInfo(String token) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerTransferInfoRequestBuilder(token);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1624,17 +1578,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerTransferInfo", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyControllerTransferInfo200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyControllerTransferInfo200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1685,23 +1634,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Update an agency client
+   * Partially updates &#x60;name&#x60;, &#x60;billingEmail&#x60;, &#x60;pixelId&#x60;, &#x60;notes&#x60; and &#x60;status&#x60;. Only fields present are changed; &#x60;status&#x60; is applied only when it is &#x60;active&#x60; or &#x60;archived&#x60;. A new &#x60;pixelId&#x60; must belong to the account (400 otherwise); an empty string clears it. Returns the updated client.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyClient
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerUpdateClient(String id) throws ApiException {
-    agencyControllerUpdateClientWithHttpInfo(id);
+  public AgencyClient agencyControllerUpdateClient(String id) throws ApiException {
+    ApiResponse<AgencyClient> localVarResponse = agencyControllerUpdateClientWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update an agency client
+   * Partially updates &#x60;name&#x60;, &#x60;billingEmail&#x60;, &#x60;pixelId&#x60;, &#x60;notes&#x60; and &#x60;status&#x60;. Only fields present are changed; &#x60;status&#x60; is applied only when it is &#x60;active&#x60; or &#x60;archived&#x60;. A new &#x60;pixelId&#x60; must belong to the account (400 otherwise); an empty string clears it. Returns the updated client.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyClient&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerUpdateClientWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyClient> agencyControllerUpdateClientWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerUpdateClientRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1714,17 +1665,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerUpdateClient", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyClient>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyClient>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1761,23 +1707,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Update a draft invoice
+   * Updates &#x60;notes&#x60; (truncated to 4000 chars) and/or &#x60;dueAt&#x60; on a draft invoice. Returns 400 if the invoice is no longer a draft and 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerUpdateInvoice(String id) throws ApiException {
-    agencyControllerUpdateInvoiceWithHttpInfo(id);
+  public AgencyInvoice agencyControllerUpdateInvoice(String id) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerUpdateInvoiceWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a draft invoice
+   * Updates &#x60;notes&#x60; (truncated to 4000 chars) and/or &#x60;dueAt&#x60; on a draft invoice. Returns 400 if the invoice is no longer a draft and 404 if unknown.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerUpdateInvoiceWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerUpdateInvoiceWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerUpdateInvoiceRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1790,17 +1738,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerUpdateInvoice", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1837,23 +1780,25 @@ public class AgencyApi {
   }
 
   /**
-   * 
-   * 
+   * Void an invoice
+   * Sets the invoice status to &#x60;void&#x60;; its pay link stops accepting payments. Paid invoices cannot be voided (400).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AgencyInvoice
    * @throws ApiException if fails to make API call
    */
-  public void agencyControllerVoidInvoice(String id) throws ApiException {
-    agencyControllerVoidInvoiceWithHttpInfo(id);
+  public AgencyInvoice agencyControllerVoidInvoice(String id) throws ApiException {
+    ApiResponse<AgencyInvoice> localVarResponse = agencyControllerVoidInvoiceWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Void an invoice
+   * Sets the invoice status to &#x60;void&#x60;; its pay link stops accepting payments. Paid invoices cannot be voided (400).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AgencyInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> agencyControllerVoidInvoiceWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AgencyInvoice> agencyControllerVoidInvoiceWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = agencyControllerVoidInvoiceRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1866,17 +1811,12 @@ public class AgencyApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("agencyControllerVoidInvoice", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AgencyInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AgencyInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

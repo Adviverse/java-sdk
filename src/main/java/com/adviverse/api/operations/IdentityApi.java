@@ -18,6 +18,11 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.ConsentDto;
+import com.adviverse.api.models.IdentityControllerConsent201Response;
+import com.adviverse.api.models.IdentityControllerGet200Response;
+import com.adviverse.api.models.IdentityControllerLink201Response;
+import com.adviverse.api.models.IdentityControllerResolve201Response;
+import com.adviverse.api.models.IdentityControllerStats200Response;
 import com.adviverse.api.models.LinkIdentityDto;
 import com.adviverse.api.models.ResolveIdentityDto;
 
@@ -84,23 +89,25 @@ public class IdentityApi {
   }
 
   /**
-   * 
-   * 
+   * Set identity consent state
+   * Sets &#x60;state&#x60; (&#x60;granted&#x60; or &#x60;denied&#x60;) on the identity &#x60;canonicalId&#x60;. &#x60;denied&#x60; blocks future cross-identity merges and signal moves involving it. Returns 404 if the identity does not exist or the caller does not own it (admins bypass).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param consentDto  (required)
+   * @return IdentityControllerConsent201Response
    * @throws ApiException if fails to make API call
    */
-  public void identityControllerConsent(ConsentDto consentDto) throws ApiException {
-    identityControllerConsentWithHttpInfo(consentDto);
+  public IdentityControllerConsent201Response identityControllerConsent(ConsentDto consentDto) throws ApiException {
+    ApiResponse<IdentityControllerConsent201Response> localVarResponse = identityControllerConsentWithHttpInfo(consentDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set identity consent state
+   * Sets &#x60;state&#x60; (&#x60;granted&#x60; or &#x60;denied&#x60;) on the identity &#x60;canonicalId&#x60;. &#x60;denied&#x60; blocks future cross-identity merges and signal moves involving it. Returns 404 if the identity does not exist or the caller does not own it (admins bypass).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param consentDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;IdentityControllerConsent201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> identityControllerConsentWithHttpInfo(ConsentDto consentDto) throws ApiException {
+  public ApiResponse<IdentityControllerConsent201Response> identityControllerConsentWithHttpInfo(ConsentDto consentDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = identityControllerConsentRequestBuilder(consentDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -113,17 +120,12 @@ public class IdentityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("identityControllerConsent", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IdentityControllerConsent201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IdentityControllerConsent201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -165,23 +167,25 @@ public class IdentityApi {
   }
 
   /**
-   * 
-   * 
+   * Get an identity with its signals
+   * Returns the identity row, the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if &#x60;canonicalId&#x60; does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param canonicalId  (required)
+   * @return IdentityControllerGet200Response
    * @throws ApiException if fails to make API call
    */
-  public void identityControllerGet(String canonicalId) throws ApiException {
-    identityControllerGetWithHttpInfo(canonicalId);
+  public IdentityControllerGet200Response identityControllerGet(String canonicalId) throws ApiException {
+    ApiResponse<IdentityControllerGet200Response> localVarResponse = identityControllerGetWithHttpInfo(canonicalId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get an identity with its signals
+   * Returns the identity row, the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if &#x60;canonicalId&#x60; does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param canonicalId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;IdentityControllerGet200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> identityControllerGetWithHttpInfo(String canonicalId) throws ApiException {
+  public ApiResponse<IdentityControllerGet200Response> identityControllerGetWithHttpInfo(String canonicalId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = identityControllerGetRequestBuilder(canonicalId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -194,17 +198,12 @@ public class IdentityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("identityControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IdentityControllerGet200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IdentityControllerGet200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -241,23 +240,25 @@ public class IdentityApi {
   }
 
   /**
-   * 
-   * 
+   * Link signals to an identity
+   * Adds &#x60;signals&#x60; (each &#x60;{ type, value }&#x60;, type one of email/phone/cookie/device/ip_ua) to the identity &#x60;canonicalId&#x60; without merging identities. A signal owned by another identity is moved only if neither identity has denied consent; otherwise it is skipped. The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param linkIdentityDto  (required)
+   * @return IdentityControllerLink201Response
    * @throws ApiException if fails to make API call
    */
-  public void identityControllerLink(LinkIdentityDto linkIdentityDto) throws ApiException {
-    identityControllerLinkWithHttpInfo(linkIdentityDto);
+  public IdentityControllerLink201Response identityControllerLink(LinkIdentityDto linkIdentityDto) throws ApiException {
+    ApiResponse<IdentityControllerLink201Response> localVarResponse = identityControllerLinkWithHttpInfo(linkIdentityDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Link signals to an identity
+   * Adds &#x60;signals&#x60; (each &#x60;{ type, value }&#x60;, type one of email/phone/cookie/device/ip_ua) to the identity &#x60;canonicalId&#x60; without merging identities. A signal owned by another identity is moved only if neither identity has denied consent; otherwise it is skipped. The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param linkIdentityDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;IdentityControllerLink201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> identityControllerLinkWithHttpInfo(LinkIdentityDto linkIdentityDto) throws ApiException {
+  public ApiResponse<IdentityControllerLink201Response> identityControllerLinkWithHttpInfo(LinkIdentityDto linkIdentityDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = identityControllerLinkRequestBuilder(linkIdentityDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -270,17 +271,12 @@ public class IdentityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("identityControllerLink", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IdentityControllerLink201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IdentityControllerLink201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -322,23 +318,25 @@ public class IdentityApi {
   }
 
   /**
-   * 
-   * 
+   * Resolve signals to a canonical identity
+   * Resolves any of &#x60;email&#x60;, &#x60;phone&#x60;, &#x60;cookieId&#x60;, &#x60;deviceId&#x60; (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent &#x60;denied&#x60;, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one &#x60;canonicalId&#x60;), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param resolveIdentityDto  (required)
+   * @return IdentityControllerResolve201Response
    * @throws ApiException if fails to make API call
    */
-  public void identityControllerResolve(ResolveIdentityDto resolveIdentityDto) throws ApiException {
-    identityControllerResolveWithHttpInfo(resolveIdentityDto);
+  public IdentityControllerResolve201Response identityControllerResolve(ResolveIdentityDto resolveIdentityDto) throws ApiException {
+    ApiResponse<IdentityControllerResolve201Response> localVarResponse = identityControllerResolveWithHttpInfo(resolveIdentityDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Resolve signals to a canonical identity
+   * Resolves any of &#x60;email&#x60;, &#x60;phone&#x60;, &#x60;cookieId&#x60;, &#x60;deviceId&#x60; (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent &#x60;denied&#x60;, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one &#x60;canonicalId&#x60;), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param resolveIdentityDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;IdentityControllerResolve201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> identityControllerResolveWithHttpInfo(ResolveIdentityDto resolveIdentityDto) throws ApiException {
+  public ApiResponse<IdentityControllerResolve201Response> identityControllerResolveWithHttpInfo(ResolveIdentityDto resolveIdentityDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = identityControllerResolveRequestBuilder(resolveIdentityDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -351,17 +349,12 @@ public class IdentityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("identityControllerResolve", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IdentityControllerResolve201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IdentityControllerResolve201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -403,21 +396,23 @@ public class IdentityApi {
   }
 
   /**
-   * 
-   * 
+   * Get identity graph counts
+   * Returns counts across the identity graph: identities, linked signals, distinct households and identities that belong to a household (merged). Scoped to the calling account: only identities it owns and signals it supplied (admins get graph-wide totals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return IdentityControllerStats200Response
    * @throws ApiException if fails to make API call
    */
-  public void identityControllerStats() throws ApiException {
-    identityControllerStatsWithHttpInfo();
+  public IdentityControllerStats200Response identityControllerStats() throws ApiException {
+    ApiResponse<IdentityControllerStats200Response> localVarResponse = identityControllerStatsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get identity graph counts
+   * Returns counts across the identity graph: identities, linked signals, distinct households and identities that belong to a household (merged). Scoped to the calling account: only identities it owns and signals it supplied (admins get graph-wide totals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;IdentityControllerStats200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> identityControllerStatsWithHttpInfo() throws ApiException {
+  public ApiResponse<IdentityControllerStats200Response> identityControllerStatsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = identityControllerStatsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -430,17 +425,12 @@ public class IdentityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("identityControllerStats", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IdentityControllerStats200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IdentityControllerStats200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -17,6 +17,11 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AccountControllerDiditWebhook201Response;
+import com.adviverse.api.models.AccountControllerKycStatus200Response;
+import com.adviverse.api.models.AccountControllerStartDidit201Response;
+import com.adviverse.api.models.OnboardingControllerSaveProfile201Response;
+import com.adviverse.api.models.OnboardingControllerStatus200Response;
 import com.adviverse.api.models.ProfileDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,27 +87,29 @@ public class AccountApi {
   }
 
   /**
-   * 
-   * 
+   * Receive Didit verification webhooks
+   * Public callback for Didit, authenticated by HMAC signature (&#x60;x-signature-simple&#x60;, &#x60;x-signature-v2&#x60; or &#x60;x-signature&#x60; over the raw body) plus a &#x60;created_at&#x60; within 5 minutes. Updates the KYC session and maps the decision onto the account&#39;s KYC status, never downgrading a verified account. Returns 401 on a bad or stale signature, otherwise 200 so Didit does not retry.  Auth: public, no credentials required.
    * @param xSignatureSimple  (required)
    * @param xSignatureV2  (required)
    * @param xSignature  (required)
+   * @return AccountControllerDiditWebhook201Response
    * @throws ApiException if fails to make API call
    */
-  public void accountControllerDiditWebhook(String xSignatureSimple, String xSignatureV2, String xSignature) throws ApiException {
-    accountControllerDiditWebhookWithHttpInfo(xSignatureSimple, xSignatureV2, xSignature);
+  public AccountControllerDiditWebhook201Response accountControllerDiditWebhook(String xSignatureSimple, String xSignatureV2, String xSignature) throws ApiException {
+    ApiResponse<AccountControllerDiditWebhook201Response> localVarResponse = accountControllerDiditWebhookWithHttpInfo(xSignatureSimple, xSignatureV2, xSignature);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Receive Didit verification webhooks
+   * Public callback for Didit, authenticated by HMAC signature (&#x60;x-signature-simple&#x60;, &#x60;x-signature-v2&#x60; or &#x60;x-signature&#x60; over the raw body) plus a &#x60;created_at&#x60; within 5 minutes. Updates the KYC session and maps the decision onto the account&#39;s KYC status, never downgrading a verified account. Returns 401 on a bad or stale signature, otherwise 200 so Didit does not retry.  Auth: public, no credentials required.
    * @param xSignatureSimple  (required)
    * @param xSignatureV2  (required)
    * @param xSignature  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AccountControllerDiditWebhook201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> accountControllerDiditWebhookWithHttpInfo(String xSignatureSimple, String xSignatureV2, String xSignature) throws ApiException {
+  public ApiResponse<AccountControllerDiditWebhook201Response> accountControllerDiditWebhookWithHttpInfo(String xSignatureSimple, String xSignatureV2, String xSignature) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = accountControllerDiditWebhookRequestBuilder(xSignatureSimple, xSignatureV2, xSignature);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -115,17 +122,12 @@ public class AccountApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("accountControllerDiditWebhook", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AccountControllerDiditWebhook201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AccountControllerDiditWebhook201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -178,21 +180,23 @@ public class AccountApi {
   }
 
   /**
-   * 
-   * 
+   * Get KYC verification status
+   * Returns the account&#39;s identity verification status (&#x60;none&#x60;, &#x60;submitted&#x60;, &#x60;verified&#x60; or &#x60;rejected&#x60;) and &#x60;instantProvider&#x60;, which is &#x60;didit&#x60; when hosted verification is configured and null otherwise. There is no manual document upload path.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return AccountControllerKycStatus200Response
    * @throws ApiException if fails to make API call
    */
-  public void accountControllerKycStatus() throws ApiException {
-    accountControllerKycStatusWithHttpInfo();
+  public AccountControllerKycStatus200Response accountControllerKycStatus() throws ApiException {
+    ApiResponse<AccountControllerKycStatus200Response> localVarResponse = accountControllerKycStatusWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get KYC verification status
+   * Returns the account&#39;s identity verification status (&#x60;none&#x60;, &#x60;submitted&#x60;, &#x60;verified&#x60; or &#x60;rejected&#x60;) and &#x60;instantProvider&#x60;, which is &#x60;didit&#x60; when hosted verification is configured and null otherwise. There is no manual document upload path.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;AccountControllerKycStatus200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> accountControllerKycStatusWithHttpInfo() throws ApiException {
+  public ApiResponse<AccountControllerKycStatus200Response> accountControllerKycStatusWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = accountControllerKycStatusRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -205,17 +209,12 @@ public class AccountApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("accountControllerKycStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AccountControllerKycStatus200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AccountControllerKycStatus200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -247,21 +246,23 @@ public class AccountApi {
   }
 
   /**
-   * 
-   * 
+   * Start a hosted KYC session
+   * Creates a Didit verification session and returns the URL to send the user to. Documents are captured and reviewed by Didit; Adviverse never receives them. Records the session and sets the account to &#x60;submitted&#x60; unless already verified. Returns 400 if the provider is not configured or the session could not be created.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return AccountControllerStartDidit201Response
    * @throws ApiException if fails to make API call
    */
-  public void accountControllerStartDidit() throws ApiException {
-    accountControllerStartDiditWithHttpInfo();
+  public AccountControllerStartDidit201Response accountControllerStartDidit() throws ApiException {
+    ApiResponse<AccountControllerStartDidit201Response> localVarResponse = accountControllerStartDiditWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Start a hosted KYC session
+   * Creates a Didit verification session and returns the URL to send the user to. Documents are captured and reviewed by Didit; Adviverse never receives them. Records the session and sets the account to &#x60;submitted&#x60; unless already verified. Returns 400 if the provider is not configured or the session could not be created.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;AccountControllerStartDidit201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> accountControllerStartDiditWithHttpInfo() throws ApiException {
+  public ApiResponse<AccountControllerStartDidit201Response> accountControllerStartDiditWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = accountControllerStartDiditRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -274,17 +275,12 @@ public class AccountApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("accountControllerStartDidit", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AccountControllerStartDidit201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AccountControllerStartDidit201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -316,23 +312,25 @@ public class AccountApi {
   }
 
   /**
-   * 
-   * 
+   * Save onboarding profile answers
+   * Stores the onboarding wizard answers. &#x60;company&#x60; and &#x60;country&#x60; (2 letters) update the account columns; &#x60;currency&#x60; updates the account currency when it is a 2-12 character code; &#x60;goal&#x60; (advertiser|publisher|both, default both) sets the default landing side. &#x60;name&#x60;, &#x60;timezone&#x60;, &#x60;marketingOptIn&#x60; and an onboarding-completed flag are merged into account metadata. Idempotent.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param profileDto  (required)
+   * @return OnboardingControllerSaveProfile201Response
    * @throws ApiException if fails to make API call
    */
-  public void onboardingControllerSaveProfile(ProfileDto profileDto) throws ApiException {
-    onboardingControllerSaveProfileWithHttpInfo(profileDto);
+  public OnboardingControllerSaveProfile201Response onboardingControllerSaveProfile(ProfileDto profileDto) throws ApiException {
+    ApiResponse<OnboardingControllerSaveProfile201Response> localVarResponse = onboardingControllerSaveProfileWithHttpInfo(profileDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Save onboarding profile answers
+   * Stores the onboarding wizard answers. &#x60;company&#x60; and &#x60;country&#x60; (2 letters) update the account columns; &#x60;currency&#x60; updates the account currency when it is a 2-12 character code; &#x60;goal&#x60; (advertiser|publisher|both, default both) sets the default landing side. &#x60;name&#x60;, &#x60;timezone&#x60;, &#x60;marketingOptIn&#x60; and an onboarding-completed flag are merged into account metadata. Idempotent.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param profileDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;OnboardingControllerSaveProfile201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> onboardingControllerSaveProfileWithHttpInfo(ProfileDto profileDto) throws ApiException {
+  public ApiResponse<OnboardingControllerSaveProfile201Response> onboardingControllerSaveProfileWithHttpInfo(ProfileDto profileDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = onboardingControllerSaveProfileRequestBuilder(profileDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -345,17 +343,12 @@ public class AccountApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("onboardingControllerSaveProfile", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<OnboardingControllerSaveProfile201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<OnboardingControllerSaveProfile201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -397,21 +390,23 @@ public class AccountApi {
   }
 
   /**
-   * 
-   * 
+   * Get onboarding checklist progress
+   * Returns onboarding checklist booleans for both sides, derived from real account state in one query: properties, verified properties, placements and tax form for the publisher side; a completed deposit, campaigns, creatives and an active campaign for the advertiser side.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return OnboardingControllerStatus200Response
    * @throws ApiException if fails to make API call
    */
-  public void onboardingControllerStatus() throws ApiException {
-    onboardingControllerStatusWithHttpInfo();
+  public OnboardingControllerStatus200Response onboardingControllerStatus() throws ApiException {
+    ApiResponse<OnboardingControllerStatus200Response> localVarResponse = onboardingControllerStatusWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get onboarding checklist progress
+   * Returns onboarding checklist booleans for both sides, derived from real account state in one query: properties, verified properties, placements and tax form for the publisher side; a completed deposit, campaigns, creatives and an active campaign for the advertiser side.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;OnboardingControllerStatus200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> onboardingControllerStatusWithHttpInfo() throws ApiException {
+  public ApiResponse<OnboardingControllerStatus200Response> onboardingControllerStatusWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = onboardingControllerStatusRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -424,17 +419,12 @@ public class AccountApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("onboardingControllerStatus", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<OnboardingControllerStatus200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<OnboardingControllerStatus200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

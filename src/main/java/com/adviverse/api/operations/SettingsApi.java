@@ -17,10 +17,21 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AdminControllerSetStatus201Response;
+import com.adviverse.api.models.ApiKey;
+import com.adviverse.api.models.ApiKeyCreated;
 import com.adviverse.api.models.BrandSafetyDto;
 import com.adviverse.api.models.CreateKeyDto;
 import com.adviverse.api.models.CreateTerminalTokenDto;
 import com.adviverse.api.models.NetworkSettingsDto;
+import com.adviverse.api.models.SegmentsControllerRevoke201Response;
+import com.adviverse.api.models.SettingsControllerBidRec200Response;
+import com.adviverse.api.models.SettingsControllerCreateTerminalToken201Response;
+import com.adviverse.api.models.SettingsControllerListTerminalTokens200ResponseInner;
+import com.adviverse.api.models.SettingsControllerRevokeKey200Response;
+import com.adviverse.api.models.SettingsControllerRotateTerminalToken201Response;
+import com.adviverse.api.models.SettingsControllerSetTerminalTokenPolicy200Response;
+import com.adviverse.api.models.SettingsControllerUpdateNetwork200Response;
 import com.adviverse.api.models.TerminalSwitchDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -86,25 +97,27 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Get a bid recommendation
+   * Recommends a CPM bid for &#x60;format&#x60; (and optional &#x60;geo&#x60;) from the last 7 days of valid winning impressions in ClickHouse. &#x60;recommendedCpm&#x60; is the 60th percentile of clearing CPM, &#x60;floorObserved&#x60; the median and &#x60;competitiveCpm&#x60; the 90th percentile, as 4-decimal strings. If the query fails it returns zeros with &#x60;note: \&quot;insufficient data\&quot;&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param format  (required)
    * @param geo  (required)
+   * @return SettingsControllerBidRec200Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerBidRec(String format, String geo) throws ApiException {
-    settingsControllerBidRecWithHttpInfo(format, geo);
+  public SettingsControllerBidRec200Response settingsControllerBidRec(String format, String geo) throws ApiException {
+    ApiResponse<SettingsControllerBidRec200Response> localVarResponse = settingsControllerBidRecWithHttpInfo(format, geo);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a bid recommendation
+   * Recommends a CPM bid for &#x60;format&#x60; (and optional &#x60;geo&#x60;) from the last 7 days of valid winning impressions in ClickHouse. &#x60;recommendedCpm&#x60; is the 60th percentile of clearing CPM, &#x60;floorObserved&#x60; the median and &#x60;competitiveCpm&#x60; the 90th percentile, as 4-decimal strings. If the query fails it returns zeros with &#x60;note: \&quot;insufficient data\&quot;&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param format  (required)
    * @param geo  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SettingsControllerBidRec200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerBidRecWithHttpInfo(String format, String geo) throws ApiException {
+  public ApiResponse<SettingsControllerBidRec200Response> settingsControllerBidRecWithHttpInfo(String format, String geo) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerBidRecRequestBuilder(format, geo);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -117,17 +130,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerBidRec", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SettingsControllerBidRec200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerBidRec200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -184,25 +192,27 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Set campaign brand-safety controls
+   * Stores brand-safety settings (&#x60;categories&#x60;, &#x60;keywords&#x60;, &#x60;domains&#x60;, &#x60;sensitivity&#x60;, free-form &#x60;options&#x60;) as JSON on the campaign, replacing any previous value. Only campaigns owned by the caller are updated; a foreign or unknown id is silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param brandSafetyDto  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerBrandSafety(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
-    settingsControllerBrandSafetyWithHttpInfo(id, brandSafetyDto);
+  public AdminControllerSetStatus201Response settingsControllerBrandSafety(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = settingsControllerBrandSafetyWithHttpInfo(id, brandSafetyDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set campaign brand-safety controls
+   * Stores brand-safety settings (&#x60;categories&#x60;, &#x60;keywords&#x60;, &#x60;domains&#x60;, &#x60;sensitivity&#x60;, free-form &#x60;options&#x60;) as JSON on the campaign, replacing any previous value. Only campaigns owned by the caller are updated; a foreign or unknown id is silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param brandSafetyDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerBrandSafetyWithHttpInfo(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> settingsControllerBrandSafetyWithHttpInfo(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerBrandSafetyRequestBuilder(id, brandSafetyDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -215,17 +225,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerBrandSafety", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -272,23 +277,25 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Create an API key
+   * Creates a scoped API key with &#x60;name&#x60;, optional &#x60;scopes&#x60; (default &#x60;[\&quot;read\&quot;]&#x60;) and optional &#x60;expiresInDays&#x60; (1-365; omitted &#x3D; never expires). The full &#x60;key&#x60; (&#x60;ak_&lt;prefix&gt;.&lt;secret&gt;&#x60;) is returned exactly once; only its SHA-256 hash is stored. The key is projected to Redis immediately so the ad-engine accepts it without waiting for a resync.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param createKeyDto  (required)
+   * @return ApiKeyCreated
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerCreateKey(CreateKeyDto createKeyDto) throws ApiException {
-    settingsControllerCreateKeyWithHttpInfo(createKeyDto);
+  public ApiKeyCreated settingsControllerCreateKey(CreateKeyDto createKeyDto) throws ApiException {
+    ApiResponse<ApiKeyCreated> localVarResponse = settingsControllerCreateKeyWithHttpInfo(createKeyDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create an API key
+   * Creates a scoped API key with &#x60;name&#x60;, optional &#x60;scopes&#x60; (default &#x60;[\&quot;read\&quot;]&#x60;) and optional &#x60;expiresInDays&#x60; (1-365; omitted &#x3D; never expires). The full &#x60;key&#x60; (&#x60;ak_&lt;prefix&gt;.&lt;secret&gt;&#x60;) is returned exactly once; only its SHA-256 hash is stored. The key is projected to Redis immediately so the ad-engine accepts it without waiting for a resync.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param createKeyDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ApiKeyCreated&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerCreateKeyWithHttpInfo(CreateKeyDto createKeyDto) throws ApiException {
+  public ApiResponse<ApiKeyCreated> settingsControllerCreateKeyWithHttpInfo(CreateKeyDto createKeyDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerCreateKeyRequestBuilder(createKeyDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -301,17 +308,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerCreateKey", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ApiKeyCreated>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ApiKeyCreated>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -353,23 +355,25 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Create a terminal serve token
+   * Mints a public &#x60;ts_&#x60; token for shipping inside a terminal client, with optional &#x60;name&#x60;, &#x60;campaignId&#x60; (must be one of your &#x60;terminal&#x60;-format campaigns) and &#x60;switch&#x60; policy. A switch policy (&#x60;flipAfter&#x60; / &#x60;flipOnClick&#x60;) requires a pinned campaign, and &#x60;fallbackTag&#x60; must be one of your own placement tags, otherwise 400. The token is projected to Redis so the engine resolves it on the serve path.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createTerminalTokenDto  (required)
+   * @return SettingsControllerCreateTerminalToken201Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerCreateTerminalToken(CreateTerminalTokenDto createTerminalTokenDto) throws ApiException {
-    settingsControllerCreateTerminalTokenWithHttpInfo(createTerminalTokenDto);
+  public SettingsControllerCreateTerminalToken201Response settingsControllerCreateTerminalToken(CreateTerminalTokenDto createTerminalTokenDto) throws ApiException {
+    ApiResponse<SettingsControllerCreateTerminalToken201Response> localVarResponse = settingsControllerCreateTerminalTokenWithHttpInfo(createTerminalTokenDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create a terminal serve token
+   * Mints a public &#x60;ts_&#x60; token for shipping inside a terminal client, with optional &#x60;name&#x60;, &#x60;campaignId&#x60; (must be one of your &#x60;terminal&#x60;-format campaigns) and &#x60;switch&#x60; policy. A switch policy (&#x60;flipAfter&#x60; / &#x60;flipOnClick&#x60;) requires a pinned campaign, and &#x60;fallbackTag&#x60; must be one of your own placement tags, otherwise 400. The token is projected to Redis so the engine resolves it on the serve path.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createTerminalTokenDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SettingsControllerCreateTerminalToken201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerCreateTerminalTokenWithHttpInfo(CreateTerminalTokenDto createTerminalTokenDto) throws ApiException {
+  public ApiResponse<SettingsControllerCreateTerminalToken201Response> settingsControllerCreateTerminalTokenWithHttpInfo(CreateTerminalTokenDto createTerminalTokenDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerCreateTerminalTokenRequestBuilder(createTerminalTokenDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -382,17 +386,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerCreateTerminalToken", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SettingsControllerCreateTerminalToken201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerCreateTerminalToken201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -434,21 +433,23 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * List API keys
+   * Lists the account&#39;s live (non-revoked) API keys, newest first. Only the public &#x60;key_prefix&#x60; is returned; the secret is never shown again after creation. &#x60;expired&#x60; is true once &#x60;expires_at&#x60; has passed.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;ApiKey&gt;
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerListKeys() throws ApiException {
-    settingsControllerListKeysWithHttpInfo();
+  public List<ApiKey> settingsControllerListKeys() throws ApiException {
+    ApiResponse<List<ApiKey>> localVarResponse = settingsControllerListKeysWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List API keys
+   * Lists the account&#39;s live (non-revoked) API keys, newest first. Only the public &#x60;key_prefix&#x60; is returned; the secret is never shown again after creation. &#x60;expired&#x60; is true once &#x60;expires_at&#x60; has passed.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;ApiKey&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerListKeysWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ApiKey>> settingsControllerListKeysWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerListKeysRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -461,17 +462,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerListKeys", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ApiKey>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ApiKey>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -503,21 +499,23 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * List terminal serve tokens
+   * Lists the account&#39;s live public terminal serve tokens (&#x60;ts_...&#x60;), newest first, including any adaptive switch policy columns. These tokens are serve-only and safe to embed in distributed CLIs, so the full value is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;SettingsControllerListTerminalTokens200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerListTerminalTokens() throws ApiException {
-    settingsControllerListTerminalTokensWithHttpInfo();
+  public List<SettingsControllerListTerminalTokens200ResponseInner> settingsControllerListTerminalTokens() throws ApiException {
+    ApiResponse<List<SettingsControllerListTerminalTokens200ResponseInner>> localVarResponse = settingsControllerListTerminalTokensWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List terminal serve tokens
+   * Lists the account&#39;s live public terminal serve tokens (&#x60;ts_...&#x60;), newest first, including any adaptive switch policy columns. These tokens are serve-only and safe to embed in distributed CLIs, so the full value is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;SettingsControllerListTerminalTokens200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerListTerminalTokensWithHttpInfo() throws ApiException {
+  public ApiResponse<List<SettingsControllerListTerminalTokens200ResponseInner>> settingsControllerListTerminalTokensWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerListTerminalTokensRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -530,17 +528,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerListTerminalTokens", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<SettingsControllerListTerminalTokens200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<SettingsControllerListTerminalTokens200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -572,23 +565,25 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Revoke an API key
+   * Marks the key revoked and removes it from the engine&#39;s Redis credential map, so it stops working everywhere. Revoking an unknown or foreign id is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
+   * @return SettingsControllerRevokeKey200Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerRevokeKey(String id) throws ApiException {
-    settingsControllerRevokeKeyWithHttpInfo(id);
+  public SettingsControllerRevokeKey200Response settingsControllerRevokeKey(String id) throws ApiException {
+    ApiResponse<SettingsControllerRevokeKey200Response> localVarResponse = settingsControllerRevokeKeyWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Revoke an API key
+   * Marks the key revoked and removes it from the engine&#39;s Redis credential map, so it stops working everywhere. Revoking an unknown or foreign id is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SettingsControllerRevokeKey200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerRevokeKeyWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SettingsControllerRevokeKey200Response> settingsControllerRevokeKeyWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerRevokeKeyRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -601,17 +596,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerRevokeKey", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SettingsControllerRevokeKey200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerRevokeKey200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -648,23 +638,25 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Revoke a terminal serve token
+   * Marks the token revoked and deletes its Redis projection so the engine stops serving it. Unknown ids are a no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return SegmentsControllerRevoke201Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerRevokeTerminalToken(String id) throws ApiException {
-    settingsControllerRevokeTerminalTokenWithHttpInfo(id);
+  public SegmentsControllerRevoke201Response settingsControllerRevokeTerminalToken(String id) throws ApiException {
+    ApiResponse<SegmentsControllerRevoke201Response> localVarResponse = settingsControllerRevokeTerminalTokenWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Revoke a terminal serve token
+   * Marks the token revoked and deletes its Redis projection so the engine stops serving it. Unknown ids are a no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SegmentsControllerRevoke201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerRevokeTerminalTokenWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SegmentsControllerRevoke201Response> settingsControllerRevokeTerminalTokenWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerRevokeTerminalTokenRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -677,17 +669,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerRevokeTerminalToken", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SegmentsControllerRevoke201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SegmentsControllerRevoke201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -724,23 +711,25 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Rotate a terminal serve token
+   * Replaces the token value with a new &#x60;ts_&#x60; string, keeping its campaign and switch policy. The old value is removed from Redis and stops serving immediately. Returns 400 if the token is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return SettingsControllerRotateTerminalToken201Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerRotateTerminalToken(String id) throws ApiException {
-    settingsControllerRotateTerminalTokenWithHttpInfo(id);
+  public SettingsControllerRotateTerminalToken201Response settingsControllerRotateTerminalToken(String id) throws ApiException {
+    ApiResponse<SettingsControllerRotateTerminalToken201Response> localVarResponse = settingsControllerRotateTerminalTokenWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Rotate a terminal serve token
+   * Replaces the token value with a new &#x60;ts_&#x60; string, keeping its campaign and switch policy. The old value is removed from Redis and stops serving immediately. Returns 400 if the token is not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SettingsControllerRotateTerminalToken201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerRotateTerminalTokenWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SettingsControllerRotateTerminalToken201Response> settingsControllerRotateTerminalTokenWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerRotateTerminalTokenRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -753,17 +742,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerRotateTerminalToken", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SettingsControllerRotateTerminalToken201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerRotateTerminalToken201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -800,25 +784,27 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Update a terminal token switch policy
+   * Arms, changes or disables (&#x60;flipAfter: 0&#x60;, &#x60;flipOnClick: false&#x60;) adaptive mode-switching on an existing token without changing its &#x60;ts_&#x60; value. Same validation as creation; 400 if the token is not found or the policy is invalid. The new policy is re-projected to Redis.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param terminalSwitchDto  (required)
+   * @return SettingsControllerSetTerminalTokenPolicy200Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerSetTerminalTokenPolicy(String id, TerminalSwitchDto terminalSwitchDto) throws ApiException {
-    settingsControllerSetTerminalTokenPolicyWithHttpInfo(id, terminalSwitchDto);
+  public SettingsControllerSetTerminalTokenPolicy200Response settingsControllerSetTerminalTokenPolicy(String id, TerminalSwitchDto terminalSwitchDto) throws ApiException {
+    ApiResponse<SettingsControllerSetTerminalTokenPolicy200Response> localVarResponse = settingsControllerSetTerminalTokenPolicyWithHttpInfo(id, terminalSwitchDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a terminal token switch policy
+   * Arms, changes or disables (&#x60;flipAfter: 0&#x60;, &#x60;flipOnClick: false&#x60;) adaptive mode-switching on an existing token without changing its &#x60;ts_&#x60; value. Same validation as creation; 400 if the token is not found or the policy is invalid. The new policy is re-projected to Redis.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param terminalSwitchDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SettingsControllerSetTerminalTokenPolicy200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerSetTerminalTokenPolicyWithHttpInfo(String id, TerminalSwitchDto terminalSwitchDto) throws ApiException {
+  public ApiResponse<SettingsControllerSetTerminalTokenPolicy200Response> settingsControllerSetTerminalTokenPolicyWithHttpInfo(String id, TerminalSwitchDto terminalSwitchDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerSetTerminalTokenPolicyRequestBuilder(id, terminalSwitchDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -831,17 +817,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerSetTerminalTokenPolicy", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SettingsControllerSetTerminalTokenPolicy200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerSetTerminalTokenPolicy200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -888,23 +869,25 @@ public class SettingsApi {
   }
 
   /**
-   * 
-   * 
+   * Update network membership and cross-fill
+   * Sets the account&#39;s tenant &#x60;networkId&#x60; (null or empty &#x3D; the general open pool) and/or &#x60;crossFill&#x60; opt-in to transact with other networks. Only provided fields change. Because these flags are projected onto every campaign and placement in the serving index, the indexer republishes after a change.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param networkSettingsDto  (required)
+   * @return SettingsControllerUpdateNetwork200Response
    * @throws ApiException if fails to make API call
    */
-  public void settingsControllerUpdateNetwork(NetworkSettingsDto networkSettingsDto) throws ApiException {
-    settingsControllerUpdateNetworkWithHttpInfo(networkSettingsDto);
+  public SettingsControllerUpdateNetwork200Response settingsControllerUpdateNetwork(NetworkSettingsDto networkSettingsDto) throws ApiException {
+    ApiResponse<SettingsControllerUpdateNetwork200Response> localVarResponse = settingsControllerUpdateNetworkWithHttpInfo(networkSettingsDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update network membership and cross-fill
+   * Sets the account&#39;s tenant &#x60;networkId&#x60; (null or empty &#x3D; the general open pool) and/or &#x60;crossFill&#x60; opt-in to transact with other networks. Only provided fields change. Because these flags are projected onto every campaign and placement in the serving index, the indexer republishes after a change.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param networkSettingsDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;SettingsControllerUpdateNetwork200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> settingsControllerUpdateNetworkWithHttpInfo(NetworkSettingsDto networkSettingsDto) throws ApiException {
+  public ApiResponse<SettingsControllerUpdateNetwork200Response> settingsControllerUpdateNetworkWithHttpInfo(NetworkSettingsDto networkSettingsDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerUpdateNetworkRequestBuilder(networkSettingsDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -917,17 +900,12 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerUpdateNetwork", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<SettingsControllerUpdateNetwork200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerUpdateNetwork200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

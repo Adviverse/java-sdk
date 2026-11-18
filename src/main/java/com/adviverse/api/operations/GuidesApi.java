@@ -17,7 +17,10 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AdminControllerSetStatus201Response;
 import com.adviverse.api.models.CreateGuideDto;
+import com.adviverse.api.models.Guide;
+import com.adviverse.api.models.GuidesControllerGet200Response;
 import com.adviverse.api.models.UpdateGuideDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -83,23 +86,25 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * List all guides
+   * Returns every guide, including unpublished ones, optionally filtered by &#x60;locale&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param locale  (required)
+   * @return List&lt;Guide&gt;
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerAdminList(String locale) throws ApiException {
-    guidesControllerAdminListWithHttpInfo(locale);
+  public List<Guide> guidesControllerAdminList(String locale) throws ApiException {
+    ApiResponse<List<Guide>> localVarResponse = guidesControllerAdminListWithHttpInfo(locale);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List all guides
+   * Returns every guide, including unpublished ones, optionally filtered by &#x60;locale&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param locale  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;Guide&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerAdminListWithHttpInfo(String locale) throws ApiException {
+  public ApiResponse<List<Guide>> guidesControllerAdminListWithHttpInfo(String locale) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerAdminListRequestBuilder(locale);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -112,17 +117,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerAdminList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<Guide>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<Guide>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -173,23 +173,25 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Create or replace a guide
+   * Creates a guide from &#x60;slug&#x60; and &#x60;title&#x60; with optional &#x60;locale&#x60; (&#x60;en&#x60;), &#x60;category&#x60; (&#x60;Guides&#x60;), &#x60;summary&#x60;, Markdown &#x60;body&#x60;, &#x60;position&#x60; (0) and &#x60;published&#x60; (true). An existing guide with the same slug and locale is overwritten (upsert). Clears the public read cache.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param createGuideDto  (required)
+   * @return Guide
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerCreate(CreateGuideDto createGuideDto) throws ApiException {
-    guidesControllerCreateWithHttpInfo(createGuideDto);
+  public Guide guidesControllerCreate(CreateGuideDto createGuideDto) throws ApiException {
+    ApiResponse<Guide> localVarResponse = guidesControllerCreateWithHttpInfo(createGuideDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create or replace a guide
+   * Creates a guide from &#x60;slug&#x60; and &#x60;title&#x60; with optional &#x60;locale&#x60; (&#x60;en&#x60;), &#x60;category&#x60; (&#x60;Guides&#x60;), &#x60;summary&#x60;, Markdown &#x60;body&#x60;, &#x60;position&#x60; (0) and &#x60;published&#x60; (true). An existing guide with the same slug and locale is overwritten (upsert). Clears the public read cache.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param createGuideDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;Guide&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerCreateWithHttpInfo(CreateGuideDto createGuideDto) throws ApiException {
+  public ApiResponse<Guide> guidesControllerCreateWithHttpInfo(CreateGuideDto createGuideDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerCreateRequestBuilder(createGuideDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -202,17 +204,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerCreate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<Guide>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<Guide>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -254,25 +251,27 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Get a published guide
+   * Public. Returns a published guide by &#x60;slug&#x60; and &#x60;locale&#x60; (default &#x60;en&#x60;). An unknown or unpublished slug returns HTTP 200 with &#x60;{ error: \&quot;not_found\&quot; }&#x60;, not 404.  Auth: public, no credentials required.
    * @param slug  (required)
    * @param locale  (required)
+   * @return GuidesControllerGet200Response
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerGet(String slug, String locale) throws ApiException {
-    guidesControllerGetWithHttpInfo(slug, locale);
+  public GuidesControllerGet200Response guidesControllerGet(String slug, String locale) throws ApiException {
+    ApiResponse<GuidesControllerGet200Response> localVarResponse = guidesControllerGetWithHttpInfo(slug, locale);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get a published guide
+   * Public. Returns a published guide by &#x60;slug&#x60; and &#x60;locale&#x60; (default &#x60;en&#x60;). An unknown or unpublished slug returns HTTP 200 with &#x60;{ error: \&quot;not_found\&quot; }&#x60;, not 404.  Auth: public, no credentials required.
    * @param slug  (required)
    * @param locale  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;GuidesControllerGet200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerGetWithHttpInfo(String slug, String locale) throws ApiException {
+  public ApiResponse<GuidesControllerGet200Response> guidesControllerGetWithHttpInfo(String slug, String locale) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerGetRequestBuilder(slug, locale);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -285,17 +284,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<GuidesControllerGet200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<GuidesControllerGet200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -351,21 +345,23 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Render the public docs index page
+   * Public, server-rendered HTML for /guides: a card per published English guide plus category navigation. Cached (max-age 300, s-maxage 3600) for search engines.  Auth: public, no credentials required.
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerIndexHtml() throws ApiException {
-    guidesControllerIndexHtmlWithHttpInfo();
+  public String guidesControllerIndexHtml() throws ApiException {
+    ApiResponse<String> localVarResponse = guidesControllerIndexHtmlWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Render the public docs index page
+   * Public, server-rendered HTML for /guides: a card per published English guide plus category navigation. Cached (max-age 300, s-maxage 3600) for search engines.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerIndexHtmlWithHttpInfo() throws ApiException {
+  public ApiResponse<String> guidesControllerIndexHtmlWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerIndexHtmlRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -378,17 +374,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerIndexHtml", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -407,7 +398,7 @@ public class GuidesApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/html");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -420,25 +411,27 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * List published guides
+   * Public. Returns published guides for &#x60;locale&#x60; (default &#x60;en&#x60;), ordered by category, position and title, optionally filtered by &#x60;category&#x60;. Reads are cached in Redis for 60 seconds. This is the in-app docs feed, separate from the OpenAPI reference at /v1/docs.  Auth: public, no credentials required.
    * @param locale  (required)
    * @param category  (required)
+   * @return List&lt;Guide&gt;
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerList(String locale, String category) throws ApiException {
-    guidesControllerListWithHttpInfo(locale, category);
+  public List<Guide> guidesControllerList(String locale, String category) throws ApiException {
+    ApiResponse<List<Guide>> localVarResponse = guidesControllerListWithHttpInfo(locale, category);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List published guides
+   * Public. Returns published guides for &#x60;locale&#x60; (default &#x60;en&#x60;), ordered by category, position and title, optionally filtered by &#x60;category&#x60;. Reads are cached in Redis for 60 seconds. This is the in-app docs feed, separate from the OpenAPI reference at /v1/docs.  Auth: public, no credentials required.
    * @param locale  (required)
    * @param category  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;Guide&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerListWithHttpInfo(String locale, String category) throws ApiException {
+  public ApiResponse<List<Guide>> guidesControllerListWithHttpInfo(String locale, String category) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerListRequestBuilder(locale, category);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -451,17 +444,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<Guide>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<Guide>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -518,23 +506,25 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Render a public guide page
+   * Public, server-rendered HTML for one English guide, with its Markdown body rendered escape-first (raw HTML is neutralized), TechArticle JSON-LD and canonical URL. Unknown slugs return a 404 HTML page.  Auth: public, no credentials required.
    * @param slug  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerPageHtml(String slug) throws ApiException {
-    guidesControllerPageHtmlWithHttpInfo(slug);
+  public String guidesControllerPageHtml(String slug) throws ApiException {
+    ApiResponse<String> localVarResponse = guidesControllerPageHtmlWithHttpInfo(slug);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Render a public guide page
+   * Public, server-rendered HTML for one English guide, with its Markdown body rendered escape-first (raw HTML is neutralized), TechArticle JSON-LD and canonical URL. Unknown slugs return a 404 HTML page.  Auth: public, no credentials required.
    * @param slug  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerPageHtmlWithHttpInfo(String slug) throws ApiException {
+  public ApiResponse<String> guidesControllerPageHtmlWithHttpInfo(String slug) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerPageHtmlRequestBuilder(slug);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -547,17 +537,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerPageHtml", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -581,7 +566,7 @@ public class GuidesApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/html");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -594,23 +579,25 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a guide
+   * Deletes the guide and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return AdminControllerSetStatus201Response
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerRemove(String id) throws ApiException {
-    guidesControllerRemoveWithHttpInfo(id);
+  public AdminControllerSetStatus201Response guidesControllerRemove(String id) throws ApiException {
+    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = guidesControllerRemoveWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a guide
+   * Deletes the guide and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerRemoveWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdminControllerSetStatus201Response> guidesControllerRemoveWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerRemoveRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -623,17 +610,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerRemove", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdminControllerSetStatus201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -670,21 +652,23 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Get the docs sitemap
+   * Public XML sitemap listing /guides and every published English guide page.  Auth: public, no credentials required.
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerSitemap() throws ApiException {
-    guidesControllerSitemapWithHttpInfo();
+  public String guidesControllerSitemap() throws ApiException {
+    ApiResponse<String> localVarResponse = guidesControllerSitemapWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the docs sitemap
+   * Public XML sitemap listing /guides and every published English guide page.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerSitemapWithHttpInfo() throws ApiException {
+  public ApiResponse<String> guidesControllerSitemapWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerSitemapRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -697,17 +681,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerSitemap", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -726,7 +705,7 @@ public class GuidesApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "application/xml");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -739,25 +718,27 @@ public class GuidesApi {
   }
 
   /**
-   * 
-   * 
+   * Update a guide
+   * Partially updates any of slug, locale, title, category, summary, body, position and published, and clears the public cache. Returns the updated guide, or null for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param updateGuideDto  (required)
+   * @return Guide
    * @throws ApiException if fails to make API call
    */
-  public void guidesControllerUpdate(String id, UpdateGuideDto updateGuideDto) throws ApiException {
-    guidesControllerUpdateWithHttpInfo(id, updateGuideDto);
+  public Guide guidesControllerUpdate(String id, UpdateGuideDto updateGuideDto) throws ApiException {
+    ApiResponse<Guide> localVarResponse = guidesControllerUpdateWithHttpInfo(id, updateGuideDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a guide
+   * Partially updates any of slug, locale, title, category, summary, body, position and published, and clears the public cache. Returns the updated guide, or null for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param updateGuideDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;Guide&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> guidesControllerUpdateWithHttpInfo(String id, UpdateGuideDto updateGuideDto) throws ApiException {
+  public ApiResponse<Guide> guidesControllerUpdateWithHttpInfo(String id, UpdateGuideDto updateGuideDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerUpdateRequestBuilder(id, updateGuideDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -770,17 +751,12 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<Guide>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<Guide>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

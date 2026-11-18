@@ -17,6 +17,10 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.BillingControllerGenerate201Response;
+import com.adviverse.api.models.BillingControllerStatement200Response;
+import com.adviverse.api.models.BillingInvoice;
+import com.adviverse.api.models.BillingInvoiceWithLines;
 import com.adviverse.api.models.GenerateInvoiceDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,23 +86,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Generate a draft invoice for an account (admin)
+   * Creates a draft invoice for &#x60;accountId&#x60; over &#x60;periodStart&#x60;..&#x60;periodEnd&#x60; (YYYY-MM-DD, inclusive). The charge equals the account&#39;s ledger &#39;spend&#39; for the period; ClickHouse impression/click counts only label zero-amount detail lines. Tax comes from tax_rates for the account&#39;s tax_country (0 if none). Numbered INV-YYYY-NNNNNN. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param generateInvoiceDto  (required)
+   * @return BillingControllerGenerate201Response
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerGenerate(GenerateInvoiceDto generateInvoiceDto) throws ApiException {
-    billingControllerGenerateWithHttpInfo(generateInvoiceDto);
+  public BillingControllerGenerate201Response billingControllerGenerate(GenerateInvoiceDto generateInvoiceDto) throws ApiException {
+    ApiResponse<BillingControllerGenerate201Response> localVarResponse = billingControllerGenerateWithHttpInfo(generateInvoiceDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Generate a draft invoice for an account (admin)
+   * Creates a draft invoice for &#x60;accountId&#x60; over &#x60;periodStart&#x60;..&#x60;periodEnd&#x60; (YYYY-MM-DD, inclusive). The charge equals the account&#39;s ledger &#39;spend&#39; for the period; ClickHouse impression/click counts only label zero-amount detail lines. Tax comes from tax_rates for the account&#39;s tax_country (0 if none). Numbered INV-YYYY-NNNNNN. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param generateInvoiceDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BillingControllerGenerate201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerGenerateWithHttpInfo(GenerateInvoiceDto generateInvoiceDto) throws ApiException {
+  public ApiResponse<BillingControllerGenerate201Response> billingControllerGenerateWithHttpInfo(GenerateInvoiceDto generateInvoiceDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerGenerateRequestBuilder(generateInvoiceDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -111,17 +117,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerGenerate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BillingControllerGenerate201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BillingControllerGenerate201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -163,23 +164,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Get an invoice with its line items
+   * Returns one invoice by id with its lines. Advertisers may only read their own invoices (403 otherwise); 404 if not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return BillingInvoiceWithLines
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerGet(String id) throws ApiException {
-    billingControllerGetWithHttpInfo(id);
+  public BillingInvoiceWithLines billingControllerGet(String id) throws ApiException {
+    ApiResponse<BillingInvoiceWithLines> localVarResponse = billingControllerGetWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get an invoice with its line items
+   * Returns one invoice by id with its lines. Advertisers may only read their own invoices (403 otherwise); 404 if not found.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BillingInvoiceWithLines&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerGetWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<BillingInvoiceWithLines> billingControllerGetWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerGetRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -192,17 +195,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BillingInvoiceWithLines>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BillingInvoiceWithLines>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -239,23 +237,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Issue a draft invoice (admin)
+   * Moves a draft invoice to &#39;issued&#39;, setting issued_at to now and due_date from the account&#39;s payment_terms_days. 400 if the invoice is not a draft.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return BillingInvoice
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerIssue(String id) throws ApiException {
-    billingControllerIssueWithHttpInfo(id);
+  public BillingInvoice billingControllerIssue(String id) throws ApiException {
+    ApiResponse<BillingInvoice> localVarResponse = billingControllerIssueWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Issue a draft invoice (admin)
+   * Moves a draft invoice to &#39;issued&#39;, setting issued_at to now and due_date from the account&#39;s payment_terms_days. 400 if the invoice is not a draft.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BillingInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerIssueWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<BillingInvoice> billingControllerIssueWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerIssueRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -268,17 +268,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerIssue", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BillingInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BillingInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -315,23 +310,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * List invoices
+   * Returns up to 500 invoices, newest first. Advertisers see only their own; admins see all and may filter with &#x60;?accountId&#x3D;&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param accountId  (required)
+   * @return List&lt;BillingInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerList(String accountId) throws ApiException {
-    billingControllerListWithHttpInfo(accountId);
+  public List<BillingInvoice> billingControllerList(String accountId) throws ApiException {
+    ApiResponse<List<BillingInvoice>> localVarResponse = billingControllerListWithHttpInfo(accountId);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List invoices
+   * Returns up to 500 invoices, newest first. Advertisers see only their own; admins see all and may filter with &#x60;?accountId&#x3D;&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param accountId  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;BillingInvoice&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerListWithHttpInfo(String accountId) throws ApiException {
+  public ApiResponse<List<BillingInvoice>> billingControllerListWithHttpInfo(String accountId) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerListRequestBuilder(accountId);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -344,17 +341,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<BillingInvoice>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<BillingInvoice>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -405,23 +397,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Pay an issued invoice from the balance
+   * Posts an &#39;invoice_payment&#39; debit for the invoice total against the account&#39;s available balance (idempotent per invoice) and marks the invoice paid. Already-paid invoices are returned unchanged; other non-issued statuses return 400, and insufficient funds return 400. Advertisers may pay only their own invoices.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return BillingInvoice
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerPay(String id) throws ApiException {
-    billingControllerPayWithHttpInfo(id);
+  public BillingInvoice billingControllerPay(String id) throws ApiException {
+    ApiResponse<BillingInvoice> localVarResponse = billingControllerPayWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Pay an issued invoice from the balance
+   * Posts an &#39;invoice_payment&#39; debit for the invoice total against the account&#39;s available balance (idempotent per invoice) and marks the invoice paid. Already-paid invoices are returned unchanged; other non-issued statuses return 400, and insufficient funds return 400. Advertisers may pay only their own invoices.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BillingInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerPayWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<BillingInvoice> billingControllerPayWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerPayRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -434,17 +428,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerPay", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BillingInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BillingInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -481,23 +470,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Render an invoice as HTML
+   * Returns a self-contained printable HTML document for the invoice (number, status, period, dates, line items and totals). Same access rules as fetching the invoice.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerRender(String id) throws ApiException {
-    billingControllerRenderWithHttpInfo(id);
+  public String billingControllerRender(String id) throws ApiException {
+    ApiResponse<String> localVarResponse = billingControllerRenderWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Render an invoice as HTML
+   * Returns a self-contained printable HTML document for the invoice (number, status, period, dates, line items and totals). Same access rules as fetching the invoice.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerRenderWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<String> billingControllerRenderWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerRenderRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -510,17 +501,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerRender", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -544,7 +530,7 @@ public class BillingApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/html");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -557,21 +543,23 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Get an account statement from the ledger
+   * Derives a statement over &#x60;from&#x60;..&#x60;to&#x60; (YYYY-MM-DD; defaults 2020-01-01 to today) from ledger entries that touched the available balance: opening balance, charges (debits), payments (credits), closing balance, and up to 1000 entries in the window. Admins may pass &#x60;?accountId&#x3D;&#x60;; advertisers always get their own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return BillingControllerStatement200Response
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerStatement() throws ApiException {
-    billingControllerStatementWithHttpInfo();
+  public BillingControllerStatement200Response billingControllerStatement() throws ApiException {
+    ApiResponse<BillingControllerStatement200Response> localVarResponse = billingControllerStatementWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get an account statement from the ledger
+   * Derives a statement over &#x60;from&#x60;..&#x60;to&#x60; (YYYY-MM-DD; defaults 2020-01-01 to today) from ledger entries that touched the available balance: opening balance, charges (debits), payments (credits), closing balance, and up to 1000 entries in the window. Admins may pass &#x60;?accountId&#x3D;&#x60;; advertisers always get their own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;BillingControllerStatement200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerStatementWithHttpInfo() throws ApiException {
+  public ApiResponse<BillingControllerStatement200Response> billingControllerStatementWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerStatementRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -584,17 +572,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerStatement", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BillingControllerStatement200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BillingControllerStatement200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -626,23 +609,25 @@ public class BillingApi {
   }
 
   /**
-   * 
-   * 
+   * Void an invoice (admin)
+   * Marks any unpaid invoice as &#39;void&#39;. Paid invoices cannot be voided (400); an already-void invoice is returned unchanged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
+   * @return BillingInvoice
    * @throws ApiException if fails to make API call
    */
-  public void billingControllerVoid(String id) throws ApiException {
-    billingControllerVoidWithHttpInfo(id);
+  public BillingInvoice billingControllerVoid(String id) throws ApiException {
+    ApiResponse<BillingInvoice> localVarResponse = billingControllerVoidWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Void an invoice (admin)
+   * Marks any unpaid invoice as &#39;void&#39;. Paid invoices cannot be voided (400); an already-void invoice is returned unchanged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;BillingInvoice&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> billingControllerVoidWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<BillingInvoice> billingControllerVoidWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = billingControllerVoidRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -655,17 +640,12 @@ public class BillingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("billingControllerVoid", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<BillingInvoice>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BillingInvoice>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

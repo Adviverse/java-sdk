@@ -17,7 +17,12 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AudienceAutomationRule;
 import com.adviverse.api.models.CreateAutomationRuleDto;
+import com.adviverse.api.models.OptimizationControllerAckAlert201Response;
+import com.adviverse.api.models.OptimizationControllerListAlerts200ResponseInner;
+import com.adviverse.api.models.OptimizationControllerOptimizerLog200ResponseInner;
+import com.adviverse.api.models.PixelControllerDeletePixel200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,23 +87,25 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * Acknowledge an alert
+   * Marks alert &#x60;id&#x60; as acknowledged. Ids not owned by the account are silently ignored, and the response is the same either way.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return OptimizationControllerAckAlert201Response
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerAckAlert(String id) throws ApiException {
-    optimizationControllerAckAlertWithHttpInfo(id);
+  public OptimizationControllerAckAlert201Response optimizationControllerAckAlert(String id) throws ApiException {
+    ApiResponse<OptimizationControllerAckAlert201Response> localVarResponse = optimizationControllerAckAlertWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Acknowledge an alert
+   * Marks alert &#x60;id&#x60; as acknowledged. Ids not owned by the account are silently ignored, and the response is the same either way.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;OptimizationControllerAckAlert201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerAckAlertWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<OptimizationControllerAckAlert201Response> optimizationControllerAckAlertWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerAckAlertRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -111,17 +118,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerAckAlert", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<OptimizationControllerAckAlert201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<OptimizationControllerAckAlert201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -158,23 +160,25 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * Create an automation rule
+   * Creates a rule of the form \&quot;when &#x60;metric&#x60; (cpa, ctr, spend, conversions, fill_rate) is &#x60;operator&#x60; (gt or lt) &#x60;threshold&#x60; over &#x60;windowHours&#x60;, apply &#x60;action&#x60;\&quot; (pause, resume, notify or adjust_bid). &#x60;name&#x60;, &#x60;metric&#x60;, &#x60;operator&#x60;, &#x60;threshold&#x60; and &#x60;action&#x60; are required. &#x60;scope&#x60; is campaign (the default, which requires &#x60;targetId&#x60;) or all. &#x60;windowHours&#x60; defaults to 24 and is clamped to 1-720. &#x60;actionValue&#x60; is kept only for adjust_bid. Invalid input returns 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createAutomationRuleDto  (required)
+   * @return AudienceAutomationRule
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerCreateRule(CreateAutomationRuleDto createAutomationRuleDto) throws ApiException {
-    optimizationControllerCreateRuleWithHttpInfo(createAutomationRuleDto);
+  public AudienceAutomationRule optimizationControllerCreateRule(CreateAutomationRuleDto createAutomationRuleDto) throws ApiException {
+    ApiResponse<AudienceAutomationRule> localVarResponse = optimizationControllerCreateRuleWithHttpInfo(createAutomationRuleDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create an automation rule
+   * Creates a rule of the form \&quot;when &#x60;metric&#x60; (cpa, ctr, spend, conversions, fill_rate) is &#x60;operator&#x60; (gt or lt) &#x60;threshold&#x60; over &#x60;windowHours&#x60;, apply &#x60;action&#x60;\&quot; (pause, resume, notify or adjust_bid). &#x60;name&#x60;, &#x60;metric&#x60;, &#x60;operator&#x60;, &#x60;threshold&#x60; and &#x60;action&#x60; are required. &#x60;scope&#x60; is campaign (the default, which requires &#x60;targetId&#x60;) or all. &#x60;windowHours&#x60; defaults to 24 and is clamped to 1-720. &#x60;actionValue&#x60; is kept only for adjust_bid. Invalid input returns 400.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param createAutomationRuleDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AudienceAutomationRule&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerCreateRuleWithHttpInfo(CreateAutomationRuleDto createAutomationRuleDto) throws ApiException {
+  public ApiResponse<AudienceAutomationRule> optimizationControllerCreateRuleWithHttpInfo(CreateAutomationRuleDto createAutomationRuleDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerCreateRuleRequestBuilder(createAutomationRuleDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -187,17 +191,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerCreateRule", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AudienceAutomationRule>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AudienceAutomationRule>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -239,21 +238,23 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * List anomaly alerts
+   * Returns up to 200 of the account&#39;s anomaly alerts, newest first. Alerts are raised by the hourly anomaly detector. Kinds include spend and CPA spikes, CTR and CVR drops, fill-rate drops and no-fill spikes.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;OptimizationControllerListAlerts200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerListAlerts() throws ApiException {
-    optimizationControllerListAlertsWithHttpInfo();
+  public List<OptimizationControllerListAlerts200ResponseInner> optimizationControllerListAlerts() throws ApiException {
+    ApiResponse<List<OptimizationControllerListAlerts200ResponseInner>> localVarResponse = optimizationControllerListAlertsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List anomaly alerts
+   * Returns up to 200 of the account&#39;s anomaly alerts, newest first. Alerts are raised by the hourly anomaly detector. Kinds include spend and CPA spikes, CTR and CVR drops, fill-rate drops and no-fill spikes.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;OptimizationControllerListAlerts200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerListAlertsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<OptimizationControllerListAlerts200ResponseInner>> optimizationControllerListAlertsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerListAlertsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -266,17 +267,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerListAlerts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<OptimizationControllerListAlerts200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<OptimizationControllerListAlerts200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -308,21 +304,23 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * List automation rules
+   * Returns the account&#39;s automation rules, newest first. A background job evaluates each enabled rule&#39;s metric over its window and applies the action when the condition holds.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;AudienceAutomationRule&gt;
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerListRules() throws ApiException {
-    optimizationControllerListRulesWithHttpInfo();
+  public List<AudienceAutomationRule> optimizationControllerListRules() throws ApiException {
+    ApiResponse<List<AudienceAutomationRule>> localVarResponse = optimizationControllerListRulesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List automation rules
+   * Returns the account&#39;s automation rules, newest first. A background job evaluates each enabled rule&#39;s metric over its window and applies the action when the condition holds.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;AudienceAutomationRule&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerListRulesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AudienceAutomationRule>> optimizationControllerListRulesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerListRulesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -335,17 +333,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerListRules", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AudienceAutomationRule>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AudienceAutomationRule>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -377,23 +370,25 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * List budget-optimizer reallocations
+   * Audit log of the automatic budget reallocator. For auto-strategy campaigns it moves daily budget toward lower-CPA performers, keeps the advertiser&#39;s total budget unchanged and limits how far each campaign can move. Each row records the old and new budget and the CPA, conversions and spend that drove the change. &#x60;limit&#x60; defaults to 100 and is clamped to 1-500; newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param limit  (required)
+   * @return List&lt;OptimizationControllerOptimizerLog200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerOptimizerLog(String limit) throws ApiException {
-    optimizationControllerOptimizerLogWithHttpInfo(limit);
+  public List<OptimizationControllerOptimizerLog200ResponseInner> optimizationControllerOptimizerLog(String limit) throws ApiException {
+    ApiResponse<List<OptimizationControllerOptimizerLog200ResponseInner>> localVarResponse = optimizationControllerOptimizerLogWithHttpInfo(limit);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List budget-optimizer reallocations
+   * Audit log of the automatic budget reallocator. For auto-strategy campaigns it moves daily budget toward lower-CPA performers, keeps the advertiser&#39;s total budget unchanged and limits how far each campaign can move. Each row records the old and new budget and the CPA, conversions and spend that drove the change. &#x60;limit&#x60; defaults to 100 and is clamped to 1-500; newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param limit  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;OptimizationControllerOptimizerLog200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerOptimizerLogWithHttpInfo(String limit) throws ApiException {
+  public ApiResponse<List<OptimizationControllerOptimizerLog200ResponseInner>> optimizationControllerOptimizerLogWithHttpInfo(String limit) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerOptimizerLogRequestBuilder(limit);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -406,17 +401,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerOptimizerLog", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<OptimizationControllerOptimizerLog200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<OptimizationControllerOptimizerLog200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -467,23 +457,25 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * Delete an automation rule
+   * Deletes rule &#x60;id&#x60; if it belongs to the account. Deleting an id the account does not own is a silent no-op that still returns &#x60;{deleted:true}&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return PixelControllerDeletePixel200Response
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerRemoveRule(String id) throws ApiException {
-    optimizationControllerRemoveRuleWithHttpInfo(id);
+  public PixelControllerDeletePixel200Response optimizationControllerRemoveRule(String id) throws ApiException {
+    ApiResponse<PixelControllerDeletePixel200Response> localVarResponse = optimizationControllerRemoveRuleWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete an automation rule
+   * Deletes rule &#x60;id&#x60; if it belongs to the account. Deleting an id the account does not own is a silent no-op that still returns &#x60;{deleted:true}&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PixelControllerDeletePixel200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerRemoveRuleWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PixelControllerDeletePixel200Response> optimizationControllerRemoveRuleWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerRemoveRuleRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -496,17 +488,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerRemoveRule", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PixelControllerDeletePixel200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PixelControllerDeletePixel200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -543,23 +530,25 @@ public class OptimizationApi {
   }
 
   /**
-   * 
-   * 
+   * Enable or disable an automation rule
+   * Sets &#x60;enabled&#x60; from the request body on rule &#x60;id&#x60; without deleting it. Returns the updated rule. If the rule does not exist or is not owned by the account, the response is 400 \&quot;rule not found\&quot;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
+   * @return AudienceAutomationRule
    * @throws ApiException if fails to make API call
    */
-  public void optimizationControllerSetRuleEnabled(String id) throws ApiException {
-    optimizationControllerSetRuleEnabledWithHttpInfo(id);
+  public AudienceAutomationRule optimizationControllerSetRuleEnabled(String id) throws ApiException {
+    ApiResponse<AudienceAutomationRule> localVarResponse = optimizationControllerSetRuleEnabledWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Enable or disable an automation rule
+   * Sets &#x60;enabled&#x60; from the request body on rule &#x60;id&#x60; without deleting it. Returns the updated rule. If the rule does not exist or is not owned by the account, the response is 400 \&quot;rule not found\&quot;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AudienceAutomationRule&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> optimizationControllerSetRuleEnabledWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AudienceAutomationRule> optimizationControllerSetRuleEnabledWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = optimizationControllerSetRuleEnabledRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -572,17 +561,12 @@ public class OptimizationApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("optimizationControllerSetRuleEnabled", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AudienceAutomationRule>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AudienceAutomationRule>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

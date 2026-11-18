@@ -17,6 +17,11 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AdvDeleted;
+import com.adviverse.api.models.AdvTeamMember;
+import com.adviverse.api.models.AuthControllerResendVerification201Response;
+import com.adviverse.api.models.MembersControllerAccept201Response;
+import com.adviverse.api.models.MembersControllerInviteInfo200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +86,23 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * Accept a team invitation
+   * Public endpoint. Sets the member&#39;s password (minimum 8 characters) and optional &#x60;name&#x60;, activates the seat, consumes the invite token, and returns a new session token so the dashboard can log in straight away. Responds 400 for a short password or an invalid or expired token.  Auth: public, no credentials required.
+   * @return MembersControllerAccept201Response
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerAccept() throws ApiException {
-    membersControllerAcceptWithHttpInfo();
+  public MembersControllerAccept201Response membersControllerAccept() throws ApiException {
+    ApiResponse<MembersControllerAccept201Response> localVarResponse = membersControllerAcceptWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Accept a team invitation
+   * Public endpoint. Sets the member&#39;s password (minimum 8 characters) and optional &#x60;name&#x60;, activates the seat, consumes the invite token, and returns a new session token so the dashboard can log in straight away. Responds 400 for a short password or an invalid or expired token.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;MembersControllerAccept201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerAcceptWithHttpInfo() throws ApiException {
+  public ApiResponse<MembersControllerAccept201Response> membersControllerAcceptWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerAcceptRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +115,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerAccept", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<MembersControllerAccept201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<MembersControllerAccept201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -150,21 +152,23 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * Invite a team member
+   * Creates (or refreshes) an invited seat and emails a single-use accept link valid for 7 days. Body: &#x60;email&#x60;, &#x60;name&#x60;, &#x60;role&#x60; (admin, manager or analyst; anything else becomes analyst), &#x60;allPixels&#x60; and &#x60;pixelIds&#x60;. Admins always get all pixels. Responds 400 for an invalid email, an email that already has an Adviverse account or a seat on another account, or a pixel id the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return AdvTeamMember
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerInvite() throws ApiException {
-    membersControllerInviteWithHttpInfo();
+  public AdvTeamMember membersControllerInvite() throws ApiException {
+    ApiResponse<AdvTeamMember> localVarResponse = membersControllerInviteWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Invite a team member
+   * Creates (or refreshes) an invited seat and emails a single-use accept link valid for 7 days. Body: &#x60;email&#x60;, &#x60;name&#x60;, &#x60;role&#x60; (admin, manager or analyst; anything else becomes analyst), &#x60;allPixels&#x60; and &#x60;pixelIds&#x60;. Admins always get all pixels. Responds 400 for an invalid email, an email that already has an Adviverse account or a seat on another account, or a pixel id the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;AdvTeamMember&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerInviteWithHttpInfo() throws ApiException {
+  public ApiResponse<AdvTeamMember> membersControllerInviteWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerInviteRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -177,17 +181,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerInvite", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvTeamMember>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvTeamMember>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -219,23 +218,25 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * Look up an invitation by token
+   * Public endpoint for the accept-invite page. Returns the invited email, role and agency name for the &#x60;token&#x60; query parameter. Responds 404 when the token is invalid or expired.  Auth: public, no credentials required.
    * @param token  (required)
+   * @return MembersControllerInviteInfo200Response
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerInviteInfo(String token) throws ApiException {
-    membersControllerInviteInfoWithHttpInfo(token);
+  public MembersControllerInviteInfo200Response membersControllerInviteInfo(String token) throws ApiException {
+    ApiResponse<MembersControllerInviteInfo200Response> localVarResponse = membersControllerInviteInfoWithHttpInfo(token);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Look up an invitation by token
+   * Public endpoint for the accept-invite page. Returns the invited email, role and agency name for the &#x60;token&#x60; query parameter. Responds 404 when the token is invalid or expired.  Auth: public, no credentials required.
    * @param token  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;MembersControllerInviteInfo200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerInviteInfoWithHttpInfo(String token) throws ApiException {
+  public ApiResponse<MembersControllerInviteInfo200Response> membersControllerInviteInfoWithHttpInfo(String token) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerInviteInfoRequestBuilder(token);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -248,17 +249,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerInviteInfo", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<MembersControllerInviteInfo200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<MembersControllerInviteInfo200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -309,21 +305,23 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * List team members
+   * Returns every seat on the agency account with role, status and pixel grants. Team-management routes are for the account owner and admin seats only; manager and analyst seats cannot reach them.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;AdvTeamMember&gt;
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerList() throws ApiException {
-    membersControllerListWithHttpInfo();
+  public List<AdvTeamMember> membersControllerList() throws ApiException {
+    ApiResponse<List<AdvTeamMember>> localVarResponse = membersControllerListWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List team members
+   * Returns every seat on the agency account with role, status and pixel grants. Team-management routes are for the account owner and admin seats only; manager and analyst seats cannot reach them.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;AdvTeamMember&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerListWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AdvTeamMember>> membersControllerListWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerListRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -336,17 +334,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerList", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AdvTeamMember>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AdvTeamMember>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -378,23 +371,25 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * Remove a team member
+   * Deletes the seat. Always returns &#x60;deleted: true&#x60;, even if no seat matched.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AdvDeleted
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerRemove(String id) throws ApiException {
-    membersControllerRemoveWithHttpInfo(id);
+  public AdvDeleted membersControllerRemove(String id) throws ApiException {
+    ApiResponse<AdvDeleted> localVarResponse = membersControllerRemoveWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Remove a team member
+   * Deletes the seat. Always returns &#x60;deleted: true&#x60;, even if no seat matched.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvDeleted&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerRemoveWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvDeleted> membersControllerRemoveWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerRemoveRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -407,17 +402,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerRemove", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvDeleted>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvDeleted>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -454,23 +444,25 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * Resend a team invitation
+   * Issues a new invite token (invalidating the previous link), resets the 7-day expiry and emails it again. Responds 404 for an unknown member and 400 when the member is already active.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerResend(String id) throws ApiException {
-    membersControllerResendWithHttpInfo(id);
+  public AuthControllerResendVerification201Response membersControllerResend(String id) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = membersControllerResendWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Resend a team invitation
+   * Issues a new invite token (invalidating the previous link), resets the 7-day expiry and emails it again. Responds 404 for an unknown member and 400 when the member is already active.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerResendWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> membersControllerResendWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerResendRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -483,17 +475,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerResend", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -530,23 +517,25 @@ public class MembersApi {
   }
 
   /**
-   * 
-   * 
+   * Update a team member
+   * Changes a seat&#39;s &#x60;role&#x60;, &#x60;allPixels&#x60;, &#x60;pixelIds&#x60; (replaces the grants), &#x60;status&#x60; (active, disabled or invited) and/or &#x60;name&#x60;. Disabling a member revokes their live sessions immediately. Responds 404 for an unknown member and 400 for a pixel the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
+   * @return AdvTeamMember
    * @throws ApiException if fails to make API call
    */
-  public void membersControllerUpdate(String id) throws ApiException {
-    membersControllerUpdateWithHttpInfo(id);
+  public AdvTeamMember membersControllerUpdate(String id) throws ApiException {
+    ApiResponse<AdvTeamMember> localVarResponse = membersControllerUpdateWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Update a team member
+   * Changes a seat&#39;s &#x60;role&#x60;, &#x60;allPixels&#x60;, &#x60;pixelIds&#x60; (replaces the grants), &#x60;status&#x60; (active, disabled or invited) and/or &#x60;name&#x60;. Disabling a member revokes their live sessions immediately. Responds 404 for an unknown member and 400 for a pixel the account does not own.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AdvTeamMember&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> membersControllerUpdateWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<AdvTeamMember> membersControllerUpdateWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = membersControllerUpdateRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -559,17 +548,12 @@ public class MembersApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("membersControllerUpdate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AdvTeamMember>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdvTeamMember>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

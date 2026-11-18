@@ -17,6 +17,18 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AuthControllerConnections200ResponseInner;
+import com.adviverse.api.models.AuthControllerEnable2fa201Response;
+import com.adviverse.api.models.AuthControllerGithubStart201Response;
+import com.adviverse.api.models.AuthControllerOauthDiscord201Response;
+import com.adviverse.api.models.AuthControllerResendVerification201Response;
+import com.adviverse.api.models.AuthControllerSetPassword201Response;
+import com.adviverse.api.models.AuthControllerSetup2fa201Response;
+import com.adviverse.api.models.AuthControllerSignup201Response;
+import com.adviverse.api.models.AuthControllerSsoConfig200Response;
+import com.adviverse.api.models.AuthControllerVerify201Response;
+import com.adviverse.api.models.AuthMe;
+import com.adviverse.api.models.AuthSession;
 import com.adviverse.api.models.EmailDto;
 import com.adviverse.api.models.LoginDto;
 import com.adviverse.api.models.OauthDiscordDto;
@@ -89,21 +101,23 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * List linked SSO providers
+   * Lists the social sign-in providers connected to the current account, oldest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;AuthControllerConnections200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void authControllerConnections() throws ApiException {
-    authControllerConnectionsWithHttpInfo();
+  public List<AuthControllerConnections200ResponseInner> authControllerConnections() throws ApiException {
+    ApiResponse<List<AuthControllerConnections200ResponseInner>> localVarResponse = authControllerConnectionsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List linked SSO providers
+   * Lists the social sign-in providers connected to the current account, oldest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;AuthControllerConnections200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerConnectionsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<AuthControllerConnections200ResponseInner>> authControllerConnectionsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerConnectionsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -116,17 +130,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerConnections", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<AuthControllerConnections200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<AuthControllerConnections200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -158,23 +167,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Disconnect an SSO provider
+   * Removes the connection for &#x60;provider&#x60; from the current account. Refuses with 400 when the account has no password and this is its only connection, so the user cannot lock themselves out. Unknown providers are a no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param provider  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerDisconnect(String provider) throws ApiException {
-    authControllerDisconnectWithHttpInfo(provider);
+  public AuthControllerResendVerification201Response authControllerDisconnect(String provider) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = authControllerDisconnectWithHttpInfo(provider);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Disconnect an SSO provider
+   * Removes the connection for &#x60;provider&#x60; from the current account. Refuses with 400 when the account has no password and this is its only connection, so the user cannot lock themselves out. Unknown providers are a no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param provider  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerDisconnectWithHttpInfo(String provider) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> authControllerDisconnectWithHttpInfo(String provider) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerDisconnectRequestBuilder(provider);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -187,17 +198,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerDisconnect", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -234,21 +240,23 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Confirm and enable TOTP 2FA
+   * Verifies &#x60;totp&#x60; against the secret from the setup step and turns on 2FA, after which login requires a code. Returns 400 &#x60;run setup first&#x60; if no secret exists, or &#x60;invalid code&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @return AuthControllerEnable2fa201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerEnable2fa() throws ApiException {
-    authControllerEnable2faWithHttpInfo();
+  public AuthControllerEnable2fa201Response authControllerEnable2fa() throws ApiException {
+    ApiResponse<AuthControllerEnable2fa201Response> localVarResponse = authControllerEnable2faWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Confirm and enable TOTP 2FA
+   * Verifies &#x60;totp&#x60; against the secret from the setup step and turns on 2FA, after which login requires a code. Returns 400 &#x60;run setup first&#x60; if no secret exists, or &#x60;invalid code&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;AuthControllerEnable2fa201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerEnable2faWithHttpInfo() throws ApiException {
+  public ApiResponse<AuthControllerEnable2fa201Response> authControllerEnable2faWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerEnable2faRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -261,17 +269,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerEnable2fa", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerEnable2fa201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerEnable2fa201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -303,23 +306,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Start a password reset
+   * Emails a one-hour password reset link to &#x60;email&#x60; when an account exists. Always returns &#x60;{ ok: true }&#x60; to avoid account enumeration. Rate-limited per IP.  Auth: public, no credentials required.
    * @param emailDto  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerForgotPassword(EmailDto emailDto) throws ApiException {
-    authControllerForgotPasswordWithHttpInfo(emailDto);
+  public AuthControllerResendVerification201Response authControllerForgotPassword(EmailDto emailDto) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = authControllerForgotPasswordWithHttpInfo(emailDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start a password reset
+   * Emails a one-hour password reset link to &#x60;email&#x60; when an account exists. Always returns &#x60;{ ok: true }&#x60; to avoid account enumeration. Rate-limited per IP.  Auth: public, no credentials required.
    * @param emailDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerForgotPasswordWithHttpInfo(EmailDto emailDto) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> authControllerForgotPasswordWithHttpInfo(EmailDto emailDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerForgotPasswordRequestBuilder(emailDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -332,17 +337,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerForgotPassword", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -384,8 +384,8 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * GitHub OAuth callback
+   * Browser redirect target for GitHub. Exchanges &#x60;code&#x60;, verifies &#x60;state&#x60;, then 302-redirects to the dashboard: &#x60;/settings#sso&#x3D;connected&#x60; after linking, &#x60;/login#sso_token&#x3D;&lt;token&gt;&#x60; after login/signup, or &#x60;/login#sso_error&#x3D;github&#x60; on any failure. The session token is passed in the URL fragment so it never reaches a server. Callbacks carrying a state issued by the Atlas identity service are forwarded there instead.  Auth: public, no credentials required.
    * @param code  (required)
    * @param state  (required)
    * @throws ApiException if fails to make API call
@@ -395,8 +395,8 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * GitHub OAuth callback
+   * Browser redirect target for GitHub. Exchanges &#x60;code&#x60;, verifies &#x60;state&#x60;, then 302-redirects to the dashboard: &#x60;/settings#sso&#x3D;connected&#x60; after linking, &#x60;/login#sso_token&#x3D;&lt;token&gt;&#x60; after login/signup, or &#x60;/login#sso_error&#x3D;github&#x60; on any failure. The session token is passed in the URL fragment so it never reaches a server. Callbacks carrying a state issued by the Atlas identity service are forwarded there instead.  Auth: public, no credentials required.
    * @param code  (required)
    * @param state  (required)
    * @return ApiResponse&lt;Void&gt;
@@ -482,25 +482,27 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Start GitHub sign-in
+   * Returns the GitHub authorize URL with a signed state carrying the optional signup &#x60;type&#x60; and, if a bearer token was sent, a \&quot;connect to this account\&quot; intent. POST is used so the session token never appears in a URL. Returns 401 if GitHub SSO is not configured.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthStartDto  (required)
+   * @return AuthControllerGithubStart201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerGithubStart(String authorization, OauthStartDto oauthStartDto) throws ApiException {
-    authControllerGithubStartWithHttpInfo(authorization, oauthStartDto);
+  public AuthControllerGithubStart201Response authControllerGithubStart(String authorization, OauthStartDto oauthStartDto) throws ApiException {
+    ApiResponse<AuthControllerGithubStart201Response> localVarResponse = authControllerGithubStartWithHttpInfo(authorization, oauthStartDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start GitHub sign-in
+   * Returns the GitHub authorize URL with a signed state carrying the optional signup &#x60;type&#x60; and, if a bearer token was sent, a \&quot;connect to this account\&quot; intent. POST is used so the session token never appears in a URL. Returns 401 if GitHub SSO is not configured.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthStartDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerGithubStart201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerGithubStartWithHttpInfo(String authorization, OauthStartDto oauthStartDto) throws ApiException {
+  public ApiResponse<AuthControllerGithubStart201Response> authControllerGithubStartWithHttpInfo(String authorization, OauthStartDto oauthStartDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerGithubStartRequestBuilder(authorization, oauthStartDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -513,17 +515,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerGithubStart", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerGithubStart201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerGithubStart201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -572,23 +569,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Log in with email and password
+   * Exchanges &#x60;email&#x60; + &#x60;password&#x60; for a session bearer token. When 2FA is enabled a &#x60;totp&#x60; code is required; without one the call fails with 401 &#x60;2fa_required&#x60;. Emails not found on an account are tried as agency team-member seats, in which case the session is bound to the agency account and &#x60;account.member&#x60; is set. Returns 401 for bad credentials, banned/suspended accounts, or SSO-only accounts without a password. A Turnstile token is checked when configured; rate-limited per IP.  Auth: public, no credentials required.
    * @param loginDto  (required)
+   * @return AuthSession
    * @throws ApiException if fails to make API call
    */
-  public void authControllerLogin(LoginDto loginDto) throws ApiException {
-    authControllerLoginWithHttpInfo(loginDto);
+  public AuthSession authControllerLogin(LoginDto loginDto) throws ApiException {
+    ApiResponse<AuthSession> localVarResponse = authControllerLoginWithHttpInfo(loginDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Log in with email and password
+   * Exchanges &#x60;email&#x60; + &#x60;password&#x60; for a session bearer token. When 2FA is enabled a &#x60;totp&#x60; code is required; without one the call fails with 401 &#x60;2fa_required&#x60;. Emails not found on an account are tried as agency team-member seats, in which case the session is bound to the agency account and &#x60;account.member&#x60; is set. Returns 401 for bad credentials, banned/suspended accounts, or SSO-only accounts without a password. A Turnstile token is checked when configured; rate-limited per IP.  Auth: public, no credentials required.
    * @param loginDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthSession&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerLoginWithHttpInfo(LoginDto loginDto) throws ApiException {
+  public ApiResponse<AuthSession> authControllerLoginWithHttpInfo(LoginDto loginDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerLoginRequestBuilder(loginDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -601,17 +600,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerLogin", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthSession>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthSession>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -653,23 +647,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Log out
+   * Revokes the session identified by the bearer token in the Authorization header. Always returns &#x60;{ ok: true }&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param authorization  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerLogout(String authorization) throws ApiException {
-    authControllerLogoutWithHttpInfo(authorization);
+  public AuthControllerResendVerification201Response authControllerLogout(String authorization) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = authControllerLogoutWithHttpInfo(authorization);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Log out
+   * Revokes the session identified by the bearer token in the Authorization header. Always returns &#x60;{ ok: true }&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param authorization  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerLogoutWithHttpInfo(String authorization) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> authControllerLogoutWithHttpInfo(String authorization) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerLogoutRequestBuilder(authorization);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -682,17 +678,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerLogout", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -731,21 +722,23 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Get the current session account
+   * Returns the account behind the current session or API key. &#x60;roles&#x60; is &#x60;[\&quot;admin\&quot;]&#x60; for admins and &#x60;[\&quot;publisher\&quot;,\&quot;advertiser\&quot;]&#x60; for every other account, since all accounts are dual-sided; &#x60;type&#x60; is only the signup choice. For agency team-member sessions &#x60;email&#x60; is the member email and &#x60;member&#x60; describes the seat role and pixel grant; otherwise &#x60;member&#x60; is null.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return AuthMe
    * @throws ApiException if fails to make API call
    */
-  public void authControllerMe() throws ApiException {
-    authControllerMeWithHttpInfo();
+  public AuthMe authControllerMe() throws ApiException {
+    ApiResponse<AuthMe> localVarResponse = authControllerMeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get the current session account
+   * Returns the account behind the current session or API key. &#x60;roles&#x60; is &#x60;[\&quot;admin\&quot;]&#x60; for admins and &#x60;[\&quot;publisher\&quot;,\&quot;advertiser\&quot;]&#x60; for every other account, since all accounts are dual-sided; &#x60;type&#x60; is only the signup choice. For agency team-member sessions &#x60;email&#x60; is the member email and &#x60;member&#x60; describes the seat role and pixel grant; otherwise &#x60;member&#x60; is null.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;AuthMe&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerMeWithHttpInfo() throws ApiException {
+  public ApiResponse<AuthMe> authControllerMeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerMeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -758,17 +751,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerMe", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthMe>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthMe>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -800,8 +788,8 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Microsoft OAuth callback
+   * Browser redirect target for Microsoft. Completes the code flow and 302-redirects to the dashboard with &#x60;#sso&#x3D;connected&#x60;, &#x60;#sso_token&#x3D;&lt;token&gt;&#x60; or &#x60;#sso_error&#x3D;microsoft&#x60;, same as the GitHub callback. Atlas-issued states are forwarded to Atlas.  Auth: public, no credentials required.
    * @param code  (required)
    * @param state  (required)
    * @throws ApiException if fails to make API call
@@ -811,8 +799,8 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Microsoft OAuth callback
+   * Browser redirect target for Microsoft. Completes the code flow and 302-redirects to the dashboard with &#x60;#sso&#x3D;connected&#x60;, &#x60;#sso_token&#x3D;&lt;token&gt;&#x60; or &#x60;#sso_error&#x3D;microsoft&#x60;, same as the GitHub callback. Atlas-issued states are forwarded to Atlas.  Auth: public, no credentials required.
    * @param code  (required)
    * @param state  (required)
    * @return ApiResponse&lt;Void&gt;
@@ -898,25 +886,27 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Start Microsoft sign-in
+   * Returns the Microsoft (Entra) authorize URL with a signed state, exactly like the GitHub start endpoint. An optional bearer token marks a connect intent; &#x60;type&#x60; sets the account type for a new signup. Returns 401 if Microsoft SSO is not configured.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthStartDto  (required)
+   * @return AuthControllerGithubStart201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerMicrosoftStart(String authorization, OauthStartDto oauthStartDto) throws ApiException {
-    authControllerMicrosoftStartWithHttpInfo(authorization, oauthStartDto);
+  public AuthControllerGithubStart201Response authControllerMicrosoftStart(String authorization, OauthStartDto oauthStartDto) throws ApiException {
+    ApiResponse<AuthControllerGithubStart201Response> localVarResponse = authControllerMicrosoftStartWithHttpInfo(authorization, oauthStartDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Start Microsoft sign-in
+   * Returns the Microsoft (Entra) authorize URL with a signed state, exactly like the GitHub start endpoint. An optional bearer token marks a connect intent; &#x60;type&#x60; sets the account type for a new signup. Returns 401 if Microsoft SSO is not configured.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthStartDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerGithubStart201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerMicrosoftStartWithHttpInfo(String authorization, OauthStartDto oauthStartDto) throws ApiException {
+  public ApiResponse<AuthControllerGithubStart201Response> authControllerMicrosoftStartWithHttpInfo(String authorization, OauthStartDto oauthStartDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerMicrosoftStartRequestBuilder(authorization, oauthStartDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -929,17 +919,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerMicrosoftStart", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerGithubStart201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerGithubStart201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -988,25 +973,27 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Sign in or connect with Discord
+   * Verifies a single-use RestoreHub widget &#x60;token&#x60; and resolves the Discord identity. Without a bearer token it logs in the account already connected to that identity, else attaches it to an account with the same provider-verified email, else creates a new passwordless account of &#x60;type&#x60;. With a valid bearer token the identity is linked to the current account instead and &#x60;{ linked: true }&#x60; is returned. Returns 400 when the email belongs to an existing account but is not verified by the provider, or no email is shared.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthDiscordDto  (required)
+   * @return AuthControllerOauthDiscord201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerOauthDiscord(String authorization, OauthDiscordDto oauthDiscordDto) throws ApiException {
-    authControllerOauthDiscordWithHttpInfo(authorization, oauthDiscordDto);
+  public AuthControllerOauthDiscord201Response authControllerOauthDiscord(String authorization, OauthDiscordDto oauthDiscordDto) throws ApiException {
+    ApiResponse<AuthControllerOauthDiscord201Response> localVarResponse = authControllerOauthDiscordWithHttpInfo(authorization, oauthDiscordDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Sign in or connect with Discord
+   * Verifies a single-use RestoreHub widget &#x60;token&#x60; and resolves the Discord identity. Without a bearer token it logs in the account already connected to that identity, else attaches it to an account with the same provider-verified email, else creates a new passwordless account of &#x60;type&#x60;. With a valid bearer token the identity is linked to the current account instead and &#x60;{ linked: true }&#x60; is returned. Returns 400 when the email belongs to an existing account but is not verified by the provider, or no email is shared.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthDiscordDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerOauthDiscord201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerOauthDiscordWithHttpInfo(String authorization, OauthDiscordDto oauthDiscordDto) throws ApiException {
+  public ApiResponse<AuthControllerOauthDiscord201Response> authControllerOauthDiscordWithHttpInfo(String authorization, OauthDiscordDto oauthDiscordDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerOauthDiscordRequestBuilder(authorization, oauthDiscordDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1019,17 +1006,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerOauthDiscord", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerOauthDiscord201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerOauthDiscord201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1078,25 +1060,27 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Sign in or connect with Google
+   * Validates a Google Identity Services ID token (&#x60;credential&#x60;) against Google tokeninfo, checking that the audience is the Adviverse client id and the issuer is Google. Login, auto-link and signup behave as for Discord; with a bearer token the Google identity is linked to the current account. Returns 401 &#x60;verification_failed&#x60; for an invalid token, or when Google SSO is not configured.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthGoogleDto  (required)
+   * @return AuthControllerOauthDiscord201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerOauthGoogle(String authorization, OauthGoogleDto oauthGoogleDto) throws ApiException {
-    authControllerOauthGoogleWithHttpInfo(authorization, oauthGoogleDto);
+  public AuthControllerOauthDiscord201Response authControllerOauthGoogle(String authorization, OauthGoogleDto oauthGoogleDto) throws ApiException {
+    ApiResponse<AuthControllerOauthDiscord201Response> localVarResponse = authControllerOauthGoogleWithHttpInfo(authorization, oauthGoogleDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Sign in or connect with Google
+   * Validates a Google Identity Services ID token (&#x60;credential&#x60;) against Google tokeninfo, checking that the audience is the Adviverse client id and the issuer is Google. Login, auto-link and signup behave as for Discord; with a bearer token the Google identity is linked to the current account. Returns 401 &#x60;verification_failed&#x60; for an invalid token, or when Google SSO is not configured.  Auth: public, no credentials required.
    * @param authorization  (required)
    * @param oauthGoogleDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerOauthDiscord201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerOauthGoogleWithHttpInfo(String authorization, OauthGoogleDto oauthGoogleDto) throws ApiException {
+  public ApiResponse<AuthControllerOauthDiscord201Response> authControllerOauthGoogleWithHttpInfo(String authorization, OauthGoogleDto oauthGoogleDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerOauthGoogleRequestBuilder(authorization, oauthGoogleDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1109,17 +1093,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerOauthGoogle", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerOauthDiscord201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerOauthDiscord201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1168,23 +1147,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Resend the verification email
+   * Sends a fresh verification link to &#x60;email&#x60; if an account exists and is not yet verified. Always returns &#x60;{ ok: true }&#x60; so the response does not reveal whether the email is registered. Rate-limited per IP.  Auth: public, no credentials required.
    * @param emailDto  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerResendVerification(EmailDto emailDto) throws ApiException {
-    authControllerResendVerificationWithHttpInfo(emailDto);
+  public AuthControllerResendVerification201Response authControllerResendVerification(EmailDto emailDto) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = authControllerResendVerificationWithHttpInfo(emailDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Resend the verification email
+   * Sends a fresh verification link to &#x60;email&#x60; if an account exists and is not yet verified. Always returns &#x60;{ ok: true }&#x60; so the response does not reveal whether the email is registered. Rate-limited per IP.  Auth: public, no credentials required.
    * @param emailDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerResendVerificationWithHttpInfo(EmailDto emailDto) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> authControllerResendVerificationWithHttpInfo(EmailDto emailDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerResendVerificationRequestBuilder(emailDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1197,17 +1178,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerResendVerification", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1249,23 +1225,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Complete a password reset
+   * Sets a new &#x60;password&#x60; (min 8 chars) using the single-use reset &#x60;token&#x60; from the email. On success the token is consumed and every active session of the account is revoked, so the user must log in again. Returns 400 for an invalid or expired token. Rate-limited per IP.  Auth: public, no credentials required.
    * @param resetPasswordDto  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerResetPassword(ResetPasswordDto resetPasswordDto) throws ApiException {
-    authControllerResetPasswordWithHttpInfo(resetPasswordDto);
+  public AuthControllerResendVerification201Response authControllerResetPassword(ResetPasswordDto resetPasswordDto) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = authControllerResetPasswordWithHttpInfo(resetPasswordDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Complete a password reset
+   * Sets a new &#x60;password&#x60; (min 8 chars) using the single-use reset &#x60;token&#x60; from the email. On success the token is consumed and every active session of the account is revoked, so the user must log in again. Returns 400 for an invalid or expired token. Rate-limited per IP.  Auth: public, no credentials required.
    * @param resetPasswordDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerResetPasswordWithHttpInfo(ResetPasswordDto resetPasswordDto) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> authControllerResetPasswordWithHttpInfo(ResetPasswordDto resetPasswordDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerResetPasswordRequestBuilder(resetPasswordDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1278,17 +1256,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerResetPassword", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1330,23 +1303,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Set or change the password
+   * Sets &#x60;newPassword&#x60; (min 8 chars). If the account already has a password, &#x60;currentPassword&#x60; is required and must match (400 if missing, 401 if wrong); SSO-only accounts can set a first password without it, which enables email login. Team-member seats get 403. &#x60;hadPassword&#x60; tells whether this was a change or a first set.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param setPasswordDto  (required)
+   * @return AuthControllerSetPassword201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerSetPassword(SetPasswordDto setPasswordDto) throws ApiException {
-    authControllerSetPasswordWithHttpInfo(setPasswordDto);
+  public AuthControllerSetPassword201Response authControllerSetPassword(SetPasswordDto setPasswordDto) throws ApiException {
+    ApiResponse<AuthControllerSetPassword201Response> localVarResponse = authControllerSetPasswordWithHttpInfo(setPasswordDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Set or change the password
+   * Sets &#x60;newPassword&#x60; (min 8 chars). If the account already has a password, &#x60;currentPassword&#x60; is required and must match (400 if missing, 401 if wrong); SSO-only accounts can set a first password without it, which enables email login. Team-member seats get 403. &#x60;hadPassword&#x60; tells whether this was a change or a first set.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param setPasswordDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerSetPassword201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerSetPasswordWithHttpInfo(SetPasswordDto setPasswordDto) throws ApiException {
+  public ApiResponse<AuthControllerSetPassword201Response> authControllerSetPasswordWithHttpInfo(SetPasswordDto setPasswordDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerSetPasswordRequestBuilder(setPasswordDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1359,17 +1334,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerSetPassword", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerSetPassword201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerSetPassword201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1411,21 +1381,23 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Begin TOTP 2FA setup
+   * Generates a new TOTP secret, stores it on the account and returns it with an &#x60;otpauth://&#x60; URI for authenticator apps. 2FA is not active until confirmed with the enable endpoint. Calling again replaces any unconfirmed secret.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @return AuthControllerSetup2fa201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerSetup2fa() throws ApiException {
-    authControllerSetup2faWithHttpInfo();
+  public AuthControllerSetup2fa201Response authControllerSetup2fa() throws ApiException {
+    ApiResponse<AuthControllerSetup2fa201Response> localVarResponse = authControllerSetup2faWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Begin TOTP 2FA setup
+   * Generates a new TOTP secret, stores it on the account and returns it with an &#x60;otpauth://&#x60; URI for authenticator apps. 2FA is not active until confirmed with the enable endpoint. Calling again replaces any unconfirmed secret.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;AuthControllerSetup2fa201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerSetup2faWithHttpInfo() throws ApiException {
+  public ApiResponse<AuthControllerSetup2fa201Response> authControllerSetup2faWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerSetup2faRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1438,17 +1410,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerSetup2fa", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerSetup2fa201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerSetup2fa201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1480,23 +1447,25 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Create an account
+   * Registers a new account from &#x60;email&#x60; and &#x60;password&#x60; (min 8 chars), with optional &#x60;type&#x60; (advertiser|publisher, default advertiser; only the default landing side, every account is dual-sided), &#x60;companyName&#x60;, &#x60;country&#x60; and &#x60;referredByCode&#x60;. A Turnstile token (&#x60;turnstileToken&#x60;) is checked first when Turnstile is configured. Creates a zero balance, records the referral if the code matches, emails a 48-hour verification link and returns a session token so the client is logged in immediately. The account starts in &#x60;pending&#x60; status until the email is verified. Returns 400 if the email is already registered.  Auth: public, no credentials required.
    * @param signupDto  (required)
+   * @return AuthControllerSignup201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerSignup(SignupDto signupDto) throws ApiException {
-    authControllerSignupWithHttpInfo(signupDto);
+  public AuthControllerSignup201Response authControllerSignup(SignupDto signupDto) throws ApiException {
+    ApiResponse<AuthControllerSignup201Response> localVarResponse = authControllerSignupWithHttpInfo(signupDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Create an account
+   * Registers a new account from &#x60;email&#x60; and &#x60;password&#x60; (min 8 chars), with optional &#x60;type&#x60; (advertiser|publisher, default advertiser; only the default landing side, every account is dual-sided), &#x60;companyName&#x60;, &#x60;country&#x60; and &#x60;referredByCode&#x60;. A Turnstile token (&#x60;turnstileToken&#x60;) is checked first when Turnstile is configured. Creates a zero balance, records the referral if the code matches, emails a 48-hour verification link and returns a session token so the client is logged in immediately. The account starts in &#x60;pending&#x60; status until the email is verified. Returns 400 if the email is already registered.  Auth: public, no credentials required.
    * @param signupDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerSignup201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerSignupWithHttpInfo(SignupDto signupDto) throws ApiException {
+  public ApiResponse<AuthControllerSignup201Response> authControllerSignupWithHttpInfo(SignupDto signupDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerSignupRequestBuilder(signupDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1509,17 +1478,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerSignup", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerSignup201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerSignup201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1561,21 +1525,23 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Get public SSO and Turnstile config
+   * Returns the public settings the login page needs to render SSO buttons and the Turnstile widget: the Google client id (or null), whether GitHub and Microsoft SSO are configured, and the Turnstile site key (or null). No secrets are returned.  Auth: public, no credentials required.
+   * @return AuthControllerSsoConfig200Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerSsoConfig() throws ApiException {
-    authControllerSsoConfigWithHttpInfo();
+  public AuthControllerSsoConfig200Response authControllerSsoConfig() throws ApiException {
+    ApiResponse<AuthControllerSsoConfig200Response> localVarResponse = authControllerSsoConfigWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get public SSO and Turnstile config
+   * Returns the public settings the login page needs to render SSO buttons and the Turnstile widget: the Google client id (or null), whether GitHub and Microsoft SSO are configured, and the Turnstile site key (or null). No secrets are returned.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;AuthControllerSsoConfig200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerSsoConfigWithHttpInfo() throws ApiException {
+  public ApiResponse<AuthControllerSsoConfig200Response> authControllerSsoConfigWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerSsoConfigRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1588,17 +1554,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerSsoConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerSsoConfig200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerSsoConfig200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1630,21 +1591,23 @@ public class AuthApi {
   }
 
   /**
-   * 
-   * 
+   * Verify an email address
+   * Consumes the single-use &#x60;token&#x60; from the verification email. Marks the account email as verified and moves a &#x60;pending&#x60; account to &#x60;active&#x60;. Returns 400 if the token is unknown, already used or expired (tokens live 48 hours).  Auth: public, no credentials required.
+   * @return AuthControllerVerify201Response
    * @throws ApiException if fails to make API call
    */
-  public void authControllerVerify() throws ApiException {
-    authControllerVerifyWithHttpInfo();
+  public AuthControllerVerify201Response authControllerVerify() throws ApiException {
+    ApiResponse<AuthControllerVerify201Response> localVarResponse = authControllerVerifyWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Verify an email address
+   * Consumes the single-use &#x60;token&#x60; from the verification email. Marks the account email as verified and moves a &#x60;pending&#x60; account to &#x60;active&#x60;. Returns 400 if the token is unknown, already used or expired (tokens live 48 hours).  Auth: public, no credentials required.
+   * @return ApiResponse&lt;AuthControllerVerify201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> authControllerVerifyWithHttpInfo() throws ApiException {
+  public ApiResponse<AuthControllerVerify201Response> authControllerVerifyWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = authControllerVerifyRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1657,17 +1620,12 @@ public class AuthApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("authControllerVerify", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerVerify201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerVerify201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

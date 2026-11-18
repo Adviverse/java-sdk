@@ -81,23 +81,25 @@ public class EdgeApi {
   }
 
   /**
-   * 
-   * 
+   * Check whether the edge may issue TLS for a domain
+   * Public, unauthenticated endpoint called by the TLS edge&#39;s on-demand certificate check, not by users. Returns 200 with body &#x60;ok&#x60; only if &#x60;?domain&#x3D;&#x60; is a verified publisher serving domain on a live property; otherwise 403.  Auth: public, no credentials required.
    * @param domain  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void edgeControllerDomainAllowed(String domain) throws ApiException {
-    edgeControllerDomainAllowedWithHttpInfo(domain);
+  public String edgeControllerDomainAllowed(String domain) throws ApiException {
+    ApiResponse<String> localVarResponse = edgeControllerDomainAllowedWithHttpInfo(domain);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Check whether the edge may issue TLS for a domain
+   * Public, unauthenticated endpoint called by the TLS edge&#39;s on-demand certificate check, not by users. Returns 200 with body &#x60;ok&#x60; only if &#x60;?domain&#x3D;&#x60; is a verified publisher serving domain on a live property; otherwise 403.  Auth: public, no credentials required.
    * @param domain  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> edgeControllerDomainAllowedWithHttpInfo(String domain) throws ApiException {
+  public ApiResponse<String> edgeControllerDomainAllowedWithHttpInfo(String domain) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = edgeControllerDomainAllowedRequestBuilder(domain);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -110,17 +112,12 @@ public class EdgeApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("edgeControllerDomainAllowed", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -158,7 +155,7 @@ public class EdgeApi {
       localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
     }
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/html");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {

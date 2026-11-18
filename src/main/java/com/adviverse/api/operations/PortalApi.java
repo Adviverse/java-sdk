@@ -18,6 +18,9 @@ import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.CreatePortalConfigDto;
+import com.adviverse.api.models.PortalTemplatesControllerCreateConfig201Response;
+import com.adviverse.api.models.PortalTemplatesControllerGetConfig200Response;
+import com.adviverse.api.models.PortalTemplatesControllerListTemplates200ResponseInner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,23 +85,25 @@ public class PortalApi {
   }
 
   /**
-   * 
-   * 
+   * Save a portal template config
+   * Stores a &#x60;config&#x60; object for template key &#x60;template&#x60; and returns its id and the hosted template URL that renders it. Use the URL as an &#x60;html5&#x60; creative&#39;s asset URL (for example on a metaverse portal surface). 400 for an unknown template.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param createPortalConfigDto  (required)
+   * @return PortalTemplatesControllerCreateConfig201Response
    * @throws ApiException if fails to make API call
    */
-  public void portalTemplatesControllerCreateConfig(CreatePortalConfigDto createPortalConfigDto) throws ApiException {
-    portalTemplatesControllerCreateConfigWithHttpInfo(createPortalConfigDto);
+  public PortalTemplatesControllerCreateConfig201Response portalTemplatesControllerCreateConfig(CreatePortalConfigDto createPortalConfigDto) throws ApiException {
+    ApiResponse<PortalTemplatesControllerCreateConfig201Response> localVarResponse = portalTemplatesControllerCreateConfigWithHttpInfo(createPortalConfigDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Save a portal template config
+   * Stores a &#x60;config&#x60; object for template key &#x60;template&#x60; and returns its id and the hosted template URL that renders it. Use the URL as an &#x60;html5&#x60; creative&#39;s asset URL (for example on a metaverse portal surface). 400 for an unknown template.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param createPortalConfigDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PortalTemplatesControllerCreateConfig201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> portalTemplatesControllerCreateConfigWithHttpInfo(CreatePortalConfigDto createPortalConfigDto) throws ApiException {
+  public ApiResponse<PortalTemplatesControllerCreateConfig201Response> portalTemplatesControllerCreateConfigWithHttpInfo(CreatePortalConfigDto createPortalConfigDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = portalTemplatesControllerCreateConfigRequestBuilder(createPortalConfigDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -111,17 +116,12 @@ public class PortalApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("portalTemplatesControllerCreateConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PortalTemplatesControllerCreateConfig201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PortalTemplatesControllerCreateConfig201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -163,23 +163,25 @@ public class PortalApi {
   }
 
   /**
-   * 
-   * 
+   * Fetch a portal config
+   * Public endpoint the hosted template calls at runtime to load its saved configuration. 404 if the config id does not exist.  Auth: public, no credentials required.
    * @param id  (required)
+   * @return PortalTemplatesControllerGetConfig200Response
    * @throws ApiException if fails to make API call
    */
-  public void portalTemplatesControllerGetConfig(String id) throws ApiException {
-    portalTemplatesControllerGetConfigWithHttpInfo(id);
+  public PortalTemplatesControllerGetConfig200Response portalTemplatesControllerGetConfig(String id) throws ApiException {
+    ApiResponse<PortalTemplatesControllerGetConfig200Response> localVarResponse = portalTemplatesControllerGetConfigWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Fetch a portal config
+   * Public endpoint the hosted template calls at runtime to load its saved configuration. 404 if the config id does not exist.  Auth: public, no credentials required.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PortalTemplatesControllerGetConfig200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> portalTemplatesControllerGetConfigWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<PortalTemplatesControllerGetConfig200Response> portalTemplatesControllerGetConfigWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = portalTemplatesControllerGetConfigRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -192,17 +194,12 @@ public class PortalApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("portalTemplatesControllerGetConfig", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PortalTemplatesControllerGetConfig200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PortalTemplatesControllerGetConfig200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -239,21 +236,23 @@ public class PortalApi {
   }
 
   /**
-   * 
-   * 
+   * List portal experience templates
+   * Returns the catalog of prebuilt HTML5 portal templates (product-showcase, spin-to-win, 360-viewer, reward-to-play, reward-onchain), each with the config fields it accepts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return List&lt;PortalTemplatesControllerListTemplates200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void portalTemplatesControllerListTemplates() throws ApiException {
-    portalTemplatesControllerListTemplatesWithHttpInfo();
+  public List<PortalTemplatesControllerListTemplates200ResponseInner> portalTemplatesControllerListTemplates() throws ApiException {
+    ApiResponse<List<PortalTemplatesControllerListTemplates200ResponseInner>> localVarResponse = portalTemplatesControllerListTemplatesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List portal experience templates
+   * Returns the catalog of prebuilt HTML5 portal templates (product-showcase, spin-to-win, 360-viewer, reward-to-play, reward-onchain), each with the config fields it accepts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
+   * @return ApiResponse&lt;List&lt;PortalTemplatesControllerListTemplates200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> portalTemplatesControllerListTemplatesWithHttpInfo() throws ApiException {
+  public ApiResponse<List<PortalTemplatesControllerListTemplates200ResponseInner>> portalTemplatesControllerListTemplatesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = portalTemplatesControllerListTemplatesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -266,17 +265,12 @@ public class PortalApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("portalTemplatesControllerListTemplates", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<PortalTemplatesControllerListTemplates200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<PortalTemplatesControllerListTemplates200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

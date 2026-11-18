@@ -17,6 +17,9 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.CapiControllerEvents201Response;
+import com.adviverse.api.models.CapiControllerRecent200ResponseInner;
+import com.adviverse.api.models.CapiControllerToken201Response;
 import com.adviverse.api.models.CapiEventsDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,23 +85,25 @@ public class CapiApi {
   }
 
   /**
-   * 
-   * 
+   * Ingest server-side conversion events (CAPI)
+   * Server-to-server batch ingest authenticated by the advertiser&#39;s CAPI token in the &#x60;X-CAPI-Token&#x60; header, not a session; a missing or invalid token returns 401. Each item in &#x60;events&#x60; needs &#x60;eventId&#x60; and &#x60;eventName&#x60;, plus optional &#x60;value&#x60;, &#x60;currency&#x60;, &#x60;clickId&#x60;, hashed &#x60;identifiers&#x60; (emailHash, phoneHash, externalId), &#x60;eventTime&#x60; and &#x60;customData&#x60;. Events are deduplicated per advertiser on &#x60;eventId&#x60; and attributed by click id first, then by the identity graph&#39;s most recent eligible click or impression. Results are per event and a failing event never fails the batch.  Auth: public, no credentials required.
    * @param capiEventsDto  (required)
+   * @return CapiControllerEvents201Response
    * @throws ApiException if fails to make API call
    */
-  public void capiControllerEvents(CapiEventsDto capiEventsDto) throws ApiException {
-    capiControllerEventsWithHttpInfo(capiEventsDto);
+  public CapiControllerEvents201Response capiControllerEvents(CapiEventsDto capiEventsDto) throws ApiException {
+    ApiResponse<CapiControllerEvents201Response> localVarResponse = capiControllerEventsWithHttpInfo(capiEventsDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Ingest server-side conversion events (CAPI)
+   * Server-to-server batch ingest authenticated by the advertiser&#39;s CAPI token in the &#x60;X-CAPI-Token&#x60; header, not a session; a missing or invalid token returns 401. Each item in &#x60;events&#x60; needs &#x60;eventId&#x60; and &#x60;eventName&#x60;, plus optional &#x60;value&#x60;, &#x60;currency&#x60;, &#x60;clickId&#x60;, hashed &#x60;identifiers&#x60; (emailHash, phoneHash, externalId), &#x60;eventTime&#x60; and &#x60;customData&#x60;. Events are deduplicated per advertiser on &#x60;eventId&#x60; and attributed by click id first, then by the identity graph&#39;s most recent eligible click or impression. Results are per event and a failing event never fails the batch.  Auth: public, no credentials required.
    * @param capiEventsDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;CapiControllerEvents201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> capiControllerEventsWithHttpInfo(CapiEventsDto capiEventsDto) throws ApiException {
+  public ApiResponse<CapiControllerEvents201Response> capiControllerEventsWithHttpInfo(CapiEventsDto capiEventsDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = capiControllerEventsRequestBuilder(capiEventsDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -111,17 +116,12 @@ public class CapiApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("capiControllerEvents", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<CapiControllerEvents201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<CapiControllerEvents201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -163,23 +163,25 @@ public class CapiApi {
   }
 
   /**
-   * 
-   * 
+   * List recent CAPI events
+   * Returns the advertiser&#39;s most recent CAPI-sourced postback log rows, newest first. &#x60;limit&#x60; defaults to 100 and is capped at 500. &#x60;attributed&#x60; shows whether the event was matched to a campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param limit  (required)
+   * @return List&lt;CapiControllerRecent200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void capiControllerRecent(String limit) throws ApiException {
-    capiControllerRecentWithHttpInfo(limit);
+  public List<CapiControllerRecent200ResponseInner> capiControllerRecent(String limit) throws ApiException {
+    ApiResponse<List<CapiControllerRecent200ResponseInner>> localVarResponse = capiControllerRecentWithHttpInfo(limit);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * List recent CAPI events
+   * Returns the advertiser&#39;s most recent CAPI-sourced postback log rows, newest first. &#x60;limit&#x60; defaults to 100 and is capped at 500. &#x60;attributed&#x60; shows whether the event was matched to a campaign.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param limit  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;CapiControllerRecent200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> capiControllerRecentWithHttpInfo(String limit) throws ApiException {
+  public ApiResponse<List<CapiControllerRecent200ResponseInner>> capiControllerRecentWithHttpInfo(String limit) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = capiControllerRecentRequestBuilder(limit);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -192,17 +194,12 @@ public class CapiApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("capiControllerRecent", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<CapiControllerRecent200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<CapiControllerRecent200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -253,21 +250,23 @@ public class CapiApi {
   }
 
   /**
-   * 
-   * 
+   * Rotate the CAPI access token
+   * Revokes any active CAPI token for the advertiser and issues a new one. The full token (&#x60;&lt;prefix&gt;.&lt;secret&gt;&#x60;) is returned only in this response; the server stores only its hash. Use it as the &#x60;X-CAPI-Token&#x60; header on POST /v1/capi/events.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return CapiControllerToken201Response
    * @throws ApiException if fails to make API call
    */
-  public void capiControllerToken() throws ApiException {
-    capiControllerTokenWithHttpInfo();
+  public CapiControllerToken201Response capiControllerToken() throws ApiException {
+    ApiResponse<CapiControllerToken201Response> localVarResponse = capiControllerTokenWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Rotate the CAPI access token
+   * Revokes any active CAPI token for the advertiser and issues a new one. The full token (&#x60;&lt;prefix&gt;.&lt;secret&gt;&#x60;) is returned only in this response; the server stores only its hash. Use it as the &#x60;X-CAPI-Token&#x60; header on POST /v1/capi/events.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;CapiControllerToken201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> capiControllerTokenWithHttpInfo() throws ApiException {
+  public ApiResponse<CapiControllerToken201Response> capiControllerTokenWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = capiControllerTokenRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -280,17 +279,12 @@ public class CapiApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("capiControllerToken", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<CapiControllerToken201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<CapiControllerToken201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

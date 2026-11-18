@@ -26,6 +26,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -45,7 +49,8 @@ import com.adviverse.api.ApiClient;
   UpdatePlacementDto.JSON_PROPERTY_HOUSE_BACKFILL,
   UpdatePlacementDto.JSON_PROPERTY_FLOOR_FALLBACK,
   UpdatePlacementDto.JSON_PROPERTY_FLOOR_AUTO,
-  UpdatePlacementDto.JSON_PROPERTY_FLOOR_SOFT
+  UpdatePlacementDto.JSON_PROPERTY_FLOOR_SOFT,
+  UpdatePlacementDto.JSON_PROPERTY_AUTO_ADS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class UpdatePlacementDto {
@@ -84,6 +89,9 @@ public class UpdatePlacementDto {
 
   public static final String JSON_PROPERTY_FLOOR_SOFT = "floorSoft";
   private BigDecimal floorSoft;
+
+  public static final String JSON_PROPERTY_AUTO_ADS = "autoAds";
+  private JsonNullable<Object> autoAds = JsonNullable.<Object>undefined();
 
   public UpdatePlacementDto() { 
   }
@@ -380,6 +388,38 @@ public class UpdatePlacementDto {
   }
 
 
+  public UpdatePlacementDto autoAds(Object autoAds) {
+    this.autoAds = JsonNullable.<Object>of(autoAds);
+    return this;
+  }
+
+  /**
+   * Get autoAds
+   * @return autoAds
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public Object getAutoAds() {
+        return autoAds.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_AUTO_ADS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<Object> getAutoAds_JsonNullable() {
+    return autoAds;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_AUTO_ADS)
+  public void setAutoAds_JsonNullable(JsonNullable<Object> autoAds) {
+    this.autoAds = autoAds;
+  }
+
+  public void setAutoAds(Object autoAds) {
+    this.autoAds = JsonNullable.<Object>of(autoAds);
+  }
+
+
   /**
    * Return true if this UpdatePlacementDto object is equal to o.
    */
@@ -403,12 +443,24 @@ public class UpdatePlacementDto {
         Objects.equals(this.houseBackfill, updatePlacementDto.houseBackfill) &&
         Objects.equals(this.floorFallback, updatePlacementDto.floorFallback) &&
         Objects.equals(this.floorAuto, updatePlacementDto.floorAuto) &&
-        Objects.equals(this.floorSoft, updatePlacementDto.floorSoft);
+        Objects.equals(this.floorSoft, updatePlacementDto.floorSoft) &&
+        equalsNullable(this.autoAds, updatePlacementDto.autoAds);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, floorCpm, revShare, auctionType, passbackUrl, status, houseOnly, houseShare, houseBackfill, floorFallback, floorAuto, floorSoft);
+    return Objects.hash(name, floorCpm, revShare, auctionType, passbackUrl, status, houseOnly, houseShare, houseBackfill, floorFallback, floorAuto, floorSoft, hashCodeNullable(autoAds));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
@@ -427,6 +479,7 @@ public class UpdatePlacementDto {
     sb.append("    floorFallback: ").append(toIndentedString(floorFallback)).append("\n");
     sb.append("    floorAuto: ").append(toIndentedString(floorAuto)).append("\n");
     sb.append("    floorSoft: ").append(toIndentedString(floorSoft)).append("\n");
+    sb.append("    autoAds: ").append(toIndentedString(autoAds)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -532,6 +585,11 @@ public class UpdatePlacementDto {
     // add `floorSoft` to the URL query string
     if (getFloorSoft() != null) {
       joiner.add(String.format("%sfloorSoft%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getFloorSoft()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `autoAds` to the URL query string
+    if (getAutoAds() != null) {
+      joiner.add(String.format("%sautoAds%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getAutoAds()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

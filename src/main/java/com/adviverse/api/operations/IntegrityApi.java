@@ -17,7 +17,10 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.AuthControllerResendVerification201Response;
 import com.adviverse.api.models.ClientPingDto;
+import com.adviverse.api.models.IntegrityControllerLiveness200Response;
+import com.adviverse.api.models.IntegrityControllerReport200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,25 +85,27 @@ public class IntegrityApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-install liveness for your tags
+   * Lists up to 500 installs that pinged any of your tags in the last &#x60;days&#x60; (default 7, max 30), with last-seen time, latest tag/uid, whether ads are enabled, and &#x60;alive&#x60; (pinged within ~95 minutes). Optional &#x60;?client&#x3D;&#x60; scopes to one client id. The summary counts alive-and-enabled, alive-but-disabled, and stale installs.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param client  (required)
    * @param days  (required)
+   * @return IntegrityControllerLiveness200Response
    * @throws ApiException if fails to make API call
    */
-  public void integrityControllerLiveness(String client, String days) throws ApiException {
-    integrityControllerLivenessWithHttpInfo(client, days);
+  public IntegrityControllerLiveness200Response integrityControllerLiveness(String client, String days) throws ApiException {
+    ApiResponse<IntegrityControllerLiveness200Response> localVarResponse = integrityControllerLivenessWithHttpInfo(client, days);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get per-install liveness for your tags
+   * Lists up to 500 installs that pinged any of your tags in the last &#x60;days&#x60; (default 7, max 30), with last-seen time, latest tag/uid, whether ads are enabled, and &#x60;alive&#x60; (pinged within ~95 minutes). Optional &#x60;?client&#x3D;&#x60; scopes to one client id. The summary counts alive-and-enabled, alive-but-disabled, and stale installs.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param client  (required)
    * @param days  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;IntegrityControllerLiveness200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> integrityControllerLivenessWithHttpInfo(String client, String days) throws ApiException {
+  public ApiResponse<IntegrityControllerLiveness200Response> integrityControllerLivenessWithHttpInfo(String client, String days) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = integrityControllerLivenessRequestBuilder(client, days);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -113,17 +118,12 @@ public class IntegrityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("integrityControllerLiveness", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IntegrityControllerLiveness200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IntegrityControllerLiveness200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -180,23 +180,25 @@ public class IntegrityApi {
   }
 
   /**
-   * 
-   * 
+   * Report a client integrity ping
+   * Public, rate-limited endpoint the terminal SDK calls about hourly per install with the &#x60;tag&#x60; it serves, its &#x60;client&#x60; id, &#x60;install_id&#x60;/&#x60;installId&#x60;, machine &#x60;uid&#x60; and &#x60;enabled&#x60; state. The ping is recorded against the tag&#39;s publisher for integrity and liveness reports. For placements with a signing secret, &#x60;ts&#x60; and &#x60;sig&#x60; (HMAC-SHA256 of &#x60;tag|uid|ts&#x60;, within 300s) are required or the ping is ignored. Always returns &#x60;{ ok: true }&#x60;, even for unknown tags or failures, so it never affects serving.  Auth: public, no credentials required.
    * @param clientPingDto  (required)
+   * @return AuthControllerResendVerification201Response
    * @throws ApiException if fails to make API call
    */
-  public void integrityControllerPing(ClientPingDto clientPingDto) throws ApiException {
-    integrityControllerPingWithHttpInfo(clientPingDto);
+  public AuthControllerResendVerification201Response integrityControllerPing(ClientPingDto clientPingDto) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = integrityControllerPingWithHttpInfo(clientPingDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Report a client integrity ping
+   * Public, rate-limited endpoint the terminal SDK calls about hourly per install with the &#x60;tag&#x60; it serves, its &#x60;client&#x60; id, &#x60;install_id&#x60;/&#x60;installId&#x60;, machine &#x60;uid&#x60; and &#x60;enabled&#x60; state. The ping is recorded against the tag&#39;s publisher for integrity and liveness reports. For placements with a signing secret, &#x60;ts&#x60; and &#x60;sig&#x60; (HMAC-SHA256 of &#x60;tag|uid|ts&#x60;, within 300s) are required or the ping is ignored. Always returns &#x60;{ ok: true }&#x60;, even for unknown tags or failures, so it never affects serving.  Auth: public, no credentials required.
    * @param clientPingDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> integrityControllerPingWithHttpInfo(ClientPingDto clientPingDto) throws ApiException {
+  public ApiResponse<AuthControllerResendVerification201Response> integrityControllerPingWithHttpInfo(ClientPingDto clientPingDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = integrityControllerPingRequestBuilder(clientPingDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -209,17 +211,12 @@ public class IntegrityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("integrityControllerPing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<AuthControllerResendVerification201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -261,25 +258,27 @@ public class IntegrityApi {
   }
 
   /**
-   * 
-   * 
+   * Get the terminal integrity report
+   * Over the last &#x60;days&#x60; (default 7, max 30) of client pings, lists machines running one of your tags that also run a foreign tag (&#x60;competing&#x60;), and, when &#x60;?client&#x3D;&#x60; is given, installs reporting your client id while serving a tag you don&#39;t own (&#x60;swapped&#x60;). Also returns your tag keys and distinct install/machine counts. Empty result if you have no placements.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param client  (required)
    * @param days  (required)
+   * @return IntegrityControllerReport200Response
    * @throws ApiException if fails to make API call
    */
-  public void integrityControllerReport(String client, String days) throws ApiException {
-    integrityControllerReportWithHttpInfo(client, days);
+  public IntegrityControllerReport200Response integrityControllerReport(String client, String days) throws ApiException {
+    ApiResponse<IntegrityControllerReport200Response> localVarResponse = integrityControllerReportWithHttpInfo(client, days);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get the terminal integrity report
+   * Over the last &#x60;days&#x60; (default 7, max 30) of client pings, lists machines running one of your tags that also run a foreign tag (&#x60;competing&#x60;), and, when &#x60;?client&#x3D;&#x60; is given, installs reporting your client id while serving a tag you don&#39;t own (&#x60;swapped&#x60;). Also returns your tag keys and distinct install/machine counts. Empty result if you have no placements.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
    * @param client  (required)
    * @param days  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;IntegrityControllerReport200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> integrityControllerReportWithHttpInfo(String client, String days) throws ApiException {
+  public ApiResponse<IntegrityControllerReport200Response> integrityControllerReportWithHttpInfo(String client, String days) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = integrityControllerReportRequestBuilder(client, days);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -292,17 +291,12 @@ public class IntegrityApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("integrityControllerReport", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<IntegrityControllerReport200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<IntegrityControllerReport200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

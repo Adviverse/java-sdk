@@ -17,6 +17,7 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
+import com.adviverse.api.models.StatsControllerGet200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,21 +82,23 @@ public class StatsApi {
   }
 
   /**
-   * 
-   * 
+   * Get public network stats
+   * Public, unauthenticated marketing figures: total impressions served across the network and total amount paid out to publishers (settled payouts). Cached in Redis for 10 minutes.  Auth: public, no credentials required.
+   * @return StatsControllerGet200Response
    * @throws ApiException if fails to make API call
    */
-  public void statsControllerGet() throws ApiException {
-    statsControllerGetWithHttpInfo();
+  public StatsControllerGet200Response statsControllerGet() throws ApiException {
+    ApiResponse<StatsControllerGet200Response> localVarResponse = statsControllerGetWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get public network stats
+   * Public, unauthenticated marketing figures: total impressions served across the network and total amount paid out to publishers (settled payouts). Cached in Redis for 10 minutes.  Auth: public, no credentials required.
+   * @return ApiResponse&lt;StatsControllerGet200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> statsControllerGetWithHttpInfo() throws ApiException {
+  public ApiResponse<StatsControllerGet200Response> statsControllerGetWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = statsControllerGetRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -108,17 +111,12 @@ public class StatsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("statsControllerGet", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<StatsControllerGet200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<StatsControllerGet200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

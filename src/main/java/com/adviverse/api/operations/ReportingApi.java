@@ -19,6 +19,46 @@ import com.adviverse.api.Pair;
 
 import com.adviverse.api.models.CreateSavedReportDto;
 import com.adviverse.api.models.CreateScheduledReportDto;
+import com.adviverse.api.models.PromoteCampaignReportingControllerSummary200Response;
+import com.adviverse.api.models.ReportAdvertiserStatsRow;
+import com.adviverse.api.models.ReportBreakdownRow;
+import com.adviverse.api.models.ReportPlacementRow;
+import com.adviverse.api.models.ReportPromoteCampaignRow;
+import com.adviverse.api.models.ReportPublisherStatsRow;
+import com.adviverse.api.models.ReportRealtime;
+import com.adviverse.api.models.ReportSavedReport;
+import com.adviverse.api.models.ReportScheduledReport;
+import com.adviverse.api.models.ReportingControllerAffiliate200ResponseInner;
+import com.adviverse.api.models.ReportingControllerAntiAdblock200Response;
+import com.adviverse.api.models.ReportingControllerAuction200Response;
+import com.adviverse.api.models.ReportingControllerBenchmark200Response;
+import com.adviverse.api.models.ReportingControllerBidLandscape200Response;
+import com.adviverse.api.models.ReportingControllerCarousel200ResponseInner;
+import com.adviverse.api.models.ReportingControllerClosedLoop200Response;
+import com.adviverse.api.models.ReportingControllerCohorts200Response;
+import com.adviverse.api.models.ReportingControllerConsentRate200Response;
+import com.adviverse.api.models.ReportingControllerCreatives200Response;
+import com.adviverse.api.models.ReportingControllerDeleteSaved200Response;
+import com.adviverse.api.models.ReportingControllerDeliveryFunnel200Response;
+import com.adviverse.api.models.ReportingControllerDeliveryPacing200ResponseInner;
+import com.adviverse.api.models.ReportingControllerFill200Response;
+import com.adviverse.api.models.ReportingControllerFunnel200Response;
+import com.adviverse.api.models.ReportingControllerGeo200ResponseInner;
+import com.adviverse.api.models.ReportingControllerIncrementality200ResponseInner;
+import com.adviverse.api.models.ReportingControllerIvt200ResponseInner;
+import com.adviverse.api.models.ReportingControllerJourney200ResponseInner;
+import com.adviverse.api.models.ReportingControllerLiquidity200Response;
+import com.adviverse.api.models.ReportingControllerMarketplace200Response;
+import com.adviverse.api.models.ReportingControllerPersonalNetwork200Response;
+import com.adviverse.api.models.ReportingControllerPivot200ResponseInner;
+import com.adviverse.api.models.ReportingControllerPublisherConsent200Response;
+import com.adviverse.api.models.ReportingControllerReach200Response;
+import com.adviverse.api.models.ReportingControllerRoas200ResponseInner;
+import com.adviverse.api.models.ReportingControllerServeLatency200Response;
+import com.adviverse.api.models.ReportingControllerSustainability200Response;
+import com.adviverse.api.models.ReportingControllerTimeToClick200Response;
+import com.adviverse.api.models.ReportingControllerVideo200Response;
+import com.adviverse.api.models.ReportingControllerViewability200ResponseInner;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,25 +123,27 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-promote-campaign performance
+   * Returns one row for each of the caller&#39;s non-deleted promote (Sponsored Products) campaigns, including those with no traffic yet (zeros). Delivery and spend come from stats_hourly and revenue from attributed conversion_value, scoped to the caller&#39;s own promote campaign ids. Sorted by spend then impressions. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param to ISO end (inclusive). (optional)
    * @param from ISO start (inclusive). (optional)
+   * @return List&lt;ReportPromoteCampaignRow&gt;
    * @throws ApiException if fails to make API call
    */
-  public void promoteCampaignReportingControllerReport(String to, String from) throws ApiException {
-    promoteCampaignReportingControllerReportWithHttpInfo(to, from);
+  public List<ReportPromoteCampaignRow> promoteCampaignReportingControllerReport(String to, String from) throws ApiException {
+    ApiResponse<List<ReportPromoteCampaignRow>> localVarResponse = promoteCampaignReportingControllerReportWithHttpInfo(to, from);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get per-promote-campaign performance
+   * Returns one row for each of the caller&#39;s non-deleted promote (Sponsored Products) campaigns, including those with no traffic yet (zeros). Delivery and spend come from stats_hourly and revenue from attributed conversion_value, scoped to the caller&#39;s own promote campaign ids. Sorted by spend then impressions. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param to ISO end (inclusive). (optional)
    * @param from ISO start (inclusive). (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;ReportPromoteCampaignRow&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> promoteCampaignReportingControllerReportWithHttpInfo(String to, String from) throws ApiException {
+  public ApiResponse<List<ReportPromoteCampaignRow>> promoteCampaignReportingControllerReportWithHttpInfo(String to, String from) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = promoteCampaignReportingControllerReportRequestBuilder(to, from);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -114,17 +156,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("promoteCampaignReportingControllerReport", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportPromoteCampaignRow>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportPromoteCampaignRow>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -173,25 +210,27 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get totals across promote campaigns
+   * Rolls up the per-promote-campaign report into one totals object over the same window, with the campaign count and recomputed CTR and ROAS. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param to ISO end (inclusive). (optional)
    * @param from ISO start (inclusive). (optional)
+   * @return PromoteCampaignReportingControllerSummary200Response
    * @throws ApiException if fails to make API call
    */
-  public void promoteCampaignReportingControllerSummary(String to, String from) throws ApiException {
-    promoteCampaignReportingControllerSummaryWithHttpInfo(to, from);
+  public PromoteCampaignReportingControllerSummary200Response promoteCampaignReportingControllerSummary(String to, String from) throws ApiException {
+    ApiResponse<PromoteCampaignReportingControllerSummary200Response> localVarResponse = promoteCampaignReportingControllerSummaryWithHttpInfo(to, from);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get totals across promote campaigns
+   * Rolls up the per-promote-campaign report into one totals object over the same window, with the campaign count and recomputed CTR and ROAS. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param to ISO end (inclusive). (optional)
    * @param from ISO start (inclusive). (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;PromoteCampaignReportingControllerSummary200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> promoteCampaignReportingControllerSummaryWithHttpInfo(String to, String from) throws ApiException {
+  public ApiResponse<PromoteCampaignReportingControllerSummary200Response> promoteCampaignReportingControllerSummaryWithHttpInfo(String to, String from) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = promoteCampaignReportingControllerSummaryRequestBuilder(to, from);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -204,17 +243,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("promoteCampaignReportingControllerSummary", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<PromoteCampaignReportingControllerSummary200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PromoteCampaignReportingControllerSummary200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -263,21 +297,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get advertiser spend and performance by dimension
+   * Aggregates the caller&#39;s advertiser delivery from adnet.stats_hourly, grouped by &#x60;dim&#x60; (day default, hour, geo, device, format, placement_id, campaign_id), with eCPM, eCPC, eCPA and CTR. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;ReportAdvertiserStatsRow&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerAdvertiser() throws ApiException {
-    reportingControllerAdvertiserWithHttpInfo();
+  public List<ReportAdvertiserStatsRow> reportingControllerAdvertiser() throws ApiException {
+    ApiResponse<List<ReportAdvertiserStatsRow>> localVarResponse = reportingControllerAdvertiserWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get advertiser spend and performance by dimension
+   * Aggregates the caller&#39;s advertiser delivery from adnet.stats_hourly, grouped by &#x60;dim&#x60; (day default, hour, geo, device, format, placement_id, campaign_id), with eCPM, eCPC, eCPA and CTR. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;ReportAdvertiserStatsRow&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerAdvertiserWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportAdvertiserStatsRow>> reportingControllerAdvertiserWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerAdvertiserRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -290,17 +326,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerAdvertiser", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportAdvertiserStatsRow>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportAdvertiserStatsRow>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -332,27 +363,29 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get affiliate sub-id funnel
+   * Per sub-id value funnel (impressions, clicks, conversions) with CTR and CVR in percent, revenue (earnings or spend), CPA payout and conversion value. &#x60;sub&#x60; picks sub1..sub5 (default sub1). Conversions carry no publisher id, so publishers get impressions/clicks/revenue only. Top 100 by revenue. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param to  (optional)
    * @param from  (optional)
    * @param sub Which sub-id to group by (default sub1). (optional)
+   * @return List&lt;ReportingControllerAffiliate200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerAffiliate(String to, String from, String sub) throws ApiException {
-    reportingControllerAffiliateWithHttpInfo(to, from, sub);
+  public List<ReportingControllerAffiliate200ResponseInner> reportingControllerAffiliate(String to, String from, String sub) throws ApiException {
+    ApiResponse<List<ReportingControllerAffiliate200ResponseInner>> localVarResponse = reportingControllerAffiliateWithHttpInfo(to, from, sub);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Get affiliate sub-id funnel
+   * Per sub-id value funnel (impressions, clicks, conversions) with CTR and CVR in percent, revenue (earnings or spend), CPA payout and conversion value. &#x60;sub&#x60; picks sub1..sub5 (default sub1). Conversions carry no publisher id, so publishers get impressions/clicks/revenue only. Top 100 by revenue. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param to  (optional)
    * @param from  (optional)
    * @param sub Which sub-id to group by (default sub1). (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;ReportingControllerAffiliate200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerAffiliateWithHttpInfo(String to, String from, String sub) throws ApiException {
+  public ApiResponse<List<ReportingControllerAffiliate200ResponseInner>> reportingControllerAffiliateWithHttpInfo(String to, String from, String sub) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerAffiliateRequestBuilder(to, from, sub);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -365,17 +398,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerAffiliate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerAffiliate200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerAffiliate200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -426,21 +454,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get impressions recovered from adblock visitors
+   * Reports valid impressions served to visitors the SDK detected as running an adblocker (for example via a first-party serving domain), as a daily series and a window total. recovered_pct is the share of valid impressions that came from adblock users. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ReportingControllerAntiAdblock200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerAntiAdblock() throws ApiException {
-    reportingControllerAntiAdblockWithHttpInfo();
+  public ReportingControllerAntiAdblock200Response reportingControllerAntiAdblock() throws ApiException {
+    ApiResponse<ReportingControllerAntiAdblock200Response> localVarResponse = reportingControllerAntiAdblockWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get impressions recovered from adblock visitors
+   * Reports valid impressions served to visitors the SDK detected as running an adblocker (for example via a first-party serving domain), as a daily series and a window total. recovered_pct is the share of valid impressions that came from adblock users. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;ReportingControllerAntiAdblock200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerAntiAdblockWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerAntiAdblock200Response> reportingControllerAntiAdblockWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerAntiAdblockRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -453,17 +483,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerAntiAdblock", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerAntiAdblock200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerAntiAdblock200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -495,21 +520,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get auction fill rate and top no-fill reasons
+   * Request count, filled count and fill rate from adnet.ad_requests plus the top 10 no-fill reasons. Publishers see their own inventory; ad_requests has no advertiser column, so other accounts see network-wide auction health. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReportingControllerAuction200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerAuction() throws ApiException {
-    reportingControllerAuctionWithHttpInfo();
+  public ReportingControllerAuction200Response reportingControllerAuction() throws ApiException {
+    ApiResponse<ReportingControllerAuction200Response> localVarResponse = reportingControllerAuctionWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get auction fill rate and top no-fill reasons
+   * Request count, filled count and fill rate from adnet.ad_requests plus the top 10 no-fill reasons. Publishers see their own inventory; ad_requests has no advertiser column, so other accounts see network-wide auction health. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReportingControllerAuction200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerAuctionWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerAuction200Response> reportingControllerAuctionWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerAuctionRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -522,17 +549,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerAuction", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerAuction200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerAuction200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -564,21 +586,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Benchmark eCPM, fill and viewability against the network
+   * Ranks the caller among publishers with enough volume in the window (&gt;&#x3D; 1000 impressions for eCPM, &gt;&#x3D; 1000 requests for fill, &gt;&#x3D; 500 measurable for viewability). Only the caller&#39;s own value plus the network median, percentile rank and sample size are returned, never another publisher&#39;s data. fillRate and viewableRate are percentages. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ReportingControllerBenchmark200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerBenchmark() throws ApiException {
-    reportingControllerBenchmarkWithHttpInfo();
+  public ReportingControllerBenchmark200Response reportingControllerBenchmark() throws ApiException {
+    ApiResponse<ReportingControllerBenchmark200Response> localVarResponse = reportingControllerBenchmarkWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Benchmark eCPM, fill and viewability against the network
+   * Ranks the caller among publishers with enough volume in the window (&gt;&#x3D; 1000 impressions for eCPM, &gt;&#x3D; 1000 requests for fill, &gt;&#x3D; 500 measurable for viewability). Only the caller&#39;s own value plus the network median, percentile rank and sample size are returned, never another publisher&#39;s data. fillRate and viewableRate are percentages. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;ReportingControllerBenchmark200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerBenchmarkWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerBenchmark200Response> reportingControllerBenchmarkWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerBenchmarkRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -591,17 +615,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerBenchmark", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerBenchmark200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerBenchmark200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -633,21 +652,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get clearing-price percentiles and estimated win curve
+   * From the caller&#39;s valid paid impressions over the last 30 days, returns clearing-price (price_paid) percentiles and a 10-point estimated win-rate curve: for each candidate bid, the fraction of observed won auctions that cleared at or below it. Only won auctions are seen, so the curve is optimistic at low bids. With no history the curve is empty and &#x60;note&#x60; is set.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ReportingControllerBidLandscape200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerBidLandscape() throws ApiException {
-    reportingControllerBidLandscapeWithHttpInfo();
+  public ReportingControllerBidLandscape200Response reportingControllerBidLandscape() throws ApiException {
+    ApiResponse<ReportingControllerBidLandscape200Response> localVarResponse = reportingControllerBidLandscapeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get clearing-price percentiles and estimated win curve
+   * From the caller&#39;s valid paid impressions over the last 30 days, returns clearing-price (price_paid) percentiles and a 10-point estimated win-rate curve: for each candidate bid, the fraction of observed won auctions that cleared at or below it. Only won auctions are seen, so the curve is optimistic at low bids. With no history the curve is empty and &#x60;note&#x60; is set.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;ReportingControllerBidLandscape200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerBidLandscapeWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerBidLandscape200Response> reportingControllerBidLandscapeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerBidLandscapeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -660,17 +681,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerBidLandscape", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerBidLandscape200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerBidLandscape200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -702,27 +718,29 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Break down delivery by OS, browser, deal, page, app or sub-id
+   * Groups valid raw impressions (and matching clicks) by &#x60;bdim&#x60;: os (default), browser, deal, page (host), page_url (host+path), app, property, region, make, model or sub1..sub5. Unknown values fall back to os. Returns at most 50 rows ordered by revenue (impression-only dims) or impressions (os/browser). Revenue is publisher earnings for publishers and spend for other accounts. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param to ISO end (inclusive). (optional)
    * @param from ISO start (inclusive). (optional)
    * @param bdim Breakdown dimension (default os). &#39;page&#39;&#x3D;site (host), &#39;page_url&#39;&#x3D;individual page (host+path), &#39;app&#39;&#x3D;in-app/in-game app id, &#39;property&#39;&#x3D;owning property (app/site). &#39;region&#39;/&#39;make&#39;/&#39;model&#39; &#x3D; deployment region / device make / device model; &#39;sub1&#39;..&#39;sub5&#39; &#x3D; affiliate sub-ids. Use &#39;app&#39;/&#39;property&#39; for per-app earnings, &#39;sub*&#39; for affiliate performance. (optional)
+   * @return List&lt;ReportBreakdownRow&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerBreakdown(String to, String from, String bdim) throws ApiException {
-    reportingControllerBreakdownWithHttpInfo(to, from, bdim);
+  public List<ReportBreakdownRow> reportingControllerBreakdown(String to, String from, String bdim) throws ApiException {
+    ApiResponse<List<ReportBreakdownRow>> localVarResponse = reportingControllerBreakdownWithHttpInfo(to, from, bdim);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Break down delivery by OS, browser, deal, page, app or sub-id
+   * Groups valid raw impressions (and matching clicks) by &#x60;bdim&#x60;: os (default), browser, deal, page (host), page_url (host+path), app, property, region, make, model or sub1..sub5. Unknown values fall back to os. Returns at most 50 rows ordered by revenue (impression-only dims) or impressions (os/browser). Revenue is publisher earnings for publishers and spend for other accounts. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param to ISO end (inclusive). (optional)
    * @param from ISO start (inclusive). (optional)
    * @param bdim Breakdown dimension (default os). &#39;page&#39;&#x3D;site (host), &#39;page_url&#39;&#x3D;individual page (host+path), &#39;app&#39;&#x3D;in-app/in-game app id, &#39;property&#39;&#x3D;owning property (app/site). &#39;region&#39;/&#39;make&#39;/&#39;model&#39; &#x3D; deployment region / device make / device model; &#39;sub1&#39;..&#39;sub5&#39; &#x3D; affiliate sub-ids. Use &#39;app&#39;/&#39;property&#39; for per-app earnings, &#39;sub*&#39; for affiliate performance. (optional)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;List&lt;ReportBreakdownRow&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerBreakdownWithHttpInfo(String to, String from, String bdim) throws ApiException {
+  public ApiResponse<List<ReportBreakdownRow>> reportingControllerBreakdownWithHttpInfo(String to, String from, String bdim) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerBreakdownRequestBuilder(to, from, bdim);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -735,17 +753,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerBreakdown", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportBreakdownRow>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportBreakdownRow>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -796,21 +809,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get clicks per carousel card
+   * Clicks per card (0-based index) of each of the caller&#39;s carousel creatives, with the card title and price taken from the creative&#39;s stored carousel_items (title defaults to &#39;Card N&#39;). Top 500 by clicks. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;ReportingControllerCarousel200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerCarousel() throws ApiException {
-    reportingControllerCarouselWithHttpInfo();
+  public List<ReportingControllerCarousel200ResponseInner> reportingControllerCarousel() throws ApiException {
+    ApiResponse<List<ReportingControllerCarousel200ResponseInner>> localVarResponse = reportingControllerCarouselWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get clicks per carousel card
+   * Clicks per card (0-based index) of each of the caller&#39;s carousel creatives, with the card title and price taken from the creative&#39;s stored carousel_items (title defaults to &#39;Card N&#39;). Top 500 by clicks. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;ReportingControllerCarousel200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerCarouselWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerCarousel200ResponseInner>> reportingControllerCarouselWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerCarouselRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -823,17 +838,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerCarousel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerCarousel200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerCarousel200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -865,21 +875,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get funnel for the account&#39;s house campaigns
+   * Impressions, clicks, conversions and spend (returned as &#x60;revenue&#x60;) across the caller&#39;s house-ad campaigns from stats_hourly, with CTR, CVR and impression-to-conversion rate in percent. Returns zeros (with houseCampaigns) when there are no house campaigns or the query fails. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ReportingControllerClosedLoop200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerClosedLoop() throws ApiException {
-    reportingControllerClosedLoopWithHttpInfo();
+  public ReportingControllerClosedLoop200Response reportingControllerClosedLoop() throws ApiException {
+    ApiResponse<ReportingControllerClosedLoop200Response> localVarResponse = reportingControllerClosedLoopWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get funnel for the account&#39;s house campaigns
+   * Impressions, clicks, conversions and spend (returned as &#x60;revenue&#x60;) across the caller&#39;s house-ad campaigns from stats_hourly, with CTR, CVR and impression-to-conversion rate in percent. Returns zeros (with houseCampaigns) when there are no house campaigns or the query fails. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;ReportingControllerClosedLoop200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerClosedLoopWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerClosedLoop200Response> reportingControllerClosedLoopWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerClosedLoopRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -892,17 +904,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerClosedLoop", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerClosedLoop200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerClosedLoop200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -934,21 +941,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get cohort retention and LTV triangle (admin)
+   * Groups accounts by signup month and, for months 0..12 after signup, reports retention (fraction of the cohort with delivery that month) and cumulative average revenue per account. &#x60;scope&#x3D;advertiser&#x60; uses spend; anything else (default) uses publisher earnings. Only accounts ever active on the chosen side are counted; cells in the future are null. No date window.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ReportingControllerCohorts200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerCohorts() throws ApiException {
-    reportingControllerCohortsWithHttpInfo();
+  public ReportingControllerCohorts200Response reportingControllerCohorts() throws ApiException {
+    ApiResponse<ReportingControllerCohorts200Response> localVarResponse = reportingControllerCohortsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get cohort retention and LTV triangle (admin)
+   * Groups accounts by signup month and, for months 0..12 after signup, reports retention (fraction of the cohort with delivery that month) and cumulative average revenue per account. &#x60;scope&#x3D;advertiser&#x60; uses spend; anything else (default) uses publisher earnings. Only accounts ever active on the chosen side are counted; cells in the future are null. No date window.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;ReportingControllerCohorts200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerCohortsWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerCohorts200Response> reportingControllerCohortsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerCohortsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -961,17 +970,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerCohorts", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerCohorts200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerCohorts200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1003,21 +1007,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get pixel consent rate (personalized vs aggregate-only)
+   * Share of the caller&#39;s pixel events (adnet.pixel_events) ingested in personalized mode (consent granted, no GPC) versus aggregate-only, as totals and a daily series. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ReportingControllerConsentRate200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerConsentRate() throws ApiException {
-    reportingControllerConsentRateWithHttpInfo();
+  public ReportingControllerConsentRate200Response reportingControllerConsentRate() throws ApiException {
+    ApiResponse<ReportingControllerConsentRate200Response> localVarResponse = reportingControllerConsentRateWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get pixel consent rate (personalized vs aggregate-only)
+   * Share of the caller&#39;s pixel events (adnet.pixel_events) ingested in personalized mode (consent granted, no GPC) versus aggregate-only, as totals and a daily series. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;ReportingControllerConsentRate200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerConsentRateWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerConsentRate200Response> reportingControllerConsentRateWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerConsentRateRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1030,17 +1036,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerConsentRate", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerConsentRate200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerConsentRate200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1072,23 +1073,25 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Save a report definition
+   * Stores a named report definition for the caller. Body: &#x60;name&#x60; (default &#39;Untitled report&#39;) and &#x60;config&#x60; (any JSON object, default {}).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param createSavedReportDto  (required)
+   * @return ReportSavedReport
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerCreateSaved(CreateSavedReportDto createSavedReportDto) throws ApiException {
-    reportingControllerCreateSavedWithHttpInfo(createSavedReportDto);
+  public ReportSavedReport reportingControllerCreateSaved(CreateSavedReportDto createSavedReportDto) throws ApiException {
+    ApiResponse<ReportSavedReport> localVarResponse = reportingControllerCreateSavedWithHttpInfo(createSavedReportDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Save a report definition
+   * Stores a named report definition for the caller. Body: &#x60;name&#x60; (default &#39;Untitled report&#39;) and &#x60;config&#x60; (any JSON object, default {}).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param createSavedReportDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ReportSavedReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerCreateSavedWithHttpInfo(CreateSavedReportDto createSavedReportDto) throws ApiException {
+  public ApiResponse<ReportSavedReport> reportingControllerCreateSavedWithHttpInfo(CreateSavedReportDto createSavedReportDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerCreateSavedRequestBuilder(createSavedReportDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1101,17 +1104,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerCreateSaved", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportSavedReport>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportSavedReport>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1153,23 +1151,25 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Schedule an emailed report
+   * Creates a scheduled report. Body: &#x60;name&#x60;, &#x60;config&#x60; (JSON; &#x60;scope&#x60; &#39;advertiser&#39;|&#39;publisher&#39; and &#x60;dim&#x60; select the stats query), &#x60;cadence&#x60; (&#39;daily&#39; default, or &#39;weekly&#39;) and &#x60;email&#x60;. next_run_at is set one day or one week from now; each run emails the stats for the last 1 or 7 days.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param createScheduledReportDto  (required)
+   * @return ReportScheduledReport
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerCreateScheduled(CreateScheduledReportDto createScheduledReportDto) throws ApiException {
-    reportingControllerCreateScheduledWithHttpInfo(createScheduledReportDto);
+  public ReportScheduledReport reportingControllerCreateScheduled(CreateScheduledReportDto createScheduledReportDto) throws ApiException {
+    ApiResponse<ReportScheduledReport> localVarResponse = reportingControllerCreateScheduledWithHttpInfo(createScheduledReportDto);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Schedule an emailed report
+   * Creates a scheduled report. Body: &#x60;name&#x60;, &#x60;config&#x60; (JSON; &#x60;scope&#x60; &#39;advertiser&#39;|&#39;publisher&#39; and &#x60;dim&#x60; select the stats query), &#x60;cadence&#x60; (&#39;daily&#39; default, or &#39;weekly&#39;) and &#x60;email&#x60;. next_run_at is set one day or one week from now; each run emails the stats for the last 1 or 7 days.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param createScheduledReportDto  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ReportScheduledReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerCreateScheduledWithHttpInfo(CreateScheduledReportDto createScheduledReportDto) throws ApiException {
+  public ApiResponse<ReportScheduledReport> reportingControllerCreateScheduledWithHttpInfo(CreateScheduledReportDto createScheduledReportDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerCreateScheduledRequestBuilder(createScheduledReportDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1182,17 +1182,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerCreateScheduled", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportScheduledReport>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportScheduledReport>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1234,21 +1229,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-creative performance and fatigue
+   * For the caller&#39;s creatives: valid impressions, clicks, CTR, conversions (attributed through the click that drove them) and CVR, sorted by impressions and capped at 50. Names come from the creative title or brand name. &#x60;fatigue&#x60; is the daily CTR series of the highest-volume creative so decay is visible. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ReportingControllerCreatives200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerCreatives() throws ApiException {
-    reportingControllerCreativesWithHttpInfo();
+  public ReportingControllerCreatives200Response reportingControllerCreatives() throws ApiException {
+    ApiResponse<ReportingControllerCreatives200Response> localVarResponse = reportingControllerCreativesWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get per-creative performance and fatigue
+   * For the caller&#39;s creatives: valid impressions, clicks, CTR, conversions (attributed through the click that drove them) and CVR, sorted by impressions and capped at 50. Names come from the creative title or brand name. &#x60;fatigue&#x60; is the daily CTR series of the highest-volume creative so decay is visible. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;ReportingControllerCreatives200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerCreativesWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerCreatives200Response> reportingControllerCreativesWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerCreativesRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1261,17 +1258,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerCreatives", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerCreatives200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerCreatives200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1303,23 +1295,25 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a saved report
+   * Deletes one of the caller&#39;s saved reports by id. Returns 404 if it does not exist or belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param id  (required)
+   * @return ReportingControllerDeleteSaved200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerDeleteSaved(String id) throws ApiException {
-    reportingControllerDeleteSavedWithHttpInfo(id);
+  public ReportingControllerDeleteSaved200Response reportingControllerDeleteSaved(String id) throws ApiException {
+    ApiResponse<ReportingControllerDeleteSaved200Response> localVarResponse = reportingControllerDeleteSavedWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a saved report
+   * Deletes one of the caller&#39;s saved reports by id. Returns 404 if it does not exist or belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ReportingControllerDeleteSaved200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerDeleteSavedWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<ReportingControllerDeleteSaved200Response> reportingControllerDeleteSavedWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerDeleteSavedRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1332,17 +1326,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerDeleteSaved", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerDeleteSaved200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerDeleteSaved200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1379,23 +1368,25 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Delete a scheduled report
+   * Deletes one of the caller&#39;s scheduled reports by id. Returns 404 if it does not exist or belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param id  (required)
+   * @return ReportingControllerDeleteSaved200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerDeleteScheduled(String id) throws ApiException {
-    reportingControllerDeleteScheduledWithHttpInfo(id);
+  public ReportingControllerDeleteSaved200Response reportingControllerDeleteScheduled(String id) throws ApiException {
+    ApiResponse<ReportingControllerDeleteSaved200Response> localVarResponse = reportingControllerDeleteScheduledWithHttpInfo(id);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Delete a scheduled report
+   * Deletes one of the caller&#39;s scheduled reports by id. Returns 404 if it does not exist or belongs to another account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
    * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ReportingControllerDeleteSaved200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerDeleteScheduledWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<ReportingControllerDeleteSaved200Response> reportingControllerDeleteScheduledWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerDeleteScheduledRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1408,17 +1399,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerDeleteScheduled", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerDeleteSaved200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerDeleteSaved200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1455,21 +1441,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get publisher delivery waterfall
+   * Requests and filled responses (ad_requests), rendered valid impressions (impressions) and measurable/viewable beacons (viewability) for the caller&#39;s inventory, with stage-to-stage rates. &#x60;discrepancy&#x60; is filled minus rendered (floored at 0). Rates are fractions 0..1. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ReportingControllerDeliveryFunnel200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerDeliveryFunnel() throws ApiException {
-    reportingControllerDeliveryFunnelWithHttpInfo();
+  public ReportingControllerDeliveryFunnel200Response reportingControllerDeliveryFunnel() throws ApiException {
+    ApiResponse<ReportingControllerDeliveryFunnel200Response> localVarResponse = reportingControllerDeliveryFunnelWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get publisher delivery waterfall
+   * Requests and filled responses (ad_requests), rendered valid impressions (impressions) and measurable/viewable beacons (viewability) for the caller&#39;s inventory, with stage-to-stage rates. &#x60;discrepancy&#x60; is filled minus rendered (floored at 0). Rates are fractions 0..1. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;ReportingControllerDeliveryFunnel200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerDeliveryFunnelWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerDeliveryFunnel200Response> reportingControllerDeliveryFunnelWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerDeliveryFunnelRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1482,17 +1470,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerDeliveryFunnel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerDeliveryFunnel200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerDeliveryFunnel200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1524,21 +1507,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get delivery pacing for booked and goal campaigns
+   * For each of the caller&#39;s campaigns with a delivery_goal or a guaranteed/sponsorship priority tier: the goal, all-time valid delivered impressions or clicks (per goal_type), percent to goal, percent of the flight elapsed, and whether delivery is keeping up (pctToGoal &gt;&#x3D; flightProgressPct). Open-ended flights count as 100% elapsed once started. No query params.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;ReportingControllerDeliveryPacing200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerDeliveryPacing() throws ApiException {
-    reportingControllerDeliveryPacingWithHttpInfo();
+  public List<ReportingControllerDeliveryPacing200ResponseInner> reportingControllerDeliveryPacing() throws ApiException {
+    ApiResponse<List<ReportingControllerDeliveryPacing200ResponseInner>> localVarResponse = reportingControllerDeliveryPacingWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get delivery pacing for booked and goal campaigns
+   * For each of the caller&#39;s campaigns with a delivery_goal or a guaranteed/sponsorship priority tier: the goal, all-time valid delivered impressions or clicks (per goal_type), percent to goal, percent of the flight elapsed, and whether delivery is keeping up (pctToGoal &gt;&#x3D; flightProgressPct). Open-ended flights count as 100% elapsed once started. No query params.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;ReportingControllerDeliveryPacing200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerDeliveryPacingWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerDeliveryPacing200ResponseInner>> reportingControllerDeliveryPacingWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerDeliveryPacingRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1551,17 +1536,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerDeliveryPacing", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerDeliveryPacing200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerDeliveryPacing200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1593,21 +1573,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get publisher fill rate and no-fill reasons
+   * Counts the caller&#39;s ad requests from adnet.ad_requests, how many were filled, and the fill rate, plus a map of unfilled requests by no-fill reason (empty reasons bucketed as &#39;unknown&#39;). Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ReportingControllerFill200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerFill() throws ApiException {
-    reportingControllerFillWithHttpInfo();
+  public ReportingControllerFill200Response reportingControllerFill() throws ApiException {
+    ApiResponse<ReportingControllerFill200Response> localVarResponse = reportingControllerFillWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get publisher fill rate and no-fill reasons
+   * Counts the caller&#39;s ad requests from adnet.ad_requests, how many were filled, and the fill rate, plus a map of unfilled requests by no-fill reason (empty reasons bucketed as &#39;unknown&#39;). Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;ReportingControllerFill200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerFillWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerFill200Response> reportingControllerFillWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerFillRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1620,17 +1602,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerFill", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerFill200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerFill200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1662,21 +1639,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get advertiser impression-click-conversion funnel
+   * Totals impressions, clicks and conversions for the caller&#39;s campaigns from adnet.stats_hourly with CTR, CVR (conversions/clicks) and impression-to-conversion rate, all in percent. Returns zeros when there is no data. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ReportingControllerFunnel200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerFunnel() throws ApiException {
-    reportingControllerFunnelWithHttpInfo();
+  public ReportingControllerFunnel200Response reportingControllerFunnel() throws ApiException {
+    ApiResponse<ReportingControllerFunnel200Response> localVarResponse = reportingControllerFunnelWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get advertiser impression-click-conversion funnel
+   * Totals impressions, clicks and conversions for the caller&#39;s campaigns from adnet.stats_hourly with CTR, CVR (conversions/clicks) and impression-to-conversion rate, all in percent. Returns zeros when there is no data. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;ReportingControllerFunnel200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerFunnelWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerFunnel200Response> reportingControllerFunnelWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerFunnelRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1689,17 +1668,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerFunnel", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerFunnel200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerFunnel200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1731,21 +1705,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-country delivery breakdown
+   * Impressions, clicks and amount per country from adnet.stats_hourly, ordered by amount. Amount is publisher earnings for publisher accounts and spend for other accounts; rows with an empty geo are skipped. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return List&lt;ReportingControllerGeo200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerGeo() throws ApiException {
-    reportingControllerGeoWithHttpInfo();
+  public List<ReportingControllerGeo200ResponseInner> reportingControllerGeo() throws ApiException {
+    ApiResponse<List<ReportingControllerGeo200ResponseInner>> localVarResponse = reportingControllerGeoWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get per-country delivery breakdown
+   * Impressions, clicks and amount per country from adnet.stats_hourly, ordered by amount. Amount is publisher earnings for publisher accounts and spend for other accounts; rows with an empty geo are skipped. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;List&lt;ReportingControllerGeo200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerGeoWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerGeo200ResponseInner>> reportingControllerGeoWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerGeoRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1758,17 +1734,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerGeo", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerGeo200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerGeo200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1800,21 +1771,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-campaign conversion lift vs holdout
+   * For up to 200 of the caller&#39;s campaigns, compares the conversion rate of exposed users (served an impression) with a holdout group (adnet.holdouts). Conversions attribute to users via the click that drove them. lift &#x3D; (exposedCvr - holdoutCvr) / holdoutCvr; holdout figures and lift are 0 when there is no holdout data. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;ReportingControllerIncrementality200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerIncrementality() throws ApiException {
-    reportingControllerIncrementalityWithHttpInfo();
+  public List<ReportingControllerIncrementality200ResponseInner> reportingControllerIncrementality() throws ApiException {
+    ApiResponse<List<ReportingControllerIncrementality200ResponseInner>> localVarResponse = reportingControllerIncrementalityWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get per-campaign conversion lift vs holdout
+   * For up to 200 of the caller&#39;s campaigns, compares the conversion rate of exposed users (served an impression) with a holdout group (adnet.holdouts). Conversions attribute to users via the click that drove them. lift &#x3D; (exposedCvr - holdoutCvr) / holdoutCvr; holdout figures and lift are 0 when there is no holdout data. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;ReportingControllerIncrementality200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerIncrementalityWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerIncrementality200ResponseInner>> reportingControllerIncrementalityWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerIncrementalityRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1827,17 +1800,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerIncrementality", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerIncrementality200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerIncrementality200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1869,21 +1837,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get invalid-traffic breakdown by reason (last 30 days)
+   * Counts impressions flagged invalid (is_valid &#x3D; 0) in the last 30 days, grouped by IVT reason and ordered by count. Publishers see IVT on their inventory; every other account sees IVT on its campaigns. Takes no window params.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;ReportingControllerIvt200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerIvt() throws ApiException {
-    reportingControllerIvtWithHttpInfo();
+  public List<ReportingControllerIvt200ResponseInner> reportingControllerIvt() throws ApiException {
+    ApiResponse<List<ReportingControllerIvt200ResponseInner>> localVarResponse = reportingControllerIvtWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get invalid-traffic breakdown by reason (last 30 days)
+   * Counts impressions flagged invalid (is_valid &#x3D; 0) in the last 30 days, grouped by IVT reason and ordered by count. Publishers see IVT on their inventory; every other account sees IVT on its campaigns. Takes no window params.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;ReportingControllerIvt200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerIvtWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerIvt200ResponseInner>> reportingControllerIvtWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerIvtRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1896,17 +1866,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerIvt", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerIvt200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerIvt200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -1938,21 +1903,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get top cross-site user paths
+   * Builds each user&#39;s time-ordered sequence of placements (first 6) from the caller&#39;s valid impressions and counts the most common paths, joined with &#39; &gt; &#39;. &#x60;topN&#x60; sets the result size (default 20, max 50); at most 50,000 users are scanned. Returns an empty list on query failure. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;ReportingControllerJourney200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerJourney() throws ApiException {
-    reportingControllerJourneyWithHttpInfo();
+  public List<ReportingControllerJourney200ResponseInner> reportingControllerJourney() throws ApiException {
+    ApiResponse<List<ReportingControllerJourney200ResponseInner>> localVarResponse = reportingControllerJourneyWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get top cross-site user paths
+   * Builds each user&#39;s time-ordered sequence of placements (first 6) from the caller&#39;s valid impressions and counts the most common paths, joined with &#39; &gt; &#39;. &#x60;topN&#x60; sets the result size (default 20, max 50); at most 50,000 users are scanned. Returns an empty list on query failure. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;ReportingControllerJourney200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerJourneyWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerJourney200ResponseInner>> reportingControllerJourneyWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerJourneyRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1965,17 +1932,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerJourney", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerJourney200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerJourney200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2007,21 +1969,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get network-wide marketplace liquidity (admin)
+   * Network-wide ad requests, filled and unmatched requests, fill rate, the top 12 no-fill reasons and a daily requests/filled series, from adnet.ad_requests. Not scoped to an account. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ReportingControllerLiquidity200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerLiquidity() throws ApiException {
-    reportingControllerLiquidityWithHttpInfo();
+  public ReportingControllerLiquidity200Response reportingControllerLiquidity() throws ApiException {
+    ApiResponse<ReportingControllerLiquidity200Response> localVarResponse = reportingControllerLiquidityWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get network-wide marketplace liquidity (admin)
+   * Network-wide ad requests, filled and unmatched requests, fill rate, the top 12 no-fill reasons and a daily requests/filled series, from adnet.ad_requests. Not scoped to an account. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;ReportingControllerLiquidity200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerLiquidityWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerLiquidity200Response> reportingControllerLiquidityWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerLiquidityRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2034,17 +1998,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerLiquidity", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerLiquidity200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerLiquidity200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2076,21 +2035,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * List saved reports
+   * Returns the caller&#39;s saved report definitions, newest first. The config is opaque JSON stored for the dashboard.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return List&lt;ReportSavedReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerListSaved() throws ApiException {
-    reportingControllerListSavedWithHttpInfo();
+  public List<ReportSavedReport> reportingControllerListSaved() throws ApiException {
+    ApiResponse<List<ReportSavedReport>> localVarResponse = reportingControllerListSavedWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List saved reports
+   * Returns the caller&#39;s saved report definitions, newest first. The config is opaque JSON stored for the dashboard.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;List&lt;ReportSavedReport&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerListSavedWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportSavedReport>> reportingControllerListSavedWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerListSavedRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2103,17 +2064,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerListSaved", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportSavedReport>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportSavedReport>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2145,21 +2101,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * List scheduled email reports
+   * Returns the caller&#39;s scheduled email reports with cadence, recipient and last/next run times, newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return List&lt;ReportScheduledReport&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerListScheduled() throws ApiException {
-    reportingControllerListScheduledWithHttpInfo();
+  public List<ReportScheduledReport> reportingControllerListScheduled() throws ApiException {
+    ApiResponse<List<ReportScheduledReport>> localVarResponse = reportingControllerListScheduledWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * List scheduled email reports
+   * Returns the caller&#39;s scheduled email reports with cadence, recipient and last/next run times, newest first.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;List&lt;ReportScheduledReport&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerListScheduledWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportScheduledReport>> reportingControllerListScheduledWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerListScheduledRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2172,17 +2130,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerListScheduled", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportScheduledReport>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportScheduledReport>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2214,21 +2167,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get marketplace economics and concentration (admin)
+   * Gross advertiser spend, publisher payout, platform margin and take rate over the window (stats_hourly), the top 10 advertisers by spend and publishers by earnings with their share of the total, and monthly signup counts per account type from Postgres (cohorts ignore the window). Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ReportingControllerMarketplace200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerMarketplace() throws ApiException {
-    reportingControllerMarketplaceWithHttpInfo();
+  public ReportingControllerMarketplace200Response reportingControllerMarketplace() throws ApiException {
+    ApiResponse<ReportingControllerMarketplace200Response> localVarResponse = reportingControllerMarketplaceWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get marketplace economics and concentration (admin)
+   * Gross advertiser spend, publisher payout, platform margin and take rate over the window (stats_hourly), the top 10 advertisers by spend and publishers by earnings with their share of the total, and monthly signup counts per account type from Postgres (cohorts ignore the window). Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
+   * @return ApiResponse&lt;ReportingControllerMarketplace200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerMarketplaceWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerMarketplace200Response> reportingControllerMarketplaceWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerMarketplaceRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2241,17 +2196,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerMarketplace", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerMarketplace200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerMarketplace200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2283,21 +2233,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get Personal Network infra fees and house-ad delivery
+   * Sums the &#39;infra_fee&#39; ledger entries charged to the caller over the period (absolute value, total and per day) and counts valid impressions of the caller&#39;s house-ad campaigns. &#x60;from&#x60;/&#x60;to&#x60; are YYYY-MM-DD dates here (default: the last 30 days through today, inclusive). infraFeePct is read from platform_config (default 0.05).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReportingControllerPersonalNetwork200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerPersonalNetwork() throws ApiException {
-    reportingControllerPersonalNetworkWithHttpInfo();
+  public ReportingControllerPersonalNetwork200Response reportingControllerPersonalNetwork() throws ApiException {
+    ApiResponse<ReportingControllerPersonalNetwork200Response> localVarResponse = reportingControllerPersonalNetworkWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get Personal Network infra fees and house-ad delivery
+   * Sums the &#39;infra_fee&#39; ledger entries charged to the caller over the period (absolute value, total and per day) and counts valid impressions of the caller&#39;s house-ad campaigns. &#x60;from&#x60;/&#x60;to&#x60; are YYYY-MM-DD dates here (default: the last 30 days through today, inclusive). infraFeePct is read from platform_config (default 0.05).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReportingControllerPersonalNetwork200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerPersonalNetworkWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerPersonalNetwork200Response> reportingControllerPersonalNetworkWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerPersonalNetworkRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2310,17 +2262,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerPersonalNetwork", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerPersonalNetwork200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerPersonalNetwork200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2352,21 +2299,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Pivot delivery over two dimensions
+   * Groups adnet.stats_hourly by &#x60;dim1&#x60; x &#x60;dim2&#x60;, each one of day, geo, device, os, browser, format, placement_id, campaign_id (os/browser are not in the rollup and resolve to a constant &#39;(n/a)&#39;). An unknown dimension returns 403 &#39;invalid pivot dimension&#39;. Amount is earnings (publisher) or spend (advertiser); max 1000 rows ordered by amount. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return List&lt;ReportingControllerPivot200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerPivot() throws ApiException {
-    reportingControllerPivotWithHttpInfo();
+  public List<ReportingControllerPivot200ResponseInner> reportingControllerPivot() throws ApiException {
+    ApiResponse<List<ReportingControllerPivot200ResponseInner>> localVarResponse = reportingControllerPivotWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Pivot delivery over two dimensions
+   * Groups adnet.stats_hourly by &#x60;dim1&#x60; x &#x60;dim2&#x60;, each one of day, geo, device, os, browser, format, placement_id, campaign_id (os/browser are not in the rollup and resolve to a constant &#39;(n/a)&#39;). An unknown dimension returns 403 &#39;invalid pivot dimension&#39;. Amount is earnings (publisher) or spend (advertiser); max 1000 rows ordered by amount. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;List&lt;ReportingControllerPivot200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerPivotWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerPivot200ResponseInner>> reportingControllerPivotWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerPivotRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2379,17 +2328,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerPivot", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerPivot200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerPivot200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2421,21 +2365,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get publisher earnings grouped by a dimension
+   * Aggregates the caller&#39;s publisher earnings from the hourly rollup (adnet.stats_hourly). &#x60;dim&#x60; picks the grouping: day (default), hour, geo, device, format, placement_id or campaign_id; rows are ordered by the dimension. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return List&lt;ReportPublisherStatsRow&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerPublisher() throws ApiException {
-    reportingControllerPublisherWithHttpInfo();
+  public List<ReportPublisherStatsRow> reportingControllerPublisher() throws ApiException {
+    ApiResponse<List<ReportPublisherStatsRow>> localVarResponse = reportingControllerPublisherWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get publisher earnings grouped by a dimension
+   * Aggregates the caller&#39;s publisher earnings from the hourly rollup (adnet.stats_hourly). &#x60;dim&#x60; picks the grouping: day (default), hour, geo, device, format, placement_id or campaign_id; rows are ordered by the dimension. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;List&lt;ReportPublisherStatsRow&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerPublisherWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportPublisherStatsRow>> reportingControllerPublisherWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerPublisherRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2448,17 +2394,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerPublisher", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportPublisherStatsRow>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportPublisherStatsRow>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2490,21 +2431,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get publisher ad-serving consent rate
+   * Share of the caller&#39;s valid impressions served with personalized-processing consent (impressions.consented, set by the engine from the request&#39;s privacy signals), as totals and a daily series. Distinct from the advertiser pixel consent rate. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ReportingControllerPublisherConsent200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerPublisherConsent() throws ApiException {
-    reportingControllerPublisherConsentWithHttpInfo();
+  public ReportingControllerPublisherConsent200Response reportingControllerPublisherConsent() throws ApiException {
+    ApiResponse<ReportingControllerPublisherConsent200Response> localVarResponse = reportingControllerPublisherConsentWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get publisher ad-serving consent rate
+   * Share of the caller&#39;s valid impressions served with personalized-processing consent (impressions.consented, set by the engine from the request&#39;s privacy signals), as totals and a daily series. Distinct from the advertiser pixel consent rate. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;ReportingControllerPublisherConsent200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerPublisherConsentWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerPublisherConsent200Response> reportingControllerPublisherConsentWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerPublisherConsentRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2517,17 +2460,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerPublisherConsent", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerPublisherConsent200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerPublisherConsent200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2559,21 +2497,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get per-placement earnings, fill and viewability
+   * Joins three ClickHouse aggregations by placement_id: earnings (stats_hourly), fill (ad_requests) and viewability (adnet.viewability), then resolves placement names from Postgres. A placement appears if it has activity in any of the three. Sorted by revenue then impressions. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return List&lt;ReportPlacementRow&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerPublisherPlacements() throws ApiException {
-    reportingControllerPublisherPlacementsWithHttpInfo();
+  public List<ReportPlacementRow> reportingControllerPublisherPlacements() throws ApiException {
+    ApiResponse<List<ReportPlacementRow>> localVarResponse = reportingControllerPublisherPlacementsWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get per-placement earnings, fill and viewability
+   * Joins three ClickHouse aggregations by placement_id: earnings (stats_hourly), fill (ad_requests) and viewability (adnet.viewability), then resolves placement names from Postgres. A placement appears if it has activity in any of the three. Sorted by revenue then impressions. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;List&lt;ReportPlacementRow&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerPublisherPlacementsWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportPlacementRow>> reportingControllerPublisherPlacementsWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerPublisherPlacementsRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2586,17 +2526,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerPublisherPlacements", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportPlacementRow>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportPlacementRow>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2628,21 +2563,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get reach and frequency (unique users)
+   * Computes unique users (by user_id_hash) from valid raw impressions, average frequency, a frequency histogram (buckets 1, 2, 3, 4, 5, 6-10, 11+ in fixed order) and a daily reach series. Publishers measure their inventory&#39;s audience; other accounts their campaigns&#39; reach. Impressions without a user hash are excluded. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReportingControllerReach200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerReach() throws ApiException {
-    reportingControllerReachWithHttpInfo();
+  public ReportingControllerReach200Response reportingControllerReach() throws ApiException {
+    ApiResponse<ReportingControllerReach200Response> localVarResponse = reportingControllerReachWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get reach and frequency (unique users)
+   * Computes unique users (by user_id_hash) from valid raw impressions, average frequency, a frequency histogram (buckets 1, 2, 3, 4, 5, 6-10, 11+ in fixed order) and a daily reach series. Publishers measure their inventory&#39;s audience; other accounts their campaigns&#39; reach. Impressions without a user hash are excluded. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReportingControllerReach200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerReachWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerReach200Response> reportingControllerReachWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerReachRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2655,17 +2592,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerReach", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerReach200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerReach200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2697,21 +2629,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get last-15-minute impressions, clicks and amount
+   * Per-minute series of valid impressions and clicks over the last 15 minutes from the raw event tables, with totals. Publisher accounts see their inventory (earnings); other accounts their campaigns (spend).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReportRealtime
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerRealtime() throws ApiException {
-    reportingControllerRealtimeWithHttpInfo();
+  public ReportRealtime reportingControllerRealtime() throws ApiException {
+    ApiResponse<ReportRealtime> localVarResponse = reportingControllerRealtimeWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get last-15-minute impressions, clicks and amount
+   * Per-minute series of valid impressions and clicks over the last 15 minutes from the raw event tables, with totals. Publisher accounts see their inventory (earnings); other accounts their campaigns (spend).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReportRealtime&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerRealtimeWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportRealtime> reportingControllerRealtimeWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerRealtimeRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2724,17 +2658,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerRealtime", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportRealtime>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportRealtime>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2766,23 +2695,25 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Stream the realtime report as Server-Sent Events
+   * Pushes the same payload as GET /v1/reporting/realtime as an SSE &#x60;data:&#x60; event immediately on connect and then every ~3 seconds (a server-side poll, not a sub-second event stream). Because EventSource cannot set headers, this route authenticates with the session token in &#x60;?access_token&#x3D;&#x60;. &#x60;scope&#x3D;advertiser|publisher&#x60; selects the side of a dual-sided account; it defaults to the account type.  Auth: public, no credentials required. Additionally checked by SseAuthGuard.
    * @param scope  (required)
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerRealtimeStream(String scope) throws ApiException {
-    reportingControllerRealtimeStreamWithHttpInfo(scope);
+  public String reportingControllerRealtimeStream(String scope) throws ApiException {
+    ApiResponse<String> localVarResponse = reportingControllerRealtimeStreamWithHttpInfo(scope);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Stream the realtime report as Server-Sent Events
+   * Pushes the same payload as GET /v1/reporting/realtime as an SSE &#x60;data:&#x60; event immediately on connect and then every ~3 seconds (a server-side poll, not a sub-second event stream). Because EventSource cannot set headers, this route authenticates with the session token in &#x60;?access_token&#x3D;&#x60;. &#x60;scope&#x3D;advertiser|publisher&#x60; selects the side of a dual-sided account; it defaults to the account type.  Auth: public, no credentials required. Additionally checked by SseAuthGuard.
    * @param scope  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerRealtimeStreamWithHttpInfo(String scope) throws ApiException {
+  public ApiResponse<String> reportingControllerRealtimeStreamWithHttpInfo(String scope) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerRealtimeStreamRequestBuilder(scope);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2795,17 +2726,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerRealtimeStream", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<String>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<String>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2843,7 +2769,7 @@ public class ReportingApi {
       localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
     }
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    localVarRequestBuilder.header("Accept", "text/event-stream");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
     if (memberVarReadTimeout != null) {
@@ -2856,21 +2782,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get daily ROAS and conversion-value trend
+   * Per-day spend (stats_hourly) joined to attributed conversion count and conversion_value (adnet.conversions), with ROAS &#x3D; conversionValue / spend. Days present in either source are included, sorted ascending. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return List&lt;ReportingControllerRoas200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerRoas() throws ApiException {
-    reportingControllerRoasWithHttpInfo();
+  public List<ReportingControllerRoas200ResponseInner> reportingControllerRoas() throws ApiException {
+    ApiResponse<List<ReportingControllerRoas200ResponseInner>> localVarResponse = reportingControllerRoasWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get daily ROAS and conversion-value trend
+   * Per-day spend (stats_hourly) joined to attributed conversion count and conversion_value (adnet.conversions), with ROAS &#x3D; conversionValue / spend. Days present in either source are included, sorted ascending. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * @return ApiResponse&lt;List&lt;ReportingControllerRoas200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerRoasWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerRoas200ResponseInner>> reportingControllerRoasWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerRoasRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2883,17 +2811,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerRoas", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerRoas200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerRoas200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2925,21 +2848,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get ad-serving decision and render latency
+   * Engine decision latency percentiles (from ad_requests.decision_us, reported in milliseconds) with the share of requests over the 100 ms soft SLA and a daily p95 series. Also returns client render latency from SDK beacons (null if the tag has not reported any) and client-side load failures (client_timeout/client_error) as a share of all requests. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ReportingControllerServeLatency200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerServeLatency() throws ApiException {
-    reportingControllerServeLatencyWithHttpInfo();
+  public ReportingControllerServeLatency200Response reportingControllerServeLatency() throws ApiException {
+    ApiResponse<ReportingControllerServeLatency200Response> localVarResponse = reportingControllerServeLatencyWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get ad-serving decision and render latency
+   * Engine decision latency percentiles (from ad_requests.decision_us, reported in milliseconds) with the share of requests over the 100 ms soft SLA and a daily p95 series. Also returns client render latency from SDK beacons (null if the tag has not reported any) and client-side load failures (client_timeout/client_error) as a share of all requests. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: publisher, admin.
+   * @return ApiResponse&lt;ReportingControllerServeLatency200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerServeLatencyWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerServeLatency200Response> reportingControllerServeLatencyWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerServeLatencyRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -2952,17 +2877,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerServeLatency", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerServeLatency200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerServeLatency200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -2994,23 +2914,25 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Estimate energy and carbon footprint of ad delivery
+   * Counts valid impressions over the last &#x60;periodDays&#x60; days (default 30, min 1) and converts them to kWh and kg CO2e using configurable factors (SUSTAINABILITY_KWH_PER_1K, default 0.0009 kWh per 1000 impressions; SUSTAINABILITY_GRID_GCO2_PER_KWH, default 475). Admins get a network-wide figure; publishers their inventory; other accounts their campaigns.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
    * @param periodDays  (required)
+   * @return ReportingControllerSustainability200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerSustainability(String periodDays) throws ApiException {
-    reportingControllerSustainabilityWithHttpInfo(periodDays);
+  public ReportingControllerSustainability200Response reportingControllerSustainability(String periodDays) throws ApiException {
+    ApiResponse<ReportingControllerSustainability200Response> localVarResponse = reportingControllerSustainabilityWithHttpInfo(periodDays);
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
+   * Estimate energy and carbon footprint of ad delivery
+   * Counts valid impressions over the last &#x60;periodDays&#x60; days (default 30, min 1) and converts them to kWh and kg CO2e using configurable factors (SUSTAINABILITY_KWH_PER_1K, default 0.0009 kWh per 1000 impressions; SUSTAINABILITY_GRID_GCO2_PER_KWH, default 475). Admins get a network-wide figure; publishers their inventory; other accounts their campaigns.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
    * @param periodDays  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * @return ApiResponse&lt;ReportingControllerSustainability200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerSustainabilityWithHttpInfo(String periodDays) throws ApiException {
+  public ApiResponse<ReportingControllerSustainability200Response> reportingControllerSustainabilityWithHttpInfo(String periodDays) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerSustainabilityRequestBuilder(periodDays);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3023,17 +2945,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerSustainability", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerSustainability200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerSustainability200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3084,21 +3001,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get time-to-click latency distribution
+   * Average and median milliseconds between render and click for valid clicks with a recorded time_to_click_ms, plus counts in fixed buckets (&lt;1s, 1-3s, 3-10s, 10-30s, 30s+). Publishers see clicks on their inventory; other accounts on their campaigns. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReportingControllerTimeToClick200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerTimeToClick() throws ApiException {
-    reportingControllerTimeToClickWithHttpInfo();
+  public ReportingControllerTimeToClick200Response reportingControllerTimeToClick() throws ApiException {
+    ApiResponse<ReportingControllerTimeToClick200Response> localVarResponse = reportingControllerTimeToClickWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get time-to-click latency distribution
+   * Average and median milliseconds between render and click for valid clicks with a recorded time_to_click_ms, plus counts in fixed buckets (&lt;1s, 1-3s, 3-10s, 10-30s, 30s+). Publishers see clicks on their inventory; other accounts on their campaigns. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded (2020-01-01 .. 2099-01-01).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReportingControllerTimeToClick200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerTimeToClickWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerTimeToClick200Response> reportingControllerTimeToClickWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerTimeToClickRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3111,17 +3030,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerTimeToClick", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerTimeToClick200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerTimeToClick200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3153,21 +3067,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get video completion funnel and breakdown
+   * Overall video funnel (starts, quartiles, completes, skips, errors and rates) from adnet.video_events, plus the same metrics per placement (publisher accounts) or per campaign (other accounts), top 100 by starts. Only exact VAST quartile events count toward the funnel. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ReportingControllerVideo200Response
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerVideo() throws ApiException {
-    reportingControllerVideoWithHttpInfo();
+  public ReportingControllerVideo200Response reportingControllerVideo() throws ApiException {
+    ApiResponse<ReportingControllerVideo200Response> localVarResponse = reportingControllerVideoWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get video completion funnel and breakdown
+   * Overall video funnel (starts, quartiles, completes, skips, errors and rates) from adnet.video_events, plus the same metrics per placement (publisher accounts) or per campaign (other accounts), top 100 by starts. Only exact VAST quartile events count toward the funnel. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher.
+   * @return ApiResponse&lt;ReportingControllerVideo200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerVideoWithHttpInfo() throws ApiException {
+  public ApiResponse<ReportingControllerVideo200Response> reportingControllerVideoWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerVideoRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3180,17 +3096,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerVideo", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<ReportingControllerVideo200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ReportingControllerVideo200Response>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);
@@ -3222,21 +3133,23 @@ public class ReportingApi {
   }
 
   /**
-   * 
-   * 
+   * Get viewability by placement or campaign
+   * Measurable and viewable beacon counts, viewable rate, and average in-view percent and duration (of viewable events) from adnet.viewability. &#x60;groupBy&#x3D;campaign&#x60; groups by campaign, anything else by placement. Advertisers see their own campaigns, publishers their own inventory, admins the whole network. Max 1000 rows ordered by measurable. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return List&lt;ReportingControllerViewability200ResponseInner&gt;
    * @throws ApiException if fails to make API call
    */
-  public void reportingControllerViewability() throws ApiException {
-    reportingControllerViewabilityWithHttpInfo();
+  public List<ReportingControllerViewability200ResponseInner> reportingControllerViewability() throws ApiException {
+    ApiResponse<List<ReportingControllerViewability200ResponseInner>> localVarResponse = reportingControllerViewabilityWithHttpInfo();
+    return localVarResponse.getData();
   }
 
   /**
-   * 
-   * 
-   * @return ApiResponse&lt;Void&gt;
+   * Get viewability by placement or campaign
+   * Measurable and viewable beacon counts, viewable rate, and average in-view percent and duration (of viewable events) from adnet.viewability. &#x60;groupBy&#x3D;campaign&#x60; groups by campaign, anything else by placement. Advertisers see their own campaigns, publishers their own inventory, admins the whole network. Max 1000 rows ordered by measurable. Optional &#x60;from&#x60;/&#x60;to&#x60; query params bound the window (ClickHouse DateTime, e.g. &#x60;2026-01-01 00:00:00&#x60;, inclusive); when omitted the window is unbounded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, publisher, admin.
+   * @return ApiResponse&lt;List&lt;ReportingControllerViewability200ResponseInner&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> reportingControllerViewabilityWithHttpInfo() throws ApiException {
+  public ApiResponse<List<ReportingControllerViewability200ResponseInner>> reportingControllerViewabilityWithHttpInfo() throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = reportingControllerViewabilityRequestBuilder();
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -3249,17 +3162,12 @@ public class ReportingApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("reportingControllerViewability", localVarResponse);
         }
-        return new ApiResponse<Void>(
+        return new ApiResponse<List<ReportingControllerViewability200ResponseInner>>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          null
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<ReportingControllerViewability200ResponseInner>>() {}) // closes the InputStream
         );
       } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-            // Ignore
-        }
-        localVarResponse.body().close();
       }
     } catch (IOException e) {
       throw new ApiException(e);

@@ -300,7 +300,7 @@ public class ConversionsApi {
 
   /**
    * Report a refund or chargeback for an order
-   * Claws back a held or settled per-checkout CPA conversion identified by &#x60;orderId&#x60;/&#x60;order_id&#x60;, optionally narrowed by &#x60;advertiserId&#x60;/&#x60;advertiser_id&#x60;. Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns &#x60;error&#x60;, an unknown order &#x60;not_found&#x60;, and a repeat call &#x60;already_refunded&#x60;.  Auth: public, no credentials required.
+   * Claws back a held or settled per-checkout CPA conversion identified by &#x60;orderId&#x60;/&#x60;order_id&#x60;. Requires the advertiser API key (scope &#x60;write&#x60;) or session, and only touches that advertiser’s own orders (admins may pass &#x60;advertiserId&#x60;). Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns &#x60;error&#x60;, an unknown order &#x60;not_found&#x60;, and a repeat call &#x60;already_refunded&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param refundDto  (required)
    * @return ConversionsControllerTrackRefund201Response
    * @throws ApiException if fails to make API call
@@ -312,7 +312,7 @@ public class ConversionsApi {
 
   /**
    * Report a refund or chargeback for an order
-   * Claws back a held or settled per-checkout CPA conversion identified by &#x60;orderId&#x60;/&#x60;order_id&#x60;, optionally narrowed by &#x60;advertiserId&#x60;/&#x60;advertiser_id&#x60;. Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns &#x60;error&#x60;, an unknown order &#x60;not_found&#x60;, and a repeat call &#x60;already_refunded&#x60;.  Auth: public, no credentials required.
+   * Claws back a held or settled per-checkout CPA conversion identified by &#x60;orderId&#x60;/&#x60;order_id&#x60;. Requires the advertiser API key (scope &#x60;write&#x60;) or session, and only touches that advertiser’s own orders (admins may pass &#x60;advertiserId&#x60;). Emits a compensating conversion event carrying the original payout and publisher earnings so the ledger posts exact reversing entries, then marks the row refunded. A missing order id returns &#x60;error&#x60;, an unknown order &#x60;not_found&#x60;, and a repeat call &#x60;already_refunded&#x60;.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: advertiser, admin.
    * @param refundDto  (required)
    * @return ApiResponse&lt;ConversionsControllerTrackRefund201Response&gt;
    * @throws ApiException if fails to make API call

@@ -168,7 +168,7 @@ public class IdentityApi {
 
   /**
    * Get an identity with its signals
-   * Returns the identity row, the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if &#x60;canonicalId&#x60; does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * Returns the identity (for an advertiser only &#x60;canonical_id&#x60;, a per-advertiser &#x60;unified_id&#x60;, &#x60;consent_state&#x60;, &#x60;first_seen&#x60; and &#x60;last_seen&#x60;, since the shared row&#39;s other fields can derive from other accounts&#39; signals; admins get the full row), the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if &#x60;canonicalId&#x60; does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param canonicalId  (required)
    * @return IdentityControllerGet200Response
    * @throws ApiException if fails to make API call
@@ -180,7 +180,7 @@ public class IdentityApi {
 
   /**
    * Get an identity with its signals
-   * Returns the identity row, the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if &#x60;canonicalId&#x60; does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * Returns the identity (for an advertiser only &#x60;canonical_id&#x60;, a per-advertiser &#x60;unified_id&#x60;, &#x60;consent_state&#x60;, &#x60;first_seen&#x60; and &#x60;last_seen&#x60;, since the shared row&#39;s other fields can derive from other accounts&#39; signals; admins get the full row), the signals on it that the caller supplied (oldest first; admins see all) and the raw cookie/device ids among them. Never returns signals supplied by other accounts. Returns 404 if &#x60;canonicalId&#x60; does not exist or the caller does not own it (owns none of its signals).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param canonicalId  (required)
    * @return ApiResponse&lt;IdentityControllerGet200Response&gt;
    * @throws ApiException if fails to make API call
@@ -241,7 +241,7 @@ public class IdentityApi {
 
   /**
    * Link signals to an identity
-   * Adds &#x60;signals&#x60; (each &#x60;{ type, value }&#x60;, type one of email/phone/cookie/device/ip_ua) to the identity &#x60;canonicalId&#x60; without merging identities. A signal owned by another identity is moved only if neither identity has denied consent; otherwise it is skipped. The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * Adds &#x60;signals&#x60; (each &#x60;{ type, value }&#x60;, type one of email/phone/cookie/device/ip_ua) to the identity &#x60;canonicalId&#x60; without merging identities. A signal owned by another identity is moved only if the caller has itself supplied that signal before (else 409, nothing is linked) and neither identity has denied consent (else it is skipped). The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param linkIdentityDto  (required)
    * @return IdentityControllerLink201Response
    * @throws ApiException if fails to make API call
@@ -253,7 +253,7 @@ public class IdentityApi {
 
   /**
    * Link signals to an identity
-   * Adds &#x60;signals&#x60; (each &#x60;{ type, value }&#x60;, type one of email/phone/cookie/device/ip_ua) to the identity &#x60;canonicalId&#x60; without merging identities. A signal owned by another identity is moved only if neither identity has denied consent; otherwise it is skipped. The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * Adds &#x60;signals&#x60; (each &#x60;{ type, value }&#x60;, type one of email/phone/cookie/device/ip_ua) to the identity &#x60;canonicalId&#x60; without merging identities. A signal owned by another identity is moved only if the caller has itself supplied that signal before (else 409, nothing is linked) and neither identity has denied consent (else it is skipped). The caller becomes an owner of the linked signals. Returns 404 if the identity does not exist or the caller does not own it (has not resolved/linked any of its signals; admins bypass), and 400 for an empty list.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param linkIdentityDto  (required)
    * @return ApiResponse&lt;IdentityControllerLink201Response&gt;
    * @throws ApiException if fails to make API call
@@ -319,7 +319,7 @@ public class IdentityApi {
 
   /**
    * Resolve signals to a canonical identity
-   * Resolves any of &#x60;email&#x60;, &#x60;phone&#x60;, &#x60;cookieId&#x60;, &#x60;deviceId&#x60; (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent &#x60;denied&#x60;, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one &#x60;canonicalId&#x60;), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * Resolves any of &#x60;email&#x60;, &#x60;phone&#x60;, &#x60;cookieId&#x60;, &#x60;deviceId&#x60; (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent &#x60;denied&#x60;, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one &#x60;canonicalId&#x60;), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts. For an advertiser &#x60;unifiedId&#x60; is a per-advertiser id (HMAC of the account and &#x60;canonicalId&#x60;): stable for that account, not comparable across accounts; admins get the global email-derived id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param resolveIdentityDto  (required)
    * @return IdentityControllerResolve201Response
    * @throws ApiException if fails to make API call
@@ -331,7 +331,7 @@ public class IdentityApi {
 
   /**
    * Resolve signals to a canonical identity
-   * Resolves any of &#x60;email&#x60;, &#x60;phone&#x60;, &#x60;cookieId&#x60;, &#x60;deviceId&#x60; (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent &#x60;denied&#x60;, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one &#x60;canonicalId&#x60;), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
+   * Resolves any of &#x60;email&#x60;, &#x60;phone&#x60;, &#x60;cookieId&#x60;, &#x60;deviceId&#x60; (at least one, else 400) to a canonical identity, creating one if none matches and linking all signals to it. If the signals already belong to different identities they are merged into the oldest one, unless any of them has consent &#x60;denied&#x60;, in which case no merge happens and their signals stay put. Email and phone are normalized and hashed; mappings are mirrored to Redis for the ad-engine. The graph is shared across accounts (the same person resolves to one &#x60;canonicalId&#x60;), but the caller is recorded as an owner of the signals it supplied and the response lists only those signals, never signals supplied by other accounts. For an advertiser &#x60;unifiedId&#x60; is a per-advertiser id (HMAC of the account and &#x60;canonicalId&#x60;): stable for that account, not comparable across accounts; admins get the global email-derived id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param resolveIdentityDto  (required)
    * @return ApiResponse&lt;IdentityControllerResolve201Response&gt;
    * @throws ApiException if fails to make API call

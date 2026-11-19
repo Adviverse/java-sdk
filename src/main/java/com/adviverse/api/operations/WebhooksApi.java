@@ -24,6 +24,7 @@ import com.adviverse.api.models.WebhookDelivery;
 import com.adviverse.api.models.WebhookDeliveryResult;
 import com.adviverse.api.models.WebhookEndpoint;
 import com.adviverse.api.models.WebhooksControllerEvents200Response;
+import com.adviverse.api.models.WebhooksControllerRevealSecret201Response;
 import com.adviverse.api.models.WebhooksControllerUnsubscribe200Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -246,7 +247,7 @@ public class WebhooksApi {
 
   /**
    * List webhook endpoints
-   * Lists the account&#39;s webhook subscriptions, newest first. Includes each endpoint&#39;s HMAC signing &#x60;secret&#x60; so the dashboard can show it for verifying the &#x60;X-Adviverse-Signature&#x60; header.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * Lists the account&#39;s webhook subscriptions, newest first. The signing secret is not returned: each endpoint has &#x60;has_secret&#x60; and &#x60;secret_hint&#x60; (its last 4 characters). Use POST /v1/webhooks/{id}/secret/reveal to fetch the secret.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
    * @return List&lt;WebhookEndpoint&gt;
    * @throws ApiException if fails to make API call
    */
@@ -257,7 +258,7 @@ public class WebhooksApi {
 
   /**
    * List webhook endpoints
-   * Lists the account&#39;s webhook subscriptions, newest first. Includes each endpoint&#39;s HMAC signing &#x60;secret&#x60; so the dashboard can show it for verifying the &#x60;X-Adviverse-Signature&#x60; header.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
+   * Lists the account&#39;s webhook subscriptions, newest first. The signing secret is not returned: each endpoint has &#x60;has_secret&#x60; and &#x60;secret_hint&#x60; (its last 4 characters). Use POST /v1/webhooks/{id}/secret/reveal to fetch the secret.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;).
    * @return ApiResponse&lt;List&lt;WebhookEndpoint&gt;&gt;
    * @throws ApiException if fails to make API call
    */
@@ -441,6 +442,79 @@ public class WebhooksApi {
 
     String localVarPath = "/v1/webhooks/deliveries/{deliveryId}/redeliver"
         .replace("{deliveryId}", ApiClient.urlEncode(deliveryId.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Reveal a webhook signing secret
+   * Returns the endpoint&#39;s current &#x60;whsec_&#x60; HMAC signing secret, used to verify the &#x60;X-Adviverse-Signature&#x60; header. List and update never return it. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @param id  (required)
+   * @return WebhooksControllerRevealSecret201Response
+   * @throws ApiException if fails to make API call
+   */
+  public WebhooksControllerRevealSecret201Response webhooksControllerRevealSecret(String id) throws ApiException {
+    ApiResponse<WebhooksControllerRevealSecret201Response> localVarResponse = webhooksControllerRevealSecretWithHttpInfo(id);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Reveal a webhook signing secret
+   * Returns the endpoint&#39;s current &#x60;whsec_&#x60; HMAC signing secret, used to verify the &#x60;X-Adviverse-Signature&#x60; header. List and update never return it. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @param id  (required)
+   * @return ApiResponse&lt;WebhooksControllerRevealSecret201Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<WebhooksControllerRevealSecret201Response> webhooksControllerRevealSecretWithHttpInfo(String id) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = webhooksControllerRevealSecretRequestBuilder(id);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("webhooksControllerRevealSecret", localVarResponse);
+        }
+        return new ApiResponse<WebhooksControllerRevealSecret201Response>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<WebhooksControllerRevealSecret201Response>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder webhooksControllerRevealSecretRequestBuilder(String id) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling webhooksControllerRevealSecret");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/webhooks/{id}/secret/reveal"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
@@ -682,7 +756,7 @@ public class WebhooksApi {
 
   /**
    * Update a webhook endpoint
-   * Changes an endpoint&#39;s &#x60;url&#x60;, &#x60;events&#x60; and/or &#x60;active&#x60; flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * Changes an endpoint&#39;s &#x60;url&#x60;, &#x60;events&#x60; and/or &#x60;active&#x60; flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account. The secret is not returned (&#x60;has_secret&#x60; + &#x60;secret_hint&#x60; instead).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
    * @param updateWebhookDto  (required)
    * @return WebhookEndpoint
@@ -695,7 +769,7 @@ public class WebhooksApi {
 
   /**
    * Update a webhook endpoint
-   * Changes an endpoint&#39;s &#x60;url&#x60;, &#x60;events&#x60; and/or &#x60;active&#x60; flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * Changes an endpoint&#39;s &#x60;url&#x60;, &#x60;events&#x60; and/or &#x60;active&#x60; flag (set false to pause deliveries); omitted fields are kept. A new URL goes through the SSRF guard and unknown event names are rejected with 400. Returns 400 if the endpoint is not found for this account. The secret is not returned (&#x60;has_secret&#x60; + &#x60;secret_hint&#x60; instead).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
    * @param updateWebhookDto  (required)
    * @return ApiResponse&lt;WebhookEndpoint&gt;

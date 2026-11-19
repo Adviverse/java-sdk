@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -43,7 +47,9 @@ import com.adviverse.api.ApiClient;
   WebhookEndpoint.JSON_PROPERTY_EVENTS,
   WebhookEndpoint.JSON_PROPERTY_ACTIVE,
   WebhookEndpoint.JSON_PROPERTY_CREATED_AT,
-  WebhookEndpoint.JSON_PROPERTY_SECRET
+  WebhookEndpoint.JSON_PROPERTY_SECRET,
+  WebhookEndpoint.JSON_PROPERTY_HAS_SECRET,
+  WebhookEndpoint.JSON_PROPERTY_SECRET_HINT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class WebhookEndpoint {
@@ -64,6 +70,12 @@ public class WebhookEndpoint {
 
   public static final String JSON_PROPERTY_SECRET = "secret";
   private String secret;
+
+  public static final String JSON_PROPERTY_HAS_SECRET = "has_secret";
+  private Boolean hasSecret;
+
+  public static final String JSON_PROPERTY_SECRET_HINT = "secret_hint";
+  private JsonNullable<String> secretHint = JsonNullable.<String>undefined();
 
   public WebhookEndpoint() { 
   }
@@ -202,21 +214,77 @@ public class WebhookEndpoint {
   }
 
   /**
-   * HMAC-SHA256 signing secret (whsec_...).
+   * HMAC-SHA256 signing secret (whsec_...). Returned only by create and rotate-secret.
    * @return secret
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_SECRET)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getSecret() {
     return secret;
   }
 
 
   @JsonProperty(JSON_PROPERTY_SECRET)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setSecret(String secret) {
     this.secret = secret;
+  }
+
+
+  public WebhookEndpoint hasSecret(Boolean hasSecret) {
+    this.hasSecret = hasSecret;
+    return this;
+  }
+
+  /**
+   * List/update only: whether a signing secret is set.
+   * @return hasSecret
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_HAS_SECRET)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getHasSecret() {
+    return hasSecret;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_HAS_SECRET)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setHasSecret(Boolean hasSecret) {
+    this.hasSecret = hasSecret;
+  }
+
+
+  public WebhookEndpoint secretHint(String secretHint) {
+    this.secretHint = JsonNullable.<String>of(secretHint);
+    return this;
+  }
+
+  /**
+   * List/update only: last 4 characters of the secret.
+   * @return secretHint
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public String getSecretHint() {
+        return secretHint.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_SECRET_HINT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<String> getSecretHint_JsonNullable() {
+    return secretHint;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_SECRET_HINT)
+  public void setSecretHint_JsonNullable(JsonNullable<String> secretHint) {
+    this.secretHint = secretHint;
+  }
+
+  public void setSecretHint(String secretHint) {
+    this.secretHint = JsonNullable.<String>of(secretHint);
   }
 
 
@@ -237,12 +305,25 @@ public class WebhookEndpoint {
         Objects.equals(this.events, webhookEndpoint.events) &&
         Objects.equals(this.active, webhookEndpoint.active) &&
         Objects.equals(this.createdAt, webhookEndpoint.createdAt) &&
-        Objects.equals(this.secret, webhookEndpoint.secret);
+        Objects.equals(this.secret, webhookEndpoint.secret) &&
+        Objects.equals(this.hasSecret, webhookEndpoint.hasSecret) &&
+        equalsNullable(this.secretHint, webhookEndpoint.secretHint);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, url, events, active, createdAt, secret);
+    return Objects.hash(id, url, events, active, createdAt, secret, hasSecret, hashCodeNullable(secretHint));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
@@ -255,6 +336,8 @@ public class WebhookEndpoint {
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
+    sb.append("    hasSecret: ").append(toIndentedString(hasSecret)).append("\n");
+    sb.append("    secretHint: ").append(toIndentedString(secretHint)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -334,6 +417,16 @@ public class WebhookEndpoint {
     // add `secret` to the URL query string
     if (getSecret() != null) {
       joiner.add(String.format("%ssecret%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getSecret()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `has_secret` to the URL query string
+    if (getHasSecret() != null) {
+      joiner.add(String.format("%shas_secret%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getHasSecret()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `secret_hint` to the URL query string
+    if (getSecretHint() != null) {
+      joiner.add(String.format("%ssecret_hint%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getSecretHint()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

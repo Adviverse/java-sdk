@@ -23,6 +23,8 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
+import com.adviverse.api.models.PubPropertyCategoriesInner;
+import com.adviverse.api.models.TrustProgress;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -53,6 +55,14 @@ import com.adviverse.api.ApiClient;
   PubProperty.JSON_PROPERTY_NAME,
   PubProperty.JSON_PROPERTY_DOMAIN,
   PubProperty.JSON_PROPERTY_CATEGORY,
+  PubProperty.JSON_PROPERTY_CATEGORY_SOURCE,
+  PubProperty.JSON_PROPERTY_CATEGORIES,
+  PubProperty.JSON_PROPERTY_CLASSIFIED_AT,
+  PubProperty.JSON_PROPERTY_CLASSIFY_ERROR,
+  PubProperty.JSON_PROPERTY_TRUST_TIER,
+  PubProperty.JSON_PROPERTY_TRUST_LOCKED,
+  PubProperty.JSON_PROPERTY_VERIFIED_AT,
+  PubProperty.JSON_PROPERTY_TRUST_PROGRESS,
   PubProperty.JSON_PROPERTY_VERIFICATION_STATUS,
   PubProperty.JSON_PROPERTY_VERIFICATION_METHOD,
   PubProperty.JSON_PROPERTY_VERIFICATION_TOKEN,
@@ -92,6 +102,100 @@ public class PubProperty extends HashMap<String, Object> {
 
   public static final String JSON_PROPERTY_CATEGORY = "category";
   private JsonNullable<Integer> category = JsonNullable.<Integer>undefined();
+
+  /**
+   * Gets or Sets categorySource
+   */
+  public enum CategorySourceEnum {
+    AUTO("auto"),
+    
+    MANUAL("manual");
+
+    private String value;
+
+    CategorySourceEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static CategorySourceEnum fromValue(String value) {
+      for (CategorySourceEnum b : CategorySourceEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  public static final String JSON_PROPERTY_CATEGORY_SOURCE = "category_source";
+  private CategorySourceEnum categorySource;
+
+  public static final String JSON_PROPERTY_CATEGORIES = "categories";
+  private List<PubPropertyCategoriesInner> categories = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_CLASSIFIED_AT = "classified_at";
+  private JsonNullable<OffsetDateTime> classifiedAt = JsonNullable.<OffsetDateTime>undefined();
+
+  public static final String JSON_PROPERTY_CLASSIFY_ERROR = "classify_error";
+  private JsonNullable<String> classifyError = JsonNullable.<String>undefined();
+
+  /**
+   * unverified &#x3D; CPA-only demand; promoted automatically once proven clean
+   */
+  public enum TrustTierEnum {
+    UNVERIFIED("unverified"),
+    
+    TRUSTED("trusted");
+
+    private String value;
+
+    TrustTierEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TrustTierEnum fromValue(String value) {
+      for (TrustTierEnum b : TrustTierEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  public static final String JSON_PROPERTY_TRUST_TIER = "trust_tier";
+  private TrustTierEnum trustTier;
+
+  public static final String JSON_PROPERTY_TRUST_LOCKED = "trust_locked";
+  private Boolean trustLocked;
+
+  public static final String JSON_PROPERTY_VERIFIED_AT = "verified_at";
+  private JsonNullable<OffsetDateTime> verifiedAt = JsonNullable.<OffsetDateTime>undefined();
+
+  public static final String JSON_PROPERTY_TRUST_PROGRESS = "trust_progress";
+  private TrustProgress trustProgress;
 
   /**
    * Gets or Sets verificationStatus
@@ -359,7 +463,7 @@ public class PubProperty extends HashMap<String, Object> {
   }
 
   /**
-   * Get category
+   * Site-niche id (GET /v1/site-niches); null when unknown
    * @return category
    */
   @javax.annotation.Nullable
@@ -382,6 +486,230 @@ public class PubProperty extends HashMap<String, Object> {
 
   public void setCategory(Integer category) {
     this.category = JsonNullable.<Integer>of(category);
+  }
+
+
+  public PubProperty categorySource(CategorySourceEnum categorySource) {
+    this.categorySource = categorySource;
+    return this;
+  }
+
+  /**
+   * Get categorySource
+   * @return categorySource
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CATEGORY_SOURCE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public CategorySourceEnum getCategorySource() {
+    return categorySource;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CATEGORY_SOURCE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCategorySource(CategorySourceEnum categorySource) {
+    this.categorySource = categorySource;
+  }
+
+
+  public PubProperty categories(List<PubPropertyCategoriesInner> categories) {
+    this.categories = categories;
+    return this;
+  }
+
+  public PubProperty addCategoriesItem(PubPropertyCategoriesInner categoriesItem) {
+    if (this.categories == null) {
+      this.categories = new ArrayList<>();
+    }
+    this.categories.add(categoriesItem);
+    return this;
+  }
+
+  /**
+   * Get categories
+   * @return categories
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CATEGORIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<PubPropertyCategoriesInner> getCategories() {
+    return categories;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CATEGORIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCategories(List<PubPropertyCategoriesInner> categories) {
+    this.categories = categories;
+  }
+
+
+  public PubProperty classifiedAt(OffsetDateTime classifiedAt) {
+    this.classifiedAt = JsonNullable.<OffsetDateTime>of(classifiedAt);
+    return this;
+  }
+
+  /**
+   * Get classifiedAt
+   * @return classifiedAt
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public OffsetDateTime getClassifiedAt() {
+        return classifiedAt.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_CLASSIFIED_AT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<OffsetDateTime> getClassifiedAt_JsonNullable() {
+    return classifiedAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CLASSIFIED_AT)
+  public void setClassifiedAt_JsonNullable(JsonNullable<OffsetDateTime> classifiedAt) {
+    this.classifiedAt = classifiedAt;
+  }
+
+  public void setClassifiedAt(OffsetDateTime classifiedAt) {
+    this.classifiedAt = JsonNullable.<OffsetDateTime>of(classifiedAt);
+  }
+
+
+  public PubProperty classifyError(String classifyError) {
+    this.classifyError = JsonNullable.<String>of(classifyError);
+    return this;
+  }
+
+  /**
+   * Get classifyError
+   * @return classifyError
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public String getClassifyError() {
+        return classifyError.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_CLASSIFY_ERROR)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<String> getClassifyError_JsonNullable() {
+    return classifyError;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_CLASSIFY_ERROR)
+  public void setClassifyError_JsonNullable(JsonNullable<String> classifyError) {
+    this.classifyError = classifyError;
+  }
+
+  public void setClassifyError(String classifyError) {
+    this.classifyError = JsonNullable.<String>of(classifyError);
+  }
+
+
+  public PubProperty trustTier(TrustTierEnum trustTier) {
+    this.trustTier = trustTier;
+    return this;
+  }
+
+  /**
+   * unverified &#x3D; CPA-only demand; promoted automatically once proven clean
+   * @return trustTier
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRUST_TIER)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public TrustTierEnum getTrustTier() {
+    return trustTier;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_TRUST_TIER)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTrustTier(TrustTierEnum trustTier) {
+    this.trustTier = trustTier;
+  }
+
+
+  public PubProperty trustLocked(Boolean trustLocked) {
+    this.trustLocked = trustLocked;
+    return this;
+  }
+
+  /**
+   * An admin pinned the trust tier; automatic changes are off
+   * @return trustLocked
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRUST_LOCKED)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getTrustLocked() {
+    return trustLocked;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_TRUST_LOCKED)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTrustLocked(Boolean trustLocked) {
+    this.trustLocked = trustLocked;
+  }
+
+
+  public PubProperty verifiedAt(OffsetDateTime verifiedAt) {
+    this.verifiedAt = JsonNullable.<OffsetDateTime>of(verifiedAt);
+    return this;
+  }
+
+  /**
+   * Get verifiedAt
+   * @return verifiedAt
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public OffsetDateTime getVerifiedAt() {
+        return verifiedAt.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERIFIED_AT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<OffsetDateTime> getVerifiedAt_JsonNullable() {
+    return verifiedAt;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_VERIFIED_AT)
+  public void setVerifiedAt_JsonNullable(JsonNullable<OffsetDateTime> verifiedAt) {
+    this.verifiedAt = verifiedAt;
+  }
+
+  public void setVerifiedAt(OffsetDateTime verifiedAt) {
+    this.verifiedAt = JsonNullable.<OffsetDateTime>of(verifiedAt);
+  }
+
+
+  public PubProperty trustProgress(TrustProgress trustProgress) {
+    this.trustProgress = trustProgress;
+    return this;
+  }
+
+  /**
+   * Get trustProgress
+   * @return trustProgress
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRUST_PROGRESS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public TrustProgress getTrustProgress() {
+    return trustProgress;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_TRUST_PROGRESS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTrustProgress(TrustProgress trustProgress) {
+    this.trustProgress = trustProgress;
   }
 
 
@@ -998,6 +1326,14 @@ public class PubProperty extends HashMap<String, Object> {
         equalsNullable(this.name, pubProperty.name) &&
         Objects.equals(this.domain, pubProperty.domain) &&
         equalsNullable(this.category, pubProperty.category) &&
+        Objects.equals(this.categorySource, pubProperty.categorySource) &&
+        Objects.equals(this.categories, pubProperty.categories) &&
+        equalsNullable(this.classifiedAt, pubProperty.classifiedAt) &&
+        equalsNullable(this.classifyError, pubProperty.classifyError) &&
+        Objects.equals(this.trustTier, pubProperty.trustTier) &&
+        Objects.equals(this.trustLocked, pubProperty.trustLocked) &&
+        equalsNullable(this.verifiedAt, pubProperty.verifiedAt) &&
+        Objects.equals(this.trustProgress, pubProperty.trustProgress) &&
         Objects.equals(this.verificationStatus, pubProperty.verificationStatus) &&
         equalsNullable(this.verificationMethod, pubProperty.verificationMethod) &&
         equalsNullable(this.verificationToken, pubProperty.verificationToken) &&
@@ -1027,7 +1363,7 @@ public class PubProperty extends HashMap<String, Object> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, publisherId, kind, hashCodeNullable(name), domain, hashCodeNullable(category), verificationStatus, hashCodeNullable(verificationMethod), hashCodeNullable(verificationToken), status, qualityScore, crossFill, hashCodeNullable(servingDomain), servingDomainVerified, hashCodeNullable(servingDomainCheckedAt), hashCodeNullable(bundleId), hashCodeNullable(storeUrl), hashCodeNullable(platform), hashCodeNullable(appStoreId), appAdsTxt, skadnetworkIds, ctvMeta, createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
+    return Objects.hash(id, publisherId, kind, hashCodeNullable(name), domain, hashCodeNullable(category), categorySource, categories, hashCodeNullable(classifiedAt), hashCodeNullable(classifyError), trustTier, trustLocked, hashCodeNullable(verifiedAt), trustProgress, verificationStatus, hashCodeNullable(verificationMethod), hashCodeNullable(verificationToken), status, qualityScore, crossFill, hashCodeNullable(servingDomain), servingDomainVerified, hashCodeNullable(servingDomainCheckedAt), hashCodeNullable(bundleId), hashCodeNullable(storeUrl), hashCodeNullable(platform), hashCodeNullable(appStoreId), appAdsTxt, skadnetworkIds, ctvMeta, createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -1048,6 +1384,14 @@ public class PubProperty extends HashMap<String, Object> {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    domain: ").append(toIndentedString(domain)).append("\n");
     sb.append("    category: ").append(toIndentedString(category)).append("\n");
+    sb.append("    categorySource: ").append(toIndentedString(categorySource)).append("\n");
+    sb.append("    categories: ").append(toIndentedString(categories)).append("\n");
+    sb.append("    classifiedAt: ").append(toIndentedString(classifiedAt)).append("\n");
+    sb.append("    classifyError: ").append(toIndentedString(classifyError)).append("\n");
+    sb.append("    trustTier: ").append(toIndentedString(trustTier)).append("\n");
+    sb.append("    trustLocked: ").append(toIndentedString(trustLocked)).append("\n");
+    sb.append("    verifiedAt: ").append(toIndentedString(verifiedAt)).append("\n");
+    sb.append("    trustProgress: ").append(toIndentedString(trustProgress)).append("\n");
     sb.append("    verificationStatus: ").append(toIndentedString(verificationStatus)).append("\n");
     sb.append("    verificationMethod: ").append(toIndentedString(verificationMethod)).append("\n");
     sb.append("    verificationToken: ").append(toIndentedString(verificationToken)).append("\n");
@@ -1143,6 +1487,51 @@ public class PubProperty extends HashMap<String, Object> {
     // add `category` to the URL query string
     if (getCategory() != null) {
       joiner.add(String.format("%scategory%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getCategory()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `category_source` to the URL query string
+    if (getCategorySource() != null) {
+      joiner.add(String.format("%scategory_source%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getCategorySource()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `categories` to the URL query string
+    if (getCategories() != null) {
+      for (int i = 0; i < getCategories().size(); i++) {
+        if (getCategories().get(i) != null) {
+          joiner.add(getCategories().get(i).toUrlQueryString(String.format("%scategories%s%s", prefix, suffix,
+          "".equals(suffix) ? "" : String.format("%s%d%s", containerPrefix, i, containerSuffix))));
+        }
+      }
+    }
+
+    // add `classified_at` to the URL query string
+    if (getClassifiedAt() != null) {
+      joiner.add(String.format("%sclassified_at%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getClassifiedAt()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `classify_error` to the URL query string
+    if (getClassifyError() != null) {
+      joiner.add(String.format("%sclassify_error%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getClassifyError()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `trust_tier` to the URL query string
+    if (getTrustTier() != null) {
+      joiner.add(String.format("%strust_tier%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getTrustTier()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `trust_locked` to the URL query string
+    if (getTrustLocked() != null) {
+      joiner.add(String.format("%strust_locked%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getTrustLocked()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `verified_at` to the URL query string
+    if (getVerifiedAt() != null) {
+      joiner.add(String.format("%sverified_at%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getVerifiedAt()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `trust_progress` to the URL query string
+    if (getTrustProgress() != null) {
+      joiner.add(getTrustProgress().toUrlQueryString(prefix + "trust_progress" + suffix));
     }
 
     // add `verification_status` to the URL query string

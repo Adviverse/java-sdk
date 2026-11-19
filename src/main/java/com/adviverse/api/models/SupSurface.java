@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import com.adviverse.api.ApiClient;
 /**
- * A &#x60;surfaces&#x60; row plus its placement &#x60;tag_key&#x60;.
+ * A &#x60;surfaces&#x60; row plus its placement &#x60;tag_key&#x60;. Player credentials (&#x60;poll_token&#x60;, &#x60;pairing_token&#x60;) are never returned.
  */
 @JsonPropertyOrder({
   SupSurface.JSON_PROPERTY_ID,
@@ -61,7 +61,6 @@ import com.adviverse.api.ApiClient;
   SupSurface.JSON_PROPERTY_AUDIENCE_MULTIPLIER,
   SupSurface.JSON_PROPERTY_STATUS,
   SupSurface.JSON_PROPERTY_PAIRING_CODE,
-  SupSurface.JSON_PROPERTY_POLL_TOKEN,
   SupSurface.JSON_PROPERTY_LAST_HEARTBEAT_AT,
   SupSurface.JSON_PROPERTY_TAG_KEY,
   SupSurface.JSON_PROPERTY_CREATED_AT
@@ -149,9 +148,6 @@ public class SupSurface extends HashMap<String, Object> {
 
   public static final String JSON_PROPERTY_PAIRING_CODE = "pairing_code";
   private JsonNullable<String> pairingCode = JsonNullable.<String>undefined();
-
-  public static final String JSON_PROPERTY_POLL_TOKEN = "poll_token";
-  private JsonNullable<String> pollToken = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_LAST_HEARTBEAT_AT = "last_heartbeat_at";
   private JsonNullable<OffsetDateTime> lastHeartbeatAt = JsonNullable.<OffsetDateTime>undefined();
@@ -613,38 +609,6 @@ public class SupSurface extends HashMap<String, Object> {
   }
 
 
-  public SupSurface pollToken(String pollToken) {
-    this.pollToken = JsonNullable.<String>of(pollToken);
-    return this;
-  }
-
-  /**
-   * Get pollToken
-   * @return pollToken
-   */
-  @javax.annotation.Nullable
-  @JsonIgnore
-  public String getPollToken() {
-        return pollToken.orElse(null);
-  }
-
-  @JsonProperty(JSON_PROPERTY_POLL_TOKEN)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public JsonNullable<String> getPollToken_JsonNullable() {
-    return pollToken;
-  }
-  
-  @JsonProperty(JSON_PROPERTY_POLL_TOKEN)
-  public void setPollToken_JsonNullable(JsonNullable<String> pollToken) {
-    this.pollToken = pollToken;
-  }
-
-  public void setPollToken(String pollToken) {
-    this.pollToken = JsonNullable.<String>of(pollToken);
-  }
-
-
   public SupSurface lastHeartbeatAt(OffsetDateTime lastHeartbeatAt) {
     this.lastHeartbeatAt = JsonNullable.<OffsetDateTime>of(lastHeartbeatAt);
     return this;
@@ -803,7 +767,6 @@ public class SupSurface extends HashMap<String, Object> {
         Objects.equals(this.audienceMultiplier, supSurface.audienceMultiplier) &&
         Objects.equals(this.status, supSurface.status) &&
         equalsNullable(this.pairingCode, supSurface.pairingCode) &&
-        equalsNullable(this.pollToken, supSurface.pollToken) &&
         equalsNullable(this.lastHeartbeatAt, supSurface.lastHeartbeatAt) &&
         equalsNullable(this.tagKey, supSurface.tagKey) &&
         Objects.equals(this.createdAt, supSurface.createdAt)&&
@@ -817,7 +780,7 @@ public class SupSurface extends HashMap<String, Object> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, hashCodeNullable(placementId), hashCodeNullable(accountId), hashCodeNullable(worldIntegrationId), hashCodeNullable(shopId), hashCodeNullable(world), surfaceType, hashCodeNullable(posX), hashCodeNullable(posY), hashCodeNullable(posZ), hashCodeNullable(widthM), hashCodeNullable(heightM), audienceMultiplier, status, hashCodeNullable(pairingCode), hashCodeNullable(pollToken), hashCodeNullable(lastHeartbeatAt), hashCodeNullable(tagKey), createdAt, super.hashCode(), additionalProperties);
+    return Objects.hash(id, hashCodeNullable(placementId), hashCodeNullable(accountId), hashCodeNullable(worldIntegrationId), hashCodeNullable(shopId), hashCodeNullable(world), surfaceType, hashCodeNullable(posX), hashCodeNullable(posY), hashCodeNullable(posZ), hashCodeNullable(widthM), hashCodeNullable(heightM), audienceMultiplier, status, hashCodeNullable(pairingCode), hashCodeNullable(lastHeartbeatAt), hashCodeNullable(tagKey), createdAt, super.hashCode(), additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -847,7 +810,6 @@ public class SupSurface extends HashMap<String, Object> {
     sb.append("    audienceMultiplier: ").append(toIndentedString(audienceMultiplier)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    pairingCode: ").append(toIndentedString(pairingCode)).append("\n");
-    sb.append("    pollToken: ").append(toIndentedString(pollToken)).append("\n");
     sb.append("    lastHeartbeatAt: ").append(toIndentedString(lastHeartbeatAt)).append("\n");
     sb.append("    tagKey: ").append(toIndentedString(tagKey)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
@@ -972,11 +934,6 @@ public class SupSurface extends HashMap<String, Object> {
     // add `pairing_code` to the URL query string
     if (getPairingCode() != null) {
       joiner.add(String.format("%spairing_code%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPairingCode()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
-    }
-
-    // add `poll_token` to the URL query string
-    if (getPollToken() != null) {
-      joiner.add(String.format("%spoll_token%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPollToken()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `last_heartbeat_at` to the URL query string

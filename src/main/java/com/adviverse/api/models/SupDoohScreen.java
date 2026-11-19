@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import com.adviverse.api.ApiClient;
 /**
- * A &#x60;dooh_screens&#x60; row plus its placement &#x60;tag_key&#x60;.
+ * A &#x60;dooh_screens&#x60; row plus its placement &#x60;tag_key&#x60;. Player credentials (&#x60;poll_token&#x60;, &#x60;pairing_token&#x60;) are never returned.
  */
 @JsonPropertyOrder({
   SupDoohScreen.JSON_PROPERTY_ID,
@@ -61,8 +61,6 @@ import com.adviverse.api.ApiClient;
   SupDoohScreen.JSON_PROPERTY_AUDIENCE_MULTIPLIER,
   SupDoohScreen.JSON_PROPERTY_STATUS,
   SupDoohScreen.JSON_PROPERTY_PAIRING_CODE,
-  SupDoohScreen.JSON_PROPERTY_POLL_TOKEN,
-  SupDoohScreen.JSON_PROPERTY_PAIRING_TOKEN,
   SupDoohScreen.JSON_PROPERTY_PAIRED_AT,
   SupDoohScreen.JSON_PROPERTY_LAST_HEARTBEAT_AT,
   SupDoohScreen.JSON_PROPERTY_PLAYER_VERSION,
@@ -155,12 +153,6 @@ public class SupDoohScreen extends HashMap<String, Object> {
 
   public static final String JSON_PROPERTY_PAIRING_CODE = "pairing_code";
   private JsonNullable<String> pairingCode = JsonNullable.<String>undefined();
-
-  public static final String JSON_PROPERTY_POLL_TOKEN = "poll_token";
-  private JsonNullable<String> pollToken = JsonNullable.<String>undefined();
-
-  public static final String JSON_PROPERTY_PAIRING_TOKEN = "pairing_token";
-  private JsonNullable<String> pairingToken = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_PAIRED_AT = "paired_at";
   private JsonNullable<OffsetDateTime> pairedAt = JsonNullable.<OffsetDateTime>undefined();
@@ -631,70 +623,6 @@ public class SupDoohScreen extends HashMap<String, Object> {
   }
 
 
-  public SupDoohScreen pollToken(String pollToken) {
-    this.pollToken = JsonNullable.<String>of(pollToken);
-    return this;
-  }
-
-  /**
-   * Get pollToken
-   * @return pollToken
-   */
-  @javax.annotation.Nullable
-  @JsonIgnore
-  public String getPollToken() {
-        return pollToken.orElse(null);
-  }
-
-  @JsonProperty(JSON_PROPERTY_POLL_TOKEN)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public JsonNullable<String> getPollToken_JsonNullable() {
-    return pollToken;
-  }
-  
-  @JsonProperty(JSON_PROPERTY_POLL_TOKEN)
-  public void setPollToken_JsonNullable(JsonNullable<String> pollToken) {
-    this.pollToken = pollToken;
-  }
-
-  public void setPollToken(String pollToken) {
-    this.pollToken = JsonNullable.<String>of(pollToken);
-  }
-
-
-  public SupDoohScreen pairingToken(String pairingToken) {
-    this.pairingToken = JsonNullable.<String>of(pairingToken);
-    return this;
-  }
-
-  /**
-   * Get pairingToken
-   * @return pairingToken
-   */
-  @javax.annotation.Nullable
-  @JsonIgnore
-  public String getPairingToken() {
-        return pairingToken.orElse(null);
-  }
-
-  @JsonProperty(JSON_PROPERTY_PAIRING_TOKEN)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public JsonNullable<String> getPairingToken_JsonNullable() {
-    return pairingToken;
-  }
-  
-  @JsonProperty(JSON_PROPERTY_PAIRING_TOKEN)
-  public void setPairingToken_JsonNullable(JsonNullable<String> pairingToken) {
-    this.pairingToken = pairingToken;
-  }
-
-  public void setPairingToken(String pairingToken) {
-    this.pairingToken = JsonNullable.<String>of(pairingToken);
-  }
-
-
   public SupDoohScreen pairedAt(OffsetDateTime pairedAt) {
     this.pairedAt = JsonNullable.<OffsetDateTime>of(pairedAt);
     return this;
@@ -941,8 +869,6 @@ public class SupDoohScreen extends HashMap<String, Object> {
         Objects.equals(this.audienceMultiplier, supDoohScreen.audienceMultiplier) &&
         Objects.equals(this.status, supDoohScreen.status) &&
         equalsNullable(this.pairingCode, supDoohScreen.pairingCode) &&
-        equalsNullable(this.pollToken, supDoohScreen.pollToken) &&
-        equalsNullable(this.pairingToken, supDoohScreen.pairingToken) &&
         equalsNullable(this.pairedAt, supDoohScreen.pairedAt) &&
         equalsNullable(this.lastHeartbeatAt, supDoohScreen.lastHeartbeatAt) &&
         equalsNullable(this.playerVersion, supDoohScreen.playerVersion) &&
@@ -959,7 +885,7 @@ public class SupDoohScreen extends HashMap<String, Object> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, hashCodeNullable(placementId), hashCodeNullable(accountId), hashCodeNullable(venueName), hashCodeNullable(venueType), hashCodeNullable(orientation), hashCodeNullable(resolutionW), hashCodeNullable(resolutionH), hashCodeNullable(lat), hashCodeNullable(lng), hashCodeNullable(timezone), loopSeconds, audienceMultiplier, status, hashCodeNullable(pairingCode), hashCodeNullable(pollToken), hashCodeNullable(pairingToken), hashCodeNullable(pairedAt), hashCodeNullable(lastHeartbeatAt), hashCodeNullable(playerVersion), hashCodeNullable(tagKey), createdAt, updatedAt, super.hashCode(), additionalProperties);
+    return Objects.hash(id, hashCodeNullable(placementId), hashCodeNullable(accountId), hashCodeNullable(venueName), hashCodeNullable(venueType), hashCodeNullable(orientation), hashCodeNullable(resolutionW), hashCodeNullable(resolutionH), hashCodeNullable(lat), hashCodeNullable(lng), hashCodeNullable(timezone), loopSeconds, audienceMultiplier, status, hashCodeNullable(pairingCode), hashCodeNullable(pairedAt), hashCodeNullable(lastHeartbeatAt), hashCodeNullable(playerVersion), hashCodeNullable(tagKey), createdAt, updatedAt, super.hashCode(), additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -989,8 +915,6 @@ public class SupDoohScreen extends HashMap<String, Object> {
     sb.append("    audienceMultiplier: ").append(toIndentedString(audienceMultiplier)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    pairingCode: ").append(toIndentedString(pairingCode)).append("\n");
-    sb.append("    pollToken: ").append(toIndentedString(pollToken)).append("\n");
-    sb.append("    pairingToken: ").append(toIndentedString(pairingToken)).append("\n");
     sb.append("    pairedAt: ").append(toIndentedString(pairedAt)).append("\n");
     sb.append("    lastHeartbeatAt: ").append(toIndentedString(lastHeartbeatAt)).append("\n");
     sb.append("    playerVersion: ").append(toIndentedString(playerVersion)).append("\n");
@@ -1118,16 +1042,6 @@ public class SupDoohScreen extends HashMap<String, Object> {
     // add `pairing_code` to the URL query string
     if (getPairingCode() != null) {
       joiner.add(String.format("%spairing_code%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPairingCode()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
-    }
-
-    // add `poll_token` to the URL query string
-    if (getPollToken() != null) {
-      joiner.add(String.format("%spoll_token%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPollToken()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
-    }
-
-    // add `pairing_token` to the URL query string
-    if (getPairingToken() != null) {
-      joiner.add(String.format("%spairing_token%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPairingToken()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `paired_at` to the URL query string

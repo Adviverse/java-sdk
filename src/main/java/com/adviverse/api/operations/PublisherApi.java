@@ -765,7 +765,7 @@ public class PublisherApi {
 
   /**
    * List your properties
-   * Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first. Optional &#x60;limit&#x60; (1-500) and &#x60;offset&#x60; query params paginate; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first, each with &#x60;trust_progress&#x60; toward paid demand (null for CLI properties or when traffic stats are unavailable). Optional &#x60;limit&#x60; (1-500) and &#x60;offset&#x60; query params paginate; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @return List&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
    */
@@ -776,7 +776,7 @@ public class PublisherApi {
 
   /**
    * List your properties
-   * Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first. Optional &#x60;limit&#x60; (1-500) and &#x60;offset&#x60; query params paginate; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Returns every non-deleted property (websites, CLI tools, mobile apps, CTV apps) owned by the publisher, newest first, each with &#x60;trust_progress&#x60; toward paid demand (null for CLI properties or when traffic stats are unavailable). Optional &#x60;limit&#x60; (1-500) and &#x60;offset&#x60; query params paginate; without &#x60;limit&#x60; the full set is returned.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @return ApiResponse&lt;List&lt;PubProperty&gt;&gt;
    * @throws ApiException if fails to make API call
    */
@@ -1459,7 +1459,7 @@ public class PublisherApi {
 
   /**
    * Update a property
-   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). &#x60;category&#x60; is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (&#x60;category_source: manual&#x60;, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing &#x60;domain&#x60; also drops a trusted property back to &#x60;unverified&#x60; (unless an admin locked its trust). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePropertyDto  (required)
    * @return PubProperty
@@ -1472,7 +1472,7 @@ public class PublisherApi {
 
   /**
    * Update a property
-   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). &#x60;category&#x60; is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (&#x60;category_source: manual&#x60;, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing &#x60;domain&#x60; also drops a trusted property back to &#x60;unverified&#x60; (unless an admin locked its trust). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePropertyDto  (required)
    * @return ApiResponse&lt;PubProperty&gt;

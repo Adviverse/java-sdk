@@ -130,7 +130,7 @@ public class IdentityControllerResolve201Response {
   }
 
   /**
-   * Get unifiedId
+   * Per-advertiser id for advertisers; the global email-derived id (or null) for admins
    * @return unifiedId
    */
   @javax.annotation.Nullable

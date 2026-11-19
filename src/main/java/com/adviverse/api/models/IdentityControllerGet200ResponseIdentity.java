@@ -178,7 +178,7 @@ public class IdentityControllerGet200ResponseIdentity extends HashMap<String, Ob
   }
 
   /**
-   * Get householdId
+   * Admins only
    * @return householdId
    */
   @javax.annotation.Nullable
@@ -242,7 +242,7 @@ public class IdentityControllerGet200ResponseIdentity extends HashMap<String, Ob
   }
 
   /**
-   * Get attributes
+   * Admins only
    * @return attributes
    */
   @javax.annotation.Nullable

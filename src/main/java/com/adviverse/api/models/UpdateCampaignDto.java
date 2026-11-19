@@ -46,6 +46,8 @@ import com.adviverse.api.ApiClient;
   UpdateCampaignDto.JSON_PROPERTY_BID_MODIFIERS,
   UpdateCampaignDto.JSON_PROPERTY_TARGETING,
   UpdateCampaignDto.JSON_PROPERTY_HOUSE_AD,
+  UpdateCampaignDto.JSON_PROPERTY_AUTO_OWN_PLACEMENTS,
+  UpdateCampaignDto.JSON_PROPERTY_NETWORK_EXPANSION,
   UpdateCampaignDto.JSON_PROPERTY_PRIORITY_TIER,
   UpdateCampaignDto.JSON_PROPERTY_DELIVERY_GOAL,
   UpdateCampaignDto.JSON_PROPERTY_GOAL_TYPE,
@@ -96,6 +98,12 @@ public class UpdateCampaignDto {
 
   public static final String JSON_PROPERTY_HOUSE_AD = "houseAd";
   private Boolean houseAd;
+
+  public static final String JSON_PROPERTY_AUTO_OWN_PLACEMENTS = "autoOwnPlacements";
+  private Boolean autoOwnPlacements;
+
+  public static final String JSON_PROPERTY_NETWORK_EXPANSION = "networkExpansion";
+  private Boolean networkExpansion;
 
   /**
    * Gets or Sets priorityTier
@@ -543,6 +551,54 @@ public class UpdateCampaignDto {
   }
 
 
+  public UpdateCampaignDto autoOwnPlacements(Boolean autoOwnPlacements) {
+    this.autoOwnPlacements = autoOwnPlacements;
+    return this;
+  }
+
+  /**
+   * Get autoOwnPlacements
+   * @return autoOwnPlacements
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_AUTO_OWN_PLACEMENTS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getAutoOwnPlacements() {
+    return autoOwnPlacements;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_AUTO_OWN_PLACEMENTS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setAutoOwnPlacements(Boolean autoOwnPlacements) {
+    this.autoOwnPlacements = autoOwnPlacements;
+  }
+
+
+  public UpdateCampaignDto networkExpansion(Boolean networkExpansion) {
+    this.networkExpansion = networkExpansion;
+    return this;
+  }
+
+  /**
+   * Get networkExpansion
+   * @return networkExpansion
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NETWORK_EXPANSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getNetworkExpansion() {
+    return networkExpansion;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_NETWORK_EXPANSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNetworkExpansion(Boolean networkExpansion) {
+    this.networkExpansion = networkExpansion;
+  }
+
+
   public UpdateCampaignDto priorityTier(PriorityTierEnum priorityTier) {
     this.priorityTier = priorityTier;
     return this;
@@ -861,6 +917,8 @@ public class UpdateCampaignDto {
         Objects.equals(this.bidModifiers, updateCampaignDto.bidModifiers) &&
         Objects.equals(this.targeting, updateCampaignDto.targeting) &&
         Objects.equals(this.houseAd, updateCampaignDto.houseAd) &&
+        Objects.equals(this.autoOwnPlacements, updateCampaignDto.autoOwnPlacements) &&
+        Objects.equals(this.networkExpansion, updateCampaignDto.networkExpansion) &&
         Objects.equals(this.priorityTier, updateCampaignDto.priorityTier) &&
         Objects.equals(this.deliveryGoal, updateCampaignDto.deliveryGoal) &&
         Objects.equals(this.goalType, updateCampaignDto.goalType) &&
@@ -877,7 +935,7 @@ public class UpdateCampaignDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, bidAmount, budgetTotal, budgetDaily, pacing, startAt, endAt, skanAppStoreId, skanSourceId, bidModifiers, targeting, houseAd, priorityTier, deliveryGoal, goalType, portfolioFreqCap, sequenceGroup, sequenceOrder, suppressAfterConversion, holdoutPct, bidStrategy, targetCpa, targetRoas, utm);
+    return Objects.hash(name, bidAmount, budgetTotal, budgetDaily, pacing, startAt, endAt, skanAppStoreId, skanSourceId, bidModifiers, targeting, houseAd, autoOwnPlacements, networkExpansion, priorityTier, deliveryGoal, goalType, portfolioFreqCap, sequenceGroup, sequenceOrder, suppressAfterConversion, holdoutPct, bidStrategy, targetCpa, targetRoas, utm);
   }
 
   @Override
@@ -896,6 +954,8 @@ public class UpdateCampaignDto {
     sb.append("    bidModifiers: ").append(toIndentedString(bidModifiers)).append("\n");
     sb.append("    targeting: ").append(toIndentedString(targeting)).append("\n");
     sb.append("    houseAd: ").append(toIndentedString(houseAd)).append("\n");
+    sb.append("    autoOwnPlacements: ").append(toIndentedString(autoOwnPlacements)).append("\n");
+    sb.append("    networkExpansion: ").append(toIndentedString(networkExpansion)).append("\n");
     sb.append("    priorityTier: ").append(toIndentedString(priorityTier)).append("\n");
     sb.append("    deliveryGoal: ").append(toIndentedString(deliveryGoal)).append("\n");
     sb.append("    goalType: ").append(toIndentedString(goalType)).append("\n");
@@ -1013,6 +1073,16 @@ public class UpdateCampaignDto {
     // add `houseAd` to the URL query string
     if (getHouseAd() != null) {
       joiner.add(String.format("%shouseAd%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getHouseAd()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `autoOwnPlacements` to the URL query string
+    if (getAutoOwnPlacements() != null) {
+      joiner.add(String.format("%sautoOwnPlacements%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getAutoOwnPlacements()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `networkExpansion` to the URL query string
+    if (getNetworkExpansion() != null) {
+      joiner.add(String.format("%snetworkExpansion%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getNetworkExpansion()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `priorityTier` to the URL query string

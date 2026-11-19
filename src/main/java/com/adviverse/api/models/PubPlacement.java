@@ -42,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import com.adviverse.api.ApiClient;
 /**
- * A &#x60;placements&#x60; row. All columns are returned, including &#x60;signing_secret&#x60;.
+ * A &#x60;placements&#x60; row. The signing secret itself is never returned here (only from POST /v1/publisher/placements/{id}/signing-secret); &#x60;has_signing_secret&#x60; says whether one is set.
  */
 @JsonPropertyOrder({
   PubPlacement.JSON_PROPERTY_ID,
@@ -66,7 +66,7 @@ import com.adviverse.api.ApiClient;
   PubPlacement.JSON_PROPERTY_HOUSE_SHARE,
   PubPlacement.JSON_PROPERTY_HOUSE_BACKFILL,
   PubPlacement.JSON_PROPERTY_FLOOR_FALLBACK,
-  PubPlacement.JSON_PROPERTY_SIGNING_SECRET,
+  PubPlacement.JSON_PROPERTY_HAS_SIGNING_SECRET,
   PubPlacement.JSON_PROPERTY_COMBO_ID,
   PubPlacement.JSON_PROPERTY_COMBO_LABEL,
   PubPlacement.JSON_PROPERTY_LAST_ACTIVE_AT,
@@ -174,8 +174,8 @@ public class PubPlacement extends HashMap<String, Object> {
   public static final String JSON_PROPERTY_FLOOR_FALLBACK = "floor_fallback";
   private Boolean floorFallback;
 
-  public static final String JSON_PROPERTY_SIGNING_SECRET = "signing_secret";
-  private JsonNullable<String> signingSecret = JsonNullable.<String>undefined();
+  public static final String JSON_PROPERTY_HAS_SIGNING_SECRET = "has_signing_secret";
+  private Boolean hasSigningSecret;
 
   public static final String JSON_PROPERTY_COMBO_ID = "combo_id";
   private JsonNullable<UUID> comboId = JsonNullable.<UUID>undefined();
@@ -754,35 +754,27 @@ public class PubPlacement extends HashMap<String, Object> {
   }
 
 
-  public PubPlacement signingSecret(String signingSecret) {
-    this.signingSecret = JsonNullable.<String>of(signingSecret);
+  public PubPlacement hasSigningSecret(Boolean hasSigningSecret) {
+    this.hasSigningSecret = hasSigningSecret;
     return this;
   }
 
   /**
-   * Get signingSecret
-   * @return signingSecret
+   * True when a signing secret is set (signed-tag enforcement is on)
+   * @return hasSigningSecret
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public String getSigningSecret() {
-        return signingSecret.orElse(null);
-  }
-
-  @JsonProperty(JSON_PROPERTY_SIGNING_SECRET)
+  @JsonProperty(JSON_PROPERTY_HAS_SIGNING_SECRET)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public JsonNullable<String> getSigningSecret_JsonNullable() {
-    return signingSecret;
-  }
-  
-  @JsonProperty(JSON_PROPERTY_SIGNING_SECRET)
-  public void setSigningSecret_JsonNullable(JsonNullable<String> signingSecret) {
-    this.signingSecret = signingSecret;
+  public Boolean getHasSigningSecret() {
+    return hasSigningSecret;
   }
 
-  public void setSigningSecret(String signingSecret) {
-    this.signingSecret = JsonNullable.<String>of(signingSecret);
+
+  @JsonProperty(JSON_PROPERTY_HAS_SIGNING_SECRET)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setHasSigningSecret(Boolean hasSigningSecret) {
+    this.hasSigningSecret = hasSigningSecret;
   }
 
 
@@ -1038,7 +1030,7 @@ public class PubPlacement extends HashMap<String, Object> {
         Objects.equals(this.houseShare, pubPlacement.houseShare) &&
         Objects.equals(this.houseBackfill, pubPlacement.houseBackfill) &&
         Objects.equals(this.floorFallback, pubPlacement.floorFallback) &&
-        equalsNullable(this.signingSecret, pubPlacement.signingSecret) &&
+        Objects.equals(this.hasSigningSecret, pubPlacement.hasSigningSecret) &&
         equalsNullable(this.comboId, pubPlacement.comboId) &&
         equalsNullable(this.comboLabel, pubPlacement.comboLabel) &&
         equalsNullable(this.lastActiveAt, pubPlacement.lastActiveAt) &&
@@ -1055,7 +1047,7 @@ public class PubPlacement extends HashMap<String, Object> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, propertyId, name, format, hashCodeNullable(width), hashCodeNullable(height), responsive, floorCpm, floorSoft, floorAuto, revShare, auctionType, hashCodeNullable(passbackUrl), hashCodeNullable(frequencyCap), status, tagKey, settings, houseOnly, houseShare, houseBackfill, floorFallback, hashCodeNullable(signingSecret), hashCodeNullable(comboId), hashCodeNullable(comboLabel), hashCodeNullable(lastActiveAt), createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
+    return Objects.hash(id, propertyId, name, format, hashCodeNullable(width), hashCodeNullable(height), responsive, floorCpm, floorSoft, floorAuto, revShare, auctionType, hashCodeNullable(passbackUrl), hashCodeNullable(frequencyCap), status, tagKey, settings, houseOnly, houseShare, houseBackfill, floorFallback, hasSigningSecret, hashCodeNullable(comboId), hashCodeNullable(comboLabel), hashCodeNullable(lastActiveAt), createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -1091,7 +1083,7 @@ public class PubPlacement extends HashMap<String, Object> {
     sb.append("    houseShare: ").append(toIndentedString(houseShare)).append("\n");
     sb.append("    houseBackfill: ").append(toIndentedString(houseBackfill)).append("\n");
     sb.append("    floorFallback: ").append(toIndentedString(floorFallback)).append("\n");
-    sb.append("    signingSecret: ").append(toIndentedString(signingSecret)).append("\n");
+    sb.append("    hasSigningSecret: ").append(toIndentedString(hasSigningSecret)).append("\n");
     sb.append("    comboId: ").append(toIndentedString(comboId)).append("\n");
     sb.append("    comboLabel: ").append(toIndentedString(comboLabel)).append("\n");
     sb.append("    lastActiveAt: ").append(toIndentedString(lastActiveAt)).append("\n");
@@ -1259,9 +1251,9 @@ public class PubPlacement extends HashMap<String, Object> {
       joiner.add(String.format("%sfloor_fallback%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getFloorFallback()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
-    // add `signing_secret` to the URL query string
-    if (getSigningSecret() != null) {
-      joiner.add(String.format("%ssigning_secret%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getSigningSecret()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    // add `has_signing_secret` to the URL query string
+    if (getHasSigningSecret() != null) {
+      joiner.add(String.format("%shas_signing_secret%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getHasSigningSecret()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `combo_id` to the URL query string

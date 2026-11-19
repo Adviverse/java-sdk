@@ -30,6 +30,7 @@ src/main/java/com/adviverse/api/models/AdminControllerProcessPayout201Response.j
 src/main/java/com/adviverse/api/models/AdminControllerQuality200ResponseInner.java
 src/main/java/com/adviverse/api/models/AdminControllerRescan201Response.java
 src/main/java/com/adviverse/api/models/AdminControllerSetStatus201Response.java
+src/main/java/com/adviverse/api/models/AdminTrustDto.java
 src/main/java/com/adviverse/api/models/AdvAdSetSummary.java
 src/main/java/com/adviverse/api/models/AdvAudience.java
 src/main/java/com/adviverse/api/models/AdvAudienceDestination.java
@@ -252,6 +253,8 @@ src/main/java/com/adviverse/api/models/MfaControllerRanked200ResponseInner.java
 src/main/java/com/adviverse/api/models/ModeledLookalikeDto.java
 src/main/java/com/adviverse/api/models/ModerationDecisionDto.java
 src/main/java/com/adviverse/api/models/NetworkSettingsDto.java
+src/main/java/com/adviverse/api/models/NicheClassification.java
+src/main/java/com/adviverse/api/models/NicheScore.java
 src/main/java/com/adviverse/api/models/OauthDiscordDto.java
 src/main/java/com/adviverse/api/models/OauthGoogleDto.java
 src/main/java/com/adviverse/api/models/OauthStartDto.java
@@ -283,10 +286,13 @@ src/main/java/com/adviverse/api/models/PortalTemplatesControllerListTemplates200
 src/main/java/com/adviverse/api/models/PortalTemplatesControllerListTemplates200ResponseInnerFieldsInner.java
 src/main/java/com/adviverse/api/models/ProfileDto.java
 src/main/java/com/adviverse/api/models/PromoteCampaignReportingControllerSummary200Response.java
+src/main/java/com/adviverse/api/models/PropertyTrustControllerAdminList200ResponseInner.java
+src/main/java/com/adviverse/api/models/PropertyTrustControllerAdminSet201Response.java
 src/main/java/com/adviverse/api/models/PubComboPreset.java
 src/main/java/com/adviverse/api/models/PubComboPresetUnitsInner.java
 src/main/java/com/adviverse/api/models/PubPlacement.java
 src/main/java/com/adviverse/api/models/PubProperty.java
+src/main/java/com/adviverse/api/models/PubPropertyCategoriesInner.java
 src/main/java/com/adviverse/api/models/PubServingDomain.java
 src/main/java/com/adviverse/api/models/PublisherControllerDisableSigning200Response.java
 src/main/java/com/adviverse/api/models/PublisherControllerDomainConnect201Response.java
@@ -437,6 +443,7 @@ src/main/java/com/adviverse/api/models/SettingsControllerRotateTerminalToken201R
 src/main/java/com/adviverse/api/models/SettingsControllerSetTerminalTokenPolicy200Response.java
 src/main/java/com/adviverse/api/models/SettingsControllerUpdateNetwork200Response.java
 src/main/java/com/adviverse/api/models/SignupDto.java
+src/main/java/com/adviverse/api/models/SiteNiche.java
 src/main/java/com/adviverse/api/models/SkadnetworkControllerHealth200Response.java
 src/main/java/com/adviverse/api/models/SkadnetworkControllerPostback200Response.java
 src/main/java/com/adviverse/api/models/StatsControllerGet200Response.java
@@ -455,6 +462,8 @@ src/main/java/com/adviverse/api/models/SurfacePairInitDto.java
 src/main/java/com/adviverse/api/models/TaxFormDto.java
 src/main/java/com/adviverse/api/models/TerminalSwitchDto.java
 src/main/java/com/adviverse/api/models/TrackConversionDto.java
+src/main/java/com/adviverse/api/models/TrustEvent.java
+src/main/java/com/adviverse/api/models/TrustProgress.java
 src/main/java/com/adviverse/api/models/UpdateAppDto.java
 src/main/java/com/adviverse/api/models/UpdateCampaignDto.java
 src/main/java/com/adviverse/api/models/UpdateCampaignGroupDto.java
@@ -473,6 +482,7 @@ src/main/java/com/adviverse/api/models/WebhookDelivery.java
 src/main/java/com/adviverse/api/models/WebhookDeliveryResult.java
 src/main/java/com/adviverse/api/models/WebhookEndpoint.java
 src/main/java/com/adviverse/api/models/WebhooksControllerEvents200Response.java
+src/main/java/com/adviverse/api/models/WebhooksControllerRevealSecret201Response.java
 src/main/java/com/adviverse/api/models/WebhooksControllerUnsubscribe200Response.java
 src/main/java/com/adviverse/api/operations/AccountApi.java
 src/main/java/com/adviverse/api/operations/AdminApi.java
@@ -501,6 +511,7 @@ src/main/java/com/adviverse/api/operations/MfaApi.java
 src/main/java/com/adviverse/api/operations/OptimizationApi.java
 src/main/java/com/adviverse/api/operations/PixelApi.java
 src/main/java/com/adviverse/api/operations/PortalApi.java
+src/main/java/com/adviverse/api/operations/PropertyTrustApi.java
 src/main/java/com/adviverse/api/operations/PublisherApi.java
 src/main/java/com/adviverse/api/operations/PublisherInsightsApi.java
 src/main/java/com/adviverse/api/operations/ReferralsApi.java

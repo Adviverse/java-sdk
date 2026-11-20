@@ -69,6 +69,8 @@ import com.adviverse.api.ApiClient;
   PubProperty.JSON_PROPERTY_STATUS,
   PubProperty.JSON_PROPERTY_QUALITY_SCORE,
   PubProperty.JSON_PROPERTY_CROSS_FILL,
+  PubProperty.JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT,
+  PubProperty.JSON_PROPERTY_ENHANCED_CAPPING,
   PubProperty.JSON_PROPERTY_SERVING_DOMAIN,
   PubProperty.JSON_PROPERTY_SERVING_DOMAIN_VERIFIED,
   PubProperty.JSON_PROPERTY_SERVING_DOMAIN_CHECKED_AT,
@@ -286,6 +288,12 @@ public class PubProperty extends HashMap<String, Object> {
 
   public static final String JSON_PROPERTY_CROSS_FILL = "cross_fill";
   private Boolean crossFill;
+
+  public static final String JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT = "contextual_without_consent";
+  private Boolean contextualWithoutConsent;
+
+  public static final String JSON_PROPERTY_ENHANCED_CAPPING = "enhanced_capping";
+  private Boolean enhancedCapping;
 
   public static final String JSON_PROPERTY_SERVING_DOMAIN = "serving_domain";
   private JsonNullable<String> servingDomain = JsonNullable.<String>undefined();
@@ -873,6 +881,54 @@ public class PubProperty extends HashMap<String, Object> {
   }
 
 
+  public PubProperty contextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+    return this;
+  }
+
+  /**
+   * Ads before consent (resolved: property consent config, else account default)
+   * @return contextualWithoutConsent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getContextualWithoutConsent() {
+    return contextualWithoutConsent;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+  }
+
+
+  public PubProperty enhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+    return this;
+  }
+
+  /**
+   * Enhanced frequency capping (resolved like contextual_without_consent)
+   * @return enhancedCapping
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getEnhancedCapping() {
+    return enhancedCapping;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+  }
+
+
   public PubProperty servingDomain(String servingDomain) {
     this.servingDomain = JsonNullable.<String>of(servingDomain);
     return this;
@@ -1340,6 +1396,8 @@ public class PubProperty extends HashMap<String, Object> {
         Objects.equals(this.status, pubProperty.status) &&
         Objects.equals(this.qualityScore, pubProperty.qualityScore) &&
         Objects.equals(this.crossFill, pubProperty.crossFill) &&
+        Objects.equals(this.contextualWithoutConsent, pubProperty.contextualWithoutConsent) &&
+        Objects.equals(this.enhancedCapping, pubProperty.enhancedCapping) &&
         equalsNullable(this.servingDomain, pubProperty.servingDomain) &&
         Objects.equals(this.servingDomainVerified, pubProperty.servingDomainVerified) &&
         equalsNullable(this.servingDomainCheckedAt, pubProperty.servingDomainCheckedAt) &&
@@ -1363,7 +1421,7 @@ public class PubProperty extends HashMap<String, Object> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, publisherId, kind, hashCodeNullable(name), domain, hashCodeNullable(category), categorySource, categories, hashCodeNullable(classifiedAt), hashCodeNullable(classifyError), trustTier, trustLocked, hashCodeNullable(verifiedAt), trustProgress, verificationStatus, hashCodeNullable(verificationMethod), hashCodeNullable(verificationToken), status, qualityScore, crossFill, hashCodeNullable(servingDomain), servingDomainVerified, hashCodeNullable(servingDomainCheckedAt), hashCodeNullable(bundleId), hashCodeNullable(storeUrl), hashCodeNullable(platform), hashCodeNullable(appStoreId), appAdsTxt, skadnetworkIds, ctvMeta, createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
+    return Objects.hash(id, publisherId, kind, hashCodeNullable(name), domain, hashCodeNullable(category), categorySource, categories, hashCodeNullable(classifiedAt), hashCodeNullable(classifyError), trustTier, trustLocked, hashCodeNullable(verifiedAt), trustProgress, verificationStatus, hashCodeNullable(verificationMethod), hashCodeNullable(verificationToken), status, qualityScore, crossFill, contextualWithoutConsent, enhancedCapping, hashCodeNullable(servingDomain), servingDomainVerified, hashCodeNullable(servingDomainCheckedAt), hashCodeNullable(bundleId), hashCodeNullable(storeUrl), hashCodeNullable(platform), hashCodeNullable(appStoreId), appAdsTxt, skadnetworkIds, ctvMeta, createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -1398,6 +1456,8 @@ public class PubProperty extends HashMap<String, Object> {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    qualityScore: ").append(toIndentedString(qualityScore)).append("\n");
     sb.append("    crossFill: ").append(toIndentedString(crossFill)).append("\n");
+    sb.append("    contextualWithoutConsent: ").append(toIndentedString(contextualWithoutConsent)).append("\n");
+    sb.append("    enhancedCapping: ").append(toIndentedString(enhancedCapping)).append("\n");
     sb.append("    servingDomain: ").append(toIndentedString(servingDomain)).append("\n");
     sb.append("    servingDomainVerified: ").append(toIndentedString(servingDomainVerified)).append("\n");
     sb.append("    servingDomainCheckedAt: ").append(toIndentedString(servingDomainCheckedAt)).append("\n");
@@ -1562,6 +1622,16 @@ public class PubProperty extends HashMap<String, Object> {
     // add `cross_fill` to the URL query string
     if (getCrossFill() != null) {
       joiner.add(String.format("%scross_fill%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getCrossFill()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `contextual_without_consent` to the URL query string
+    if (getContextualWithoutConsent() != null) {
+      joiner.add(String.format("%scontextual_without_consent%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getContextualWithoutConsent()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `enhanced_capping` to the URL query string
+    if (getEnhancedCapping() != null) {
+      joiner.add(String.format("%senhanced_capping%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getEnhancedCapping()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `serving_domain` to the URL query string

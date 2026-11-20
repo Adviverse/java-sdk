@@ -50,7 +50,8 @@ import com.adviverse.api.ApiClient;
   UpdatePlacementDto.JSON_PROPERTY_FLOOR_FALLBACK,
   UpdatePlacementDto.JSON_PROPERTY_FLOOR_AUTO,
   UpdatePlacementDto.JSON_PROPERTY_FLOOR_SOFT,
-  UpdatePlacementDto.JSON_PROPERTY_AUTO_ADS
+  UpdatePlacementDto.JSON_PROPERTY_AUTO_ADS,
+  UpdatePlacementDto.JSON_PROPERTY_FREQUENCY_CAP
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class UpdatePlacementDto {
@@ -92,6 +93,9 @@ public class UpdatePlacementDto {
 
   public static final String JSON_PROPERTY_AUTO_ADS = "autoAds";
   private JsonNullable<Object> autoAds = JsonNullable.<Object>undefined();
+
+  public static final String JSON_PROPERTY_FREQUENCY_CAP = "frequencyCap";
+  private JsonNullable<Object> frequencyCap = JsonNullable.<Object>undefined();
 
   public UpdatePlacementDto() { 
   }
@@ -420,6 +424,38 @@ public class UpdatePlacementDto {
   }
 
 
+  public UpdatePlacementDto frequencyCap(Object frequencyCap) {
+    this.frequencyCap = JsonNullable.<Object>of(frequencyCap);
+    return this;
+  }
+
+  /**
+   * Get frequencyCap
+   * @return frequencyCap
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public Object getFrequencyCap() {
+        return frequencyCap.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_FREQUENCY_CAP)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<Object> getFrequencyCap_JsonNullable() {
+    return frequencyCap;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_FREQUENCY_CAP)
+  public void setFrequencyCap_JsonNullable(JsonNullable<Object> frequencyCap) {
+    this.frequencyCap = frequencyCap;
+  }
+
+  public void setFrequencyCap(Object frequencyCap) {
+    this.frequencyCap = JsonNullable.<Object>of(frequencyCap);
+  }
+
+
   /**
    * Return true if this UpdatePlacementDto object is equal to o.
    */
@@ -444,7 +480,8 @@ public class UpdatePlacementDto {
         Objects.equals(this.floorFallback, updatePlacementDto.floorFallback) &&
         Objects.equals(this.floorAuto, updatePlacementDto.floorAuto) &&
         Objects.equals(this.floorSoft, updatePlacementDto.floorSoft) &&
-        equalsNullable(this.autoAds, updatePlacementDto.autoAds);
+        equalsNullable(this.autoAds, updatePlacementDto.autoAds) &&
+        equalsNullable(this.frequencyCap, updatePlacementDto.frequencyCap);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -453,7 +490,7 @@ public class UpdatePlacementDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, floorCpm, revShare, auctionType, passbackUrl, status, houseOnly, houseShare, houseBackfill, floorFallback, floorAuto, floorSoft, hashCodeNullable(autoAds));
+    return Objects.hash(name, floorCpm, revShare, auctionType, passbackUrl, status, houseOnly, houseShare, houseBackfill, floorFallback, floorAuto, floorSoft, hashCodeNullable(autoAds), hashCodeNullable(frequencyCap));
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -480,6 +517,7 @@ public class UpdatePlacementDto {
     sb.append("    floorAuto: ").append(toIndentedString(floorAuto)).append("\n");
     sb.append("    floorSoft: ").append(toIndentedString(floorSoft)).append("\n");
     sb.append("    autoAds: ").append(toIndentedString(autoAds)).append("\n");
+    sb.append("    frequencyCap: ").append(toIndentedString(frequencyCap)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -590,6 +628,11 @@ public class UpdatePlacementDto {
     // add `autoAds` to the URL query string
     if (getAutoAds() != null) {
       joiner.add(String.format("%sautoAds%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getAutoAds()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `frequencyCap` to the URL query string
+    if (getFrequencyCap() != null) {
+      joiner.add(String.format("%sfrequencyCap%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getFrequencyCap()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

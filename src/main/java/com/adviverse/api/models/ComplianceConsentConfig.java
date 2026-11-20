@@ -50,7 +50,9 @@ import com.adviverse.api.ApiClient;
   ComplianceConsentConfig.JSON_PROPERTY_CONSENT_KEY,
   ComplianceConsentConfig.JSON_PROPERTY_CONSENT_GRANT_VALUE,
   ComplianceConsentConfig.JSON_PROPERTY_TCF_PURPOSE,
-  ComplianceConsentConfig.JSON_PROPERTY_TCF_VENDOR_ID
+  ComplianceConsentConfig.JSON_PROPERTY_TCF_VENDOR_ID,
+  ComplianceConsentConfig.JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT,
+  ComplianceConsentConfig.JSON_PROPERTY_ENHANCED_CAPPING
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class ComplianceConsentConfig {
@@ -171,6 +173,12 @@ public class ComplianceConsentConfig {
 
   public static final String JSON_PROPERTY_TCF_VENDOR_ID = "tcfVendorId";
   private JsonNullable<Integer> tcfVendorId = JsonNullable.<Integer>undefined();
+
+  public static final String JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT = "contextualWithoutConsent";
+  private Boolean contextualWithoutConsent;
+
+  public static final String JSON_PROPERTY_ENHANCED_CAPPING = "enhancedCapping";
+  private Boolean enhancedCapping;
 
   public ComplianceConsentConfig() { 
   }
@@ -543,6 +551,54 @@ public class ComplianceConsentConfig {
   }
 
 
+  public ComplianceConsentConfig contextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+    return this;
+  }
+
+  /**
+   * Ads always load: visitors who have not answered (or rejected) the CMP get contextual ads with no identifier; personalized still waits for consent. Same as the page flag window.ADVIVERSE_MIN_AC &#x3D; 0.
+   * @return contextualWithoutConsent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getContextualWithoutConsent() {
+    return contextualWithoutConsent;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+  }
+
+
+  public ComplianceConsentConfig enhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+    return this;
+  }
+
+  /**
+   * Enhanced frequency capping: outside the EEA/UK, for visitors with no opt-out signal (GPC, US-privacy opt-out), contextual frequency caps also use browser signals and an SDK canvas hash (daily-rotating, per-site, never stored on the device). Off: caps use IP + user agent only and unusual contextual traffic is not served. Declare it in your privacy policy if you turn it on.
+   * @return enhancedCapping
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getEnhancedCapping() {
+    return enhancedCapping;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+  }
+
+
   /**
    * Return true if this ComplianceConsentConfig object is equal to o.
    */
@@ -568,7 +624,9 @@ public class ComplianceConsentConfig {
         equalsNullable(this.consentKey, complianceConsentConfig.consentKey) &&
         equalsNullable(this.consentGrantValue, complianceConsentConfig.consentGrantValue) &&
         Objects.equals(this.tcfPurpose, complianceConsentConfig.tcfPurpose) &&
-        equalsNullable(this.tcfVendorId, complianceConsentConfig.tcfVendorId);
+        equalsNullable(this.tcfVendorId, complianceConsentConfig.tcfVendorId) &&
+        Objects.equals(this.contextualWithoutConsent, complianceConsentConfig.contextualWithoutConsent) &&
+        Objects.equals(this.enhancedCapping, complianceConsentConfig.enhancedCapping);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -577,7 +635,7 @@ public class ComplianceConsentConfig {
 
   @Override
   public int hashCode() {
-    return Objects.hash(publisherId, hashCodeNullable(propertyId), mode, defaultConsent, honorGpc, collectTcf, collectGpp, collectGpc, resendOnChange, consentSource, hashCodeNullable(consentKey), hashCodeNullable(consentGrantValue), tcfPurpose, hashCodeNullable(tcfVendorId));
+    return Objects.hash(publisherId, hashCodeNullable(propertyId), mode, defaultConsent, honorGpc, collectTcf, collectGpp, collectGpc, resendOnChange, consentSource, hashCodeNullable(consentKey), hashCodeNullable(consentGrantValue), tcfPurpose, hashCodeNullable(tcfVendorId), contextualWithoutConsent, enhancedCapping);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -605,6 +663,8 @@ public class ComplianceConsentConfig {
     sb.append("    consentGrantValue: ").append(toIndentedString(consentGrantValue)).append("\n");
     sb.append("    tcfPurpose: ").append(toIndentedString(tcfPurpose)).append("\n");
     sb.append("    tcfVendorId: ").append(toIndentedString(tcfVendorId)).append("\n");
+    sb.append("    contextualWithoutConsent: ").append(toIndentedString(contextualWithoutConsent)).append("\n");
+    sb.append("    enhancedCapping: ").append(toIndentedString(enhancedCapping)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -720,6 +780,16 @@ public class ComplianceConsentConfig {
     // add `tcfVendorId` to the URL query string
     if (getTcfVendorId() != null) {
       joiner.add(String.format("%stcfVendorId%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getTcfVendorId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `contextualWithoutConsent` to the URL query string
+    if (getContextualWithoutConsent() != null) {
+      joiner.add(String.format("%scontextualWithoutConsent%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getContextualWithoutConsent()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `enhancedCapping` to the URL query string
+    if (getEnhancedCapping() != null) {
+      joiner.add(String.format("%senhancedCapping%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getEnhancedCapping()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

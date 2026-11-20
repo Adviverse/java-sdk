@@ -19,6 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
+import com.adviverse.api.models.PublisherControllerVerify201ResponseCheck;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -35,7 +36,10 @@ import com.adviverse.api.ApiClient;
 @JsonPropertyOrder({
   PublisherControllerVerify201Response.JSON_PROPERTY_VERIFIED,
   PublisherControllerVerify201Response.JSON_PROPERTY_TOKEN,
-  PublisherControllerVerify201Response.JSON_PROPERTY_METHOD
+  PublisherControllerVerify201Response.JSON_PROPERTY_METHOD,
+  PublisherControllerVerify201Response.JSON_PROPERTY_ERROR,
+  PublisherControllerVerify201Response.JSON_PROPERTY_MESSAGE,
+  PublisherControllerVerify201Response.JSON_PROPERTY_CHECK
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class PublisherControllerVerify201Response {
@@ -47,6 +51,15 @@ public class PublisherControllerVerify201Response {
 
   public static final String JSON_PROPERTY_METHOD = "method";
   private String method;
+
+  public static final String JSON_PROPERTY_ERROR = "error";
+  private String error;
+
+  public static final String JSON_PROPERTY_MESSAGE = "message";
+  private String message;
+
+  public static final String JSON_PROPERTY_CHECK = "check";
+  private PublisherControllerVerify201ResponseCheck check;
 
   public PublisherControllerVerify201Response() { 
   }
@@ -123,6 +136,78 @@ public class PublisherControllerVerify201Response {
   }
 
 
+  public PublisherControllerVerify201Response error(String error) {
+    this.error = error;
+    return this;
+  }
+
+  /**
+   * Get error
+   * @return error
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ERROR)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getError() {
+    return error;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ERROR)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setError(String error) {
+    this.error = error;
+  }
+
+
+  public PublisherControllerVerify201Response message(String message) {
+    this.message = message;
+    return this;
+  }
+
+  /**
+   * Get message
+   * @return message
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_MESSAGE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getMessage() {
+    return message;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_MESSAGE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+
+  public PublisherControllerVerify201Response check(PublisherControllerVerify201ResponseCheck check) {
+    this.check = check;
+    return this;
+  }
+
+  /**
+   * Get check
+   * @return check
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_CHECK)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public PublisherControllerVerify201ResponseCheck getCheck() {
+    return check;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CHECK)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setCheck(PublisherControllerVerify201ResponseCheck check) {
+    this.check = check;
+  }
+
+
   /**
    * Return true if this PublisherController_verify_201_response object is equal to o.
    */
@@ -137,12 +222,15 @@ public class PublisherControllerVerify201Response {
     PublisherControllerVerify201Response publisherControllerVerify201Response = (PublisherControllerVerify201Response) o;
     return Objects.equals(this.verified, publisherControllerVerify201Response.verified) &&
         Objects.equals(this.token, publisherControllerVerify201Response.token) &&
-        Objects.equals(this.method, publisherControllerVerify201Response.method);
+        Objects.equals(this.method, publisherControllerVerify201Response.method) &&
+        Objects.equals(this.error, publisherControllerVerify201Response.error) &&
+        Objects.equals(this.message, publisherControllerVerify201Response.message) &&
+        Objects.equals(this.check, publisherControllerVerify201Response.check);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(verified, token, method);
+    return Objects.hash(verified, token, method, error, message, check);
   }
 
   @Override
@@ -152,6 +240,9 @@ public class PublisherControllerVerify201Response {
     sb.append("    verified: ").append(toIndentedString(verified)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("    method: ").append(toIndentedString(method)).append("\n");
+    sb.append("    error: ").append(toIndentedString(error)).append("\n");
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    check: ").append(toIndentedString(check)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -212,6 +303,21 @@ public class PublisherControllerVerify201Response {
     // add `method` to the URL query string
     if (getMethod() != null) {
       joiner.add(String.format("%smethod%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getMethod()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `error` to the URL query string
+    if (getError() != null) {
+      joiner.add(String.format("%serror%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getError()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `message` to the URL query string
+    if (getMessage() != null) {
+      joiner.add(String.format("%smessage%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getMessage()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `check` to the URL query string
+    if (getCheck() != null) {
+      joiner.add(getCheck().toUrlQueryString(prefix + "check" + suffix));
     }
 
     return joiner.toString();

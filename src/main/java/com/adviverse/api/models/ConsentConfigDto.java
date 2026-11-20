@@ -46,7 +46,9 @@ import com.adviverse.api.ApiClient;
   ConsentConfigDto.JSON_PROPERTY_CONSENT_KEY,
   ConsentConfigDto.JSON_PROPERTY_CONSENT_GRANT_VALUE,
   ConsentConfigDto.JSON_PROPERTY_TCF_PURPOSE,
-  ConsentConfigDto.JSON_PROPERTY_TCF_VENDOR_ID
+  ConsentConfigDto.JSON_PROPERTY_TCF_VENDOR_ID,
+  ConsentConfigDto.JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT,
+  ConsentConfigDto.JSON_PROPERTY_ENHANCED_CAPPING
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class ConsentConfigDto {
@@ -164,6 +166,12 @@ public class ConsentConfigDto {
 
   public static final String JSON_PROPERTY_TCF_VENDOR_ID = "tcfVendorId";
   private BigDecimal tcfVendorId;
+
+  public static final String JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT = "contextualWithoutConsent";
+  private Boolean contextualWithoutConsent;
+
+  public static final String JSON_PROPERTY_ENHANCED_CAPPING = "enhancedCapping";
+  private Boolean enhancedCapping;
 
   public ConsentConfigDto() { 
   }
@@ -480,6 +488,54 @@ public class ConsentConfigDto {
   }
 
 
+  public ConsentConfigDto contextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+    return this;
+  }
+
+  /**
+   * Get contextualWithoutConsent
+   * @return contextualWithoutConsent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getContextualWithoutConsent() {
+    return contextualWithoutConsent;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+  }
+
+
+  public ConsentConfigDto enhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+    return this;
+  }
+
+  /**
+   * Get enhancedCapping
+   * @return enhancedCapping
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getEnhancedCapping() {
+    return enhancedCapping;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+  }
+
+
   /**
    * Return true if this ConsentConfigDto object is equal to o.
    */
@@ -504,12 +560,14 @@ public class ConsentConfigDto {
         Objects.equals(this.consentKey, consentConfigDto.consentKey) &&
         Objects.equals(this.consentGrantValue, consentConfigDto.consentGrantValue) &&
         Objects.equals(this.tcfPurpose, consentConfigDto.tcfPurpose) &&
-        Objects.equals(this.tcfVendorId, consentConfigDto.tcfVendorId);
+        Objects.equals(this.tcfVendorId, consentConfigDto.tcfVendorId) &&
+        Objects.equals(this.contextualWithoutConsent, consentConfigDto.contextualWithoutConsent) &&
+        Objects.equals(this.enhancedCapping, consentConfigDto.enhancedCapping);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(propertyId, mode, defaultConsent, honorGpc, collectTcf, collectGpp, collectGpc, resendOnChange, consentSource, consentKey, consentGrantValue, tcfPurpose, tcfVendorId);
+    return Objects.hash(propertyId, mode, defaultConsent, honorGpc, collectTcf, collectGpp, collectGpc, resendOnChange, consentSource, consentKey, consentGrantValue, tcfPurpose, tcfVendorId, contextualWithoutConsent, enhancedCapping);
   }
 
   @Override
@@ -529,6 +587,8 @@ public class ConsentConfigDto {
     sb.append("    consentGrantValue: ").append(toIndentedString(consentGrantValue)).append("\n");
     sb.append("    tcfPurpose: ").append(toIndentedString(tcfPurpose)).append("\n");
     sb.append("    tcfVendorId: ").append(toIndentedString(tcfVendorId)).append("\n");
+    sb.append("    contextualWithoutConsent: ").append(toIndentedString(contextualWithoutConsent)).append("\n");
+    sb.append("    enhancedCapping: ").append(toIndentedString(enhancedCapping)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -639,6 +699,16 @@ public class ConsentConfigDto {
     // add `tcfVendorId` to the URL query string
     if (getTcfVendorId() != null) {
       joiner.add(String.format("%stcfVendorId%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getTcfVendorId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `contextualWithoutConsent` to the URL query string
+    if (getContextualWithoutConsent() != null) {
+      joiner.add(String.format("%scontextualWithoutConsent%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getContextualWithoutConsent()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `enhancedCapping` to the URL query string
+    if (getEnhancedCapping() != null) {
+      joiner.add(String.format("%senhancedCapping%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getEnhancedCapping()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

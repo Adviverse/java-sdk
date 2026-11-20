@@ -17,9 +17,9 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
-import com.adviverse.api.models.AdminControllerSetStatus201Response;
 import com.adviverse.api.models.BlogControllerGet200Response;
 import com.adviverse.api.models.BlogPost;
+import com.adviverse.api.models.ComplianceControllerComplete201Response;
 import com.adviverse.api.models.CreatePostDto;
 import com.adviverse.api.models.UpdatePostDto;
 
@@ -582,11 +582,11 @@ public class BlogApi {
    * Delete a blog post
    * Deletes the post and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response blogControllerRemove(String id) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = blogControllerRemoveWithHttpInfo(id);
+  public ComplianceControllerComplete201Response blogControllerRemove(String id) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = blogControllerRemoveWithHttpInfo(id);
     return localVarResponse.getData();
   }
 
@@ -594,10 +594,10 @@ public class BlogApi {
    * Delete a blog post
    * Deletes the post and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> blogControllerRemoveWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> blogControllerRemoveWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = blogControllerRemoveRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -610,10 +610,10 @@ public class BlogApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("blogControllerRemove", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }

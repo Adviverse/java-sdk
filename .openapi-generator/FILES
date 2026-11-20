@@ -29,7 +29,6 @@ src/main/java/com/adviverse/api/models/AdminControllerConfig200ResponseInner.jav
 src/main/java/com/adviverse/api/models/AdminControllerProcessPayout201Response.java
 src/main/java/com/adviverse/api/models/AdminControllerQuality200ResponseInner.java
 src/main/java/com/adviverse/api/models/AdminControllerRescan201Response.java
-src/main/java/com/adviverse/api/models/AdminControllerSetStatus201Response.java
 src/main/java/com/adviverse/api/models/AdminTrustDto.java
 src/main/java/com/adviverse/api/models/AdvAdSetSummary.java
 src/main/java/com/adviverse/api/models/AdvAudience.java
@@ -148,6 +147,7 @@ src/main/java/com/adviverse/api/models/ComboControllerListPresets200Response.jav
 src/main/java/com/adviverse/api/models/ComboUnitDto.java
 src/main/java/com/adviverse/api/models/CompanionDto.java
 src/main/java/com/adviverse/api/models/ComplianceConsentConfig.java
+src/main/java/com/adviverse/api/models/ComplianceControllerComplete201Response.java
 src/main/java/com/adviverse/api/models/ComplianceControllerConsent201Response.java
 src/main/java/com/adviverse/api/models/ComplianceControllerConsentLog200ResponseInner.java
 src/main/java/com/adviverse/api/models/ComplianceControllerSellers200Response.java
@@ -299,6 +299,7 @@ src/main/java/com/adviverse/api/models/PublisherControllerDomainConnect201Respon
 src/main/java/com/adviverse/api/models/PublisherControllerRotateSigningSecret201Response.java
 src/main/java/com/adviverse/api/models/PublisherControllerTag200Response.java
 src/main/java/com/adviverse/api/models/PublisherControllerVerify201Response.java
+src/main/java/com/adviverse/api/models/PublisherControllerVerify201ResponseCheck.java
 src/main/java/com/adviverse/api/models/PublisherControllerVerifyServingDomain201Response.java
 src/main/java/com/adviverse/api/models/PublisherInsightsControllerClearing200Response.java
 src/main/java/com/adviverse/api/models/PublisherInsightsControllerClearing200ResponsePointsInner.java

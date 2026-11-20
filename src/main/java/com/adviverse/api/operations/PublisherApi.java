@@ -632,6 +632,79 @@ public class PublisherApi {
   }
 
   /**
+   * Get one property
+   * Returns one property (same shape as an item of the list, including &#x60;trust_progress&#x60; and the resolved consent switches &#x60;contextual_without_consent&#x60; / &#x60;enhanced_capping&#x60;). 404 if not found, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @return PubProperty
+   * @throws ApiException if fails to make API call
+   */
+  public PubProperty publisherControllerGetProperty(String id) throws ApiException {
+    ApiResponse<PubProperty> localVarResponse = publisherControllerGetPropertyWithHttpInfo(id);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Get one property
+   * Returns one property (same shape as an item of the list, including &#x60;trust_progress&#x60; and the resolved consent switches &#x60;contextual_without_consent&#x60; / &#x60;enhanced_capping&#x60;). 404 if not found, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @return ApiResponse&lt;PubProperty&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<PubProperty> publisherControllerGetPropertyWithHttpInfo(String id) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = publisherControllerGetPropertyRequestBuilder(id);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("publisherControllerGetProperty", localVarResponse);
+        }
+        return new ApiResponse<PubProperty>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PubProperty>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder publisherControllerGetPropertyRequestBuilder(String id) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling publisherControllerGetProperty");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/publisher/properties/{id}"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
    * List your mobile and CTV apps
    * Returns the publisher&#39;s properties of kind &#x60;mobile_app&#x60; or &#x60;ctv&#x60;, newest first. Web properties are excluded.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;read&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @return List&lt;PubProperty&gt;
@@ -1374,7 +1447,7 @@ public class PublisherApi {
 
   /**
    * Update a placement
-   * Patches &#x60;name&#x60;, &#x60;floorCpm&#x60;, &#x60;revShare&#x60;, &#x60;auctionType&#x60;, &#x60;passbackUrl&#x60;, &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;), house/yield flags, and the dynamic-floor settings &#x60;floorAuto&#x60; (let the yield optimizer manage the floor) and &#x60;floorSoft&#x60; (soft reserve). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches &#x60;name&#x60;, &#x60;floorCpm&#x60;, &#x60;revShare&#x60;, &#x60;auctionType&#x60;, &#x60;passbackUrl&#x60;, &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;), house/yield flags, and the dynamic-floor settings &#x60;floorAuto&#x60; (let the yield optimizer manage the floor) and &#x60;floorSoft&#x60; (soft reserve), and &#x60;frequencyCap&#x60; (&#x60;{ impressions, windowSeconds }&#x60;; &#x60;{}&#x60; or &#x60;null&#x60; removes it). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePlacementDto  (required)
    * @return PubPlacement
@@ -1387,7 +1460,7 @@ public class PublisherApi {
 
   /**
    * Update a placement
-   * Patches &#x60;name&#x60;, &#x60;floorCpm&#x60;, &#x60;revShare&#x60;, &#x60;auctionType&#x60;, &#x60;passbackUrl&#x60;, &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;), house/yield flags, and the dynamic-floor settings &#x60;floorAuto&#x60; (let the yield optimizer manage the floor) and &#x60;floorSoft&#x60; (soft reserve). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches &#x60;name&#x60;, &#x60;floorCpm&#x60;, &#x60;revShare&#x60;, &#x60;auctionType&#x60;, &#x60;passbackUrl&#x60;, &#x60;status&#x60; (&#x60;active&#x60;/&#x60;paused&#x60;), house/yield flags, and the dynamic-floor settings &#x60;floorAuto&#x60; (let the yield optimizer manage the floor) and &#x60;floorSoft&#x60; (soft reserve), and &#x60;frequencyCap&#x60; (&#x60;{ impressions, windowSeconds }&#x60;; &#x60;{}&#x60; or &#x60;null&#x60; removes it). Returns the updated row and republishes the serving index. 404 if the placement is not found among your properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePlacementDto  (required)
    * @return ApiResponse&lt;PubPlacement&gt;
@@ -1459,7 +1532,7 @@ public class PublisherApi {
 
   /**
    * Update a property
-   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). &#x60;category&#x60; is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (&#x60;category_source: manual&#x60;, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing &#x60;domain&#x60; also drops a trusted property back to &#x60;unverified&#x60; (unless an admin locked its trust). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). &#x60;contextualWithoutConsent&#x60; (Ads before consent: unanswered/rejected visitors get contextual ads, no identifier) and &#x60;enhancedCapping&#x60; (Enhanced frequency capping: outside the EEA/UK/CH, no GPC/opt-out, contextual caps add browser signals and an SDK canvas hash) are written to this property&#39;s consent config — the same settings as POST /v1/publisher/consent-config with this propertyId; the rest of that config is kept. &#x60;category&#x60; is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (&#x60;category_source: manual&#x60;, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing &#x60;domain&#x60; also drops a trusted property back to &#x60;unverified&#x60; (unless an admin locked its trust). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePropertyDto  (required)
    * @return PubProperty
@@ -1472,7 +1545,7 @@ public class PublisherApi {
 
   /**
    * Update a property
-   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). &#x60;category&#x60; is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (&#x60;category_source: manual&#x60;, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing &#x60;domain&#x60; also drops a trusted property back to &#x60;unverified&#x60; (unless an admin locked its trust). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches &#x60;name&#x60;, &#x60;domain&#x60;, &#x60;category&#x60;, &#x60;verificationMethod&#x60; and &#x60;crossFill&#x60; (opt in to filling this property with other-network demand). &#x60;contextualWithoutConsent&#x60; (Ads before consent: unanswered/rejected visitors get contextual ads, no identifier) and &#x60;enhancedCapping&#x60; (Enhanced frequency capping: outside the EEA/UK/CH, no GPC/opt-out, contextual caps add browser signals and an SDK canvas hash) are written to this property&#39;s consent config — the same settings as POST /v1/publisher/consent-config with this propertyId; the rest of that config is kept. &#x60;category&#x60; is a site-niche id from GET /v1/site-niches and marks the niche as set by hand (&#x60;category_source: manual&#x60;, never overwritten by auto-detection); send 0 to hand it back to auto-detection. 400 for an unknown id. Changing &#x60;domain&#x60; also drops a trusted property back to &#x60;unverified&#x60; (unless an admin locked its trust). Changing &#x60;domain&#x60; resets &#x60;verification_status&#x60; to &#x60;unverified&#x60;, so the property must be re-verified. Returns the updated row (unchanged row if no fields were sent) and republishes the serving index. 404 if the property does not exist, 403 if another publisher owns it.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updatePropertyDto  (required)
    * @return ApiResponse&lt;PubProperty&gt;
@@ -1544,7 +1617,7 @@ public class PublisherApi {
 
   /**
    * Verify property ownership
-   * Checks the property for its verification token using its method: &#x60;dns&#x60; looks up a TXT record at &#x60;adviverse-verify.&lt;domain&gt;&#x60;, &#x60;file&#x60; fetches &#x60;http://&lt;domain&gt;/.well-known/adviverse-verify.txt&#x60;, &#x60;meta&#x60; fetches the homepage and looks for the token. On success the property becomes &#x60;verified&#x60;, a &#x60;pending&#x60; property is auto-approved, and the serving index is republished so its placements start serving. A failed check is not an error: it returns &#x60;verified: false&#x60; with the token and method to show the publisher.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Checks the property for its verification token using its method: &#x60;dns&#x60; looks up a TXT record at &#x60;adviverse-verify.&lt;domain&gt;&#x60;, &#x60;file&#x60; fetches &#x60;http://&lt;domain&gt;/.well-known/adviverse-verify.txt&#x60;, &#x60;meta&#x60; fetches the homepage and looks for the token. On success the property becomes &#x60;verified&#x60;, a &#x60;pending&#x60; property is auto-approved, and the serving index is republished so its placements start serving. File and meta checks add a cache-busting &#x60;?adviverse_verify&#x3D;&lt;ms&gt;&#x60; query so a CDN-cached page cannot fail them. A failed check is not an error: it returns &#x60;verified: false&#x60; with &#x60;error&#x60; (dns_lookup_failed | token_not_found | http_error | fetch_failed), a human &#x60;message&#x60;, and &#x60;check&#x60; (what was fetched or queried and what it answered, including &#x60;age&#x60; and &#x60;cf-cache-status&#x60;).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @return PublisherControllerVerify201Response
    * @throws ApiException if fails to make API call
@@ -1556,7 +1629,7 @@ public class PublisherApi {
 
   /**
    * Verify property ownership
-   * Checks the property for its verification token using its method: &#x60;dns&#x60; looks up a TXT record at &#x60;adviverse-verify.&lt;domain&gt;&#x60;, &#x60;file&#x60; fetches &#x60;http://&lt;domain&gt;/.well-known/adviverse-verify.txt&#x60;, &#x60;meta&#x60; fetches the homepage and looks for the token. On success the property becomes &#x60;verified&#x60;, a &#x60;pending&#x60; property is auto-approved, and the serving index is republished so its placements start serving. A failed check is not an error: it returns &#x60;verified: false&#x60; with the token and method to show the publisher.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Checks the property for its verification token using its method: &#x60;dns&#x60; looks up a TXT record at &#x60;adviverse-verify.&lt;domain&gt;&#x60;, &#x60;file&#x60; fetches &#x60;http://&lt;domain&gt;/.well-known/adviverse-verify.txt&#x60;, &#x60;meta&#x60; fetches the homepage and looks for the token. On success the property becomes &#x60;verified&#x60;, a &#x60;pending&#x60; property is auto-approved, and the serving index is republished so its placements start serving. File and meta checks add a cache-busting &#x60;?adviverse_verify&#x3D;&lt;ms&gt;&#x60; query so a CDN-cached page cannot fail them. A failed check is not an error: it returns &#x60;verified: false&#x60; with &#x60;error&#x60; (dns_lookup_failed | token_not_found | http_error | fetch_failed), a human &#x60;message&#x60;, and &#x60;check&#x60; (what was fetched or queried and what it answered, including &#x60;age&#x60; and &#x60;cf-cache-status&#x60;).  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @return ApiResponse&lt;PublisherControllerVerify201Response&gt;
    * @throws ApiException if fails to make API call

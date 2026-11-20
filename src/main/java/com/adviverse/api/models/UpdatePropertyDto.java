@@ -38,7 +38,9 @@ import com.adviverse.api.ApiClient;
   UpdatePropertyDto.JSON_PROPERTY_DOMAIN,
   UpdatePropertyDto.JSON_PROPERTY_CATEGORY,
   UpdatePropertyDto.JSON_PROPERTY_VERIFICATION_METHOD,
-  UpdatePropertyDto.JSON_PROPERTY_CROSS_FILL
+  UpdatePropertyDto.JSON_PROPERTY_CROSS_FILL,
+  UpdatePropertyDto.JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT,
+  UpdatePropertyDto.JSON_PROPERTY_ENHANCED_CAPPING
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class UpdatePropertyDto {
@@ -56,6 +58,12 @@ public class UpdatePropertyDto {
 
   public static final String JSON_PROPERTY_CROSS_FILL = "crossFill";
   private Boolean crossFill;
+
+  public static final String JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT = "contextualWithoutConsent";
+  private Boolean contextualWithoutConsent;
+
+  public static final String JSON_PROPERTY_ENHANCED_CAPPING = "enhancedCapping";
+  private Boolean enhancedCapping;
 
   public UpdatePropertyDto() { 
   }
@@ -180,6 +188,54 @@ public class UpdatePropertyDto {
   }
 
 
+  public UpdatePropertyDto contextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+    return this;
+  }
+
+  /**
+   * Get contextualWithoutConsent
+   * @return contextualWithoutConsent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getContextualWithoutConsent() {
+    return contextualWithoutConsent;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_CONTEXTUAL_WITHOUT_CONSENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContextualWithoutConsent(Boolean contextualWithoutConsent) {
+    this.contextualWithoutConsent = contextualWithoutConsent;
+  }
+
+
+  public UpdatePropertyDto enhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+    return this;
+  }
+
+  /**
+   * Get enhancedCapping
+   * @return enhancedCapping
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getEnhancedCapping() {
+    return enhancedCapping;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ENHANCED_CAPPING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnhancedCapping(Boolean enhancedCapping) {
+    this.enhancedCapping = enhancedCapping;
+  }
+
+
   /**
    * Return true if this UpdatePropertyDto object is equal to o.
    */
@@ -196,12 +252,14 @@ public class UpdatePropertyDto {
         Objects.equals(this.domain, updatePropertyDto.domain) &&
         Objects.equals(this.category, updatePropertyDto.category) &&
         Objects.equals(this.verificationMethod, updatePropertyDto.verificationMethod) &&
-        Objects.equals(this.crossFill, updatePropertyDto.crossFill);
+        Objects.equals(this.crossFill, updatePropertyDto.crossFill) &&
+        Objects.equals(this.contextualWithoutConsent, updatePropertyDto.contextualWithoutConsent) &&
+        Objects.equals(this.enhancedCapping, updatePropertyDto.enhancedCapping);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, domain, category, verificationMethod, crossFill);
+    return Objects.hash(name, domain, category, verificationMethod, crossFill, contextualWithoutConsent, enhancedCapping);
   }
 
   @Override
@@ -213,6 +271,8 @@ public class UpdatePropertyDto {
     sb.append("    category: ").append(toIndentedString(category)).append("\n");
     sb.append("    verificationMethod: ").append(toIndentedString(verificationMethod)).append("\n");
     sb.append("    crossFill: ").append(toIndentedString(crossFill)).append("\n");
+    sb.append("    contextualWithoutConsent: ").append(toIndentedString(contextualWithoutConsent)).append("\n");
+    sb.append("    enhancedCapping: ").append(toIndentedString(enhancedCapping)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -283,6 +343,16 @@ public class UpdatePropertyDto {
     // add `crossFill` to the URL query string
     if (getCrossFill() != null) {
       joiner.add(String.format("%scrossFill%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getCrossFill()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `contextualWithoutConsent` to the URL query string
+    if (getContextualWithoutConsent() != null) {
+      joiner.add(String.format("%scontextualWithoutConsent%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getContextualWithoutConsent()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `enhancedCapping` to the URL query string
+    if (getEnhancedCapping() != null) {
+      joiner.add(String.format("%senhancedCapping%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getEnhancedCapping()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

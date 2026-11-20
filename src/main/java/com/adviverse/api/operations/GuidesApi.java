@@ -17,7 +17,7 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
-import com.adviverse.api.models.AdminControllerSetStatus201Response;
+import com.adviverse.api.models.ComplianceControllerComplete201Response;
 import com.adviverse.api.models.CreateGuideDto;
 import com.adviverse.api.models.Guide;
 import com.adviverse.api.models.GuidesControllerGet200Response;
@@ -582,11 +582,11 @@ public class GuidesApi {
    * Delete a guide
    * Deletes the guide and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response guidesControllerRemove(String id) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = guidesControllerRemoveWithHttpInfo(id);
+  public ComplianceControllerComplete201Response guidesControllerRemove(String id) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = guidesControllerRemoveWithHttpInfo(id);
     return localVarResponse.getData();
   }
 
@@ -594,10 +594,10 @@ public class GuidesApi {
    * Delete a guide
    * Deletes the guide and clears the public cache. Returns &#x60;{ ok: true }&#x60; even for an unknown id.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> guidesControllerRemoveWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> guidesControllerRemoveWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = guidesControllerRemoveRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -610,10 +610,10 @@ public class GuidesApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("guidesControllerRemove", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }

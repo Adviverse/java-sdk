@@ -23,7 +23,7 @@ import com.adviverse.api.models.AdminControllerConfig200ResponseInner;
 import com.adviverse.api.models.AdminControllerProcessPayout201Response;
 import com.adviverse.api.models.AdminControllerQuality200ResponseInner;
 import com.adviverse.api.models.AdminControllerRescan201Response;
-import com.adviverse.api.models.AdminControllerSetStatus201Response;
+import com.adviverse.api.models.ComplianceControllerComplete201Response;
 import com.adviverse.api.models.ModerationDecisionDto;
 import com.adviverse.api.models.SetAccountStatusDto;
 import com.adviverse.api.models.SetConfigDto;
@@ -181,11 +181,11 @@ public class AdminApi {
    * Add a fraud blocklist entry
    * Adds a &#x60;kind&#x60; (&#x60;ip&#x60;, &#x60;domain&#x60;, &#x60;asn&#x60;, &#x60;device&#x60;, &#x60;user_agent&#x60;, &#x60;country&#x60;, &#x60;subnet&#x60;) / &#x60;value&#x60; pair with an optional &#x60;reason&#x60;. Duplicates of an existing kind/value are ignored. The addition is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param addBlockDto  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response adminControllerAddBlock(AddBlockDto addBlockDto) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerAddBlockWithHttpInfo(addBlockDto);
+  public ComplianceControllerComplete201Response adminControllerAddBlock(AddBlockDto addBlockDto) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = adminControllerAddBlockWithHttpInfo(addBlockDto);
     return localVarResponse.getData();
   }
 
@@ -193,10 +193,10 @@ public class AdminApi {
    * Add a fraud blocklist entry
    * Adds a &#x60;kind&#x60; (&#x60;ip&#x60;, &#x60;domain&#x60;, &#x60;asn&#x60;, &#x60;device&#x60;, &#x60;user_agent&#x60;, &#x60;country&#x60;, &#x60;subnet&#x60;) / &#x60;value&#x60; pair with an optional &#x60;reason&#x60;. Duplicates of an existing kind/value are ignored. The addition is audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param addBlockDto  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> adminControllerAddBlockWithHttpInfo(AddBlockDto addBlockDto) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> adminControllerAddBlockWithHttpInfo(AddBlockDto addBlockDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerAddBlockRequestBuilder(addBlockDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -209,10 +209,10 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerAddBlock", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }
@@ -463,11 +463,11 @@ public class AdminApi {
    * Confirm a manual deposit
    * Marks a manual deposit received and credits the advertiser ledger. &#x60;ref&#x60; is the bank/provider reference (defaults to &#x60;manual:&lt;id&gt;&#x60;). Idempotent: &#x60;ok&#x60; is true only when a new credit was posted. A deposit tied to an agency invoice also marks that invoice paid.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response adminControllerConfirmDeposit(String id) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerConfirmDepositWithHttpInfo(id);
+  public ComplianceControllerComplete201Response adminControllerConfirmDeposit(String id) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = adminControllerConfirmDepositWithHttpInfo(id);
     return localVarResponse.getData();
   }
 
@@ -475,10 +475,10 @@ public class AdminApi {
    * Confirm a manual deposit
    * Marks a manual deposit received and credits the advertiser ledger. &#x60;ref&#x60; is the bank/provider reference (defaults to &#x60;manual:&lt;id&gt;&#x60;). Idempotent: &#x60;ok&#x60; is true only when a new credit was posted. A deposit tied to an agency invoice also marks that invoice paid.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> adminControllerConfirmDepositWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> adminControllerConfirmDepositWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerConfirmDepositRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -491,10 +491,10 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerConfirmDeposit", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }
@@ -536,11 +536,11 @@ public class AdminApi {
    * Confirm a manual payout
    * For manual (wire) payouts left in &#x60;processing&#x60;: after ops sends the bank transfer, &#x60;paid: true&#x60; (default) settles it and releases the held funds, and &#x60;paid: false&#x60; marks it failed and returns them. Returns 404 for an unknown payout and 400 if it is not awaiting confirmation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response adminControllerConfirmPayout(String id) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerConfirmPayoutWithHttpInfo(id);
+  public ComplianceControllerComplete201Response adminControllerConfirmPayout(String id) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = adminControllerConfirmPayoutWithHttpInfo(id);
     return localVarResponse.getData();
   }
 
@@ -548,10 +548,10 @@ public class AdminApi {
    * Confirm a manual payout
    * For manual (wire) payouts left in &#x60;processing&#x60;: after ops sends the bank transfer, &#x60;paid: true&#x60; (default) settles it and releases the held funds, and &#x60;paid: false&#x60; marks it failed and returns them. Returns 404 for an unknown payout and 400 if it is not awaiting confirmation.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> adminControllerConfirmPayoutWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> adminControllerConfirmPayoutWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerConfirmPayoutRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -564,10 +564,10 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerConfirmPayout", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }
@@ -610,11 +610,11 @@ public class AdminApi {
    * Applies &#x60;decision&#x60; (&#x60;approved&#x60; or &#x60;rejected&#x60;) with optional &#x60;notes&#x60; to a queue item. This updates the target: the creative&#39;s moderation status, the campaign or sponsored-product campaign&#39;s status (&#x60;active&#x60; or &#x60;rejected&#x60;), or the property&#39;s status. The decision is audit-logged and the serving index is republished, so approved items can serve within seconds. 404 for an unknown item.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param moderationDecisionDto  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response adminControllerDecide(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerDecideWithHttpInfo(id, moderationDecisionDto);
+  public ComplianceControllerComplete201Response adminControllerDecide(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = adminControllerDecideWithHttpInfo(id, moderationDecisionDto);
     return localVarResponse.getData();
   }
 
@@ -623,10 +623,10 @@ public class AdminApi {
    * Applies &#x60;decision&#x60; (&#x60;approved&#x60; or &#x60;rejected&#x60;) with optional &#x60;notes&#x60; to a queue item. This updates the target: the creative&#39;s moderation status, the campaign or sponsored-product campaign&#39;s status (&#x60;active&#x60; or &#x60;rejected&#x60;), or the property&#39;s status. The decision is audit-logged and the serving index is republished, so approved items can serve within seconds. 404 for an unknown item.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param moderationDecisionDto  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> adminControllerDecideWithHttpInfo(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> adminControllerDecideWithHttpInfo(String id, ModerationDecisionDto moderationDecisionDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerDecideRequestBuilder(id, moderationDecisionDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -639,10 +639,10 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerDecide", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }
@@ -1134,11 +1134,11 @@ public class AdminApi {
    * Set a platform config value
    * Creates or replaces the config entry &#x60;key&#x60; (1-200 chars) with &#x60;value&#x60; (any JSON). The change is recorded with the admin as updater and audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param setConfigDto  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response adminControllerSetConfig(SetConfigDto setConfigDto) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerSetConfigWithHttpInfo(setConfigDto);
+  public ComplianceControllerComplete201Response adminControllerSetConfig(SetConfigDto setConfigDto) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = adminControllerSetConfigWithHttpInfo(setConfigDto);
     return localVarResponse.getData();
   }
 
@@ -1146,10 +1146,10 @@ public class AdminApi {
    * Set a platform config value
    * Creates or replaces the config entry &#x60;key&#x60; (1-200 chars) with &#x60;value&#x60; (any JSON). The change is recorded with the admin as updater and audit-logged.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param setConfigDto  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> adminControllerSetConfigWithHttpInfo(SetConfigDto setConfigDto) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> adminControllerSetConfigWithHttpInfo(SetConfigDto setConfigDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerSetConfigRequestBuilder(setConfigDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1162,10 +1162,10 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerSetConfig", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }
@@ -1213,11 +1213,11 @@ public class AdminApi {
    * Sets an account&#39;s &#x60;status&#x60; to &#x60;active&#x60;, &#x60;pending&#x60;, &#x60;suspended&#x60;, &#x60;banned&#x60; or &#x60;closed&#x60;. The previous and new status are written to the audit log. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param setAccountStatusDto  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response adminControllerSetStatus(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = adminControllerSetStatusWithHttpInfo(id, setAccountStatusDto);
+  public ComplianceControllerComplete201Response adminControllerSetStatus(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = adminControllerSetStatusWithHttpInfo(id, setAccountStatusDto);
     return localVarResponse.getData();
   }
 
@@ -1226,10 +1226,10 @@ public class AdminApi {
    * Sets an account&#39;s &#x60;status&#x60; to &#x60;active&#x60;, &#x60;pending&#x60;, &#x60;suspended&#x60;, &#x60;banned&#x60; or &#x60;closed&#x60;. The previous and new status are written to the audit log. 404 if the account does not exist.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;admin&#x60; (or &#x60;*&#x60;). Roles: admin.
    * @param id  (required)
    * @param setAccountStatusDto  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> adminControllerSetStatusWithHttpInfo(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> adminControllerSetStatusWithHttpInfo(String id, SetAccountStatusDto setAccountStatusDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = adminControllerSetStatusRequestBuilder(id, setAccountStatusDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -1242,10 +1242,10 @@ public class AdminApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("adminControllerSetStatus", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }

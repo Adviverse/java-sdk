@@ -17,10 +17,10 @@ import com.adviverse.api.ApiException;
 import com.adviverse.api.ApiResponse;
 import com.adviverse.api.Pair;
 
-import com.adviverse.api.models.AdminControllerSetStatus201Response;
 import com.adviverse.api.models.ApiKey;
 import com.adviverse.api.models.ApiKeyCreated;
 import com.adviverse.api.models.BrandSafetyDto;
+import com.adviverse.api.models.ComplianceControllerComplete201Response;
 import com.adviverse.api.models.CreateKeyDto;
 import com.adviverse.api.models.CreateTerminalTokenDto;
 import com.adviverse.api.models.NetworkSettingsDto;
@@ -196,11 +196,11 @@ public class SettingsApi {
    * Stores brand-safety settings (&#x60;categories&#x60;, &#x60;keywords&#x60;, &#x60;domains&#x60;, &#x60;sensitivity&#x60;, free-form &#x60;options&#x60;) as JSON on the campaign, replacing any previous value. Only campaigns owned by the caller are updated; a foreign or unknown id is silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param brandSafetyDto  (required)
-   * @return AdminControllerSetStatus201Response
+   * @return ComplianceControllerComplete201Response
    * @throws ApiException if fails to make API call
    */
-  public AdminControllerSetStatus201Response settingsControllerBrandSafety(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
-    ApiResponse<AdminControllerSetStatus201Response> localVarResponse = settingsControllerBrandSafetyWithHttpInfo(id, brandSafetyDto);
+  public ComplianceControllerComplete201Response settingsControllerBrandSafety(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
+    ApiResponse<ComplianceControllerComplete201Response> localVarResponse = settingsControllerBrandSafetyWithHttpInfo(id, brandSafetyDto);
     return localVarResponse.getData();
   }
 
@@ -209,10 +209,10 @@ public class SettingsApi {
    * Stores brand-safety settings (&#x60;categories&#x60;, &#x60;keywords&#x60;, &#x60;domains&#x60;, &#x60;sensitivity&#x60;, free-form &#x60;options&#x60;) as JSON on the campaign, replacing any previous value. Only campaigns owned by the caller are updated; a foreign or unknown id is silently ignored.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: advertiser.
    * @param id  (required)
    * @param brandSafetyDto  (required)
-   * @return ApiResponse&lt;AdminControllerSetStatus201Response&gt;
+   * @return ApiResponse&lt;ComplianceControllerComplete201Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<AdminControllerSetStatus201Response> settingsControllerBrandSafetyWithHttpInfo(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
+  public ApiResponse<ComplianceControllerComplete201Response> settingsControllerBrandSafetyWithHttpInfo(String id, BrandSafetyDto brandSafetyDto) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerBrandSafetyRequestBuilder(id, brandSafetyDto);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -225,10 +225,10 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerBrandSafety", localVarResponse);
         }
-        return new ApiResponse<AdminControllerSetStatus201Response>(
+        return new ApiResponse<ComplianceControllerComplete201Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AdminControllerSetStatus201Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<ComplianceControllerComplete201Response>() {}) // closes the InputStream
         );
       } finally {
       }

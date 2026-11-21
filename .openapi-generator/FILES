@@ -188,6 +188,13 @@ src/main/java/com/adviverse/api/models/DealsControllerLookupAdvertiser200Respons
 src/main/java/com/adviverse/api/models/DealsControllerPreviewClaim200Response.java
 src/main/java/com/adviverse/api/models/DealsControllerStatus201Response.java
 src/main/java/com/adviverse/api/models/DepositDto.java
+src/main/java/com/adviverse/api/models/DeviceApproveDto.java
+src/main/java/com/adviverse/api/models/DeviceAuthControllerApprove201Response.java
+src/main/java/com/adviverse/api/models/DeviceAuthControllerCode200Response.java
+src/main/java/com/adviverse/api/models/DeviceAuthControllerDescribe200Response.java
+src/main/java/com/adviverse/api/models/DeviceAuthControllerToken200Response.java
+src/main/java/com/adviverse/api/models/DeviceCodeDto.java
+src/main/java/com/adviverse/api/models/DeviceTokenDto.java
 src/main/java/com/adviverse/api/models/DoohControllerList200ResponseInner.java
 src/main/java/com/adviverse/api/models/DoohControllerSaveSetup201Response.java
 src/main/java/com/adviverse/api/models/DoohSetupDto.java
@@ -439,7 +446,7 @@ src/main/java/com/adviverse/api/models/SettingsControllerBidRec200Response.java
 src/main/java/com/adviverse/api/models/SettingsControllerCreateTerminalToken201Response.java
 src/main/java/com/adviverse/api/models/SettingsControllerCreateTerminalToken201ResponseSwitch.java
 src/main/java/com/adviverse/api/models/SettingsControllerListTerminalTokens200ResponseInner.java
-src/main/java/com/adviverse/api/models/SettingsControllerRevokeKey200Response.java
+src/main/java/com/adviverse/api/models/SettingsControllerRevokeCurrentKey200Response.java
 src/main/java/com/adviverse/api/models/SettingsControllerRotateTerminalToken201Response.java
 src/main/java/com/adviverse/api/models/SettingsControllerSetTerminalTokenPolicy200Response.java
 src/main/java/com/adviverse/api/models/SettingsControllerUpdateNetwork200Response.java
@@ -479,6 +486,7 @@ src/main/java/com/adviverse/api/models/UpdateScreenDto.java
 src/main/java/com/adviverse/api/models/UpdateSurfaceDto.java
 src/main/java/com/adviverse/api/models/UpdateWebhookDto.java
 src/main/java/com/adviverse/api/models/VerificationControllerCategories200ResponseInner.java
+src/main/java/com/adviverse/api/models/VerifyAppDto.java
 src/main/java/com/adviverse/api/models/WebhookDelivery.java
 src/main/java/com/adviverse/api/models/WebhookDeliveryResult.java
 src/main/java/com/adviverse/api/models/WebhookEndpoint.java
@@ -498,6 +506,7 @@ src/main/java/com/adviverse/api/operations/ComboApi.java
 src/main/java/com/adviverse/api/operations/ComplianceApi.java
 src/main/java/com/adviverse/api/operations/ConversionsApi.java
 src/main/java/com/adviverse/api/operations/DealsApi.java
+src/main/java/com/adviverse/api/operations/DeviceAuthApi.java
 src/main/java/com/adviverse/api/operations/DoohApi.java
 src/main/java/com/adviverse/api/operations/EdgeApi.java
 src/main/java/com/adviverse/api/operations/ExportsApi.java

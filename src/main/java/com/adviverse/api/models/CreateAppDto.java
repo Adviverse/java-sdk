@@ -41,7 +41,8 @@ import com.adviverse.api.ApiClient;
   CreateAppDto.JSON_PROPERTY_STORE_URL,
   CreateAppDto.JSON_PROPERTY_APP_STORE_ID,
   CreateAppDto.JSON_PROPERTY_CATEGORY,
-  CreateAppDto.JSON_PROPERTY_CTV_META
+  CreateAppDto.JSON_PROPERTY_CTV_META,
+  CreateAppDto.JSON_PROPERTY_DEVELOPER_PROPERTY_ID
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class CreateAppDto {
@@ -148,6 +149,9 @@ public class CreateAppDto {
 
   public static final String JSON_PROPERTY_CTV_META = "ctvMeta";
   private Object ctvMeta;
+
+  public static final String JSON_PROPERTY_DEVELOPER_PROPERTY_ID = "developerPropertyId";
+  private String developerPropertyId;
 
   public CreateAppDto() { 
   }
@@ -344,6 +348,30 @@ public class CreateAppDto {
   }
 
 
+  public CreateAppDto developerPropertyId(String developerPropertyId) {
+    this.developerPropertyId = developerPropertyId;
+    return this;
+  }
+
+  /**
+   * Get developerPropertyId
+   * @return developerPropertyId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_DEVELOPER_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getDeveloperPropertyId() {
+    return developerPropertyId;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_DEVELOPER_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDeveloperPropertyId(String developerPropertyId) {
+    this.developerPropertyId = developerPropertyId;
+  }
+
+
   /**
    * Return true if this CreateAppDto object is equal to o.
    */
@@ -363,12 +391,13 @@ public class CreateAppDto {
         Objects.equals(this.storeUrl, createAppDto.storeUrl) &&
         Objects.equals(this.appStoreId, createAppDto.appStoreId) &&
         Objects.equals(this.category, createAppDto.category) &&
-        Objects.equals(this.ctvMeta, createAppDto.ctvMeta);
+        Objects.equals(this.ctvMeta, createAppDto.ctvMeta) &&
+        Objects.equals(this.developerPropertyId, createAppDto.developerPropertyId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(kind, name, bundleId, platform, storeUrl, appStoreId, category, ctvMeta);
+    return Objects.hash(kind, name, bundleId, platform, storeUrl, appStoreId, category, ctvMeta, developerPropertyId);
   }
 
   @Override
@@ -383,6 +412,7 @@ public class CreateAppDto {
     sb.append("    appStoreId: ").append(toIndentedString(appStoreId)).append("\n");
     sb.append("    category: ").append(toIndentedString(category)).append("\n");
     sb.append("    ctvMeta: ").append(toIndentedString(ctvMeta)).append("\n");
+    sb.append("    developerPropertyId: ").append(toIndentedString(developerPropertyId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -468,6 +498,11 @@ public class CreateAppDto {
     // add `ctvMeta` to the URL query string
     if (getCtvMeta() != null) {
       joiner.add(String.format("%sctvMeta%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getCtvMeta()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `developerPropertyId` to the URL query string
+    if (getDeveloperPropertyId() != null) {
+      joiner.add(String.format("%sdeveloperPropertyId%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getDeveloperPropertyId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

@@ -35,6 +35,7 @@ import com.adviverse.api.ApiClient;
  */
 @JsonPropertyOrder({
   CreatePlacementDto.JSON_PROPERTY_PROPERTY_ID,
+  CreatePlacementDto.JSON_PROPERTY_APP_ID,
   CreatePlacementDto.JSON_PROPERTY_NAME,
   CreatePlacementDto.JSON_PROPERTY_FORMAT,
   CreatePlacementDto.JSON_PROPERTY_WIDTH,
@@ -55,6 +56,9 @@ import com.adviverse.api.ApiClient;
 public class CreatePlacementDto {
   public static final String JSON_PROPERTY_PROPERTY_ID = "propertyId";
   private String propertyId;
+
+  public static final String JSON_PROPERTY_APP_ID = "appId";
+  private String appId;
 
   public static final String JSON_PROPERTY_NAME = "name";
   private String name;
@@ -113,18 +117,42 @@ public class CreatePlacementDto {
    * Get propertyId
    * @return propertyId
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getPropertyId() {
     return propertyId;
   }
 
 
   @JsonProperty(JSON_PROPERTY_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setPropertyId(String propertyId) {
     this.propertyId = propertyId;
+  }
+
+
+  public CreatePlacementDto appId(String appId) {
+    this.appId = appId;
+    return this;
+  }
+
+  /**
+   * Get appId
+   * @return appId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_APP_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getAppId() {
+    return appId;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_APP_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 
 
@@ -504,6 +532,7 @@ public class CreatePlacementDto {
     }
     CreatePlacementDto createPlacementDto = (CreatePlacementDto) o;
     return Objects.equals(this.propertyId, createPlacementDto.propertyId) &&
+        Objects.equals(this.appId, createPlacementDto.appId) &&
         Objects.equals(this.name, createPlacementDto.name) &&
         Objects.equals(this.format, createPlacementDto.format) &&
         Objects.equals(this.width, createPlacementDto.width) &&
@@ -523,7 +552,7 @@ public class CreatePlacementDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(propertyId, name, format, width, height, responsive, floorCpm, revShare, auctionType, passbackUrl, frequencyCap, settings, houseOnly, houseShare, houseBackfill, floorFallback);
+    return Objects.hash(propertyId, appId, name, format, width, height, responsive, floorCpm, revShare, auctionType, passbackUrl, frequencyCap, settings, houseOnly, houseShare, houseBackfill, floorFallback);
   }
 
   @Override
@@ -531,6 +560,7 @@ public class CreatePlacementDto {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreatePlacementDto {\n");
     sb.append("    propertyId: ").append(toIndentedString(propertyId)).append("\n");
+    sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    format: ").append(toIndentedString(format)).append("\n");
     sb.append("    width: ").append(toIndentedString(width)).append("\n");
@@ -596,6 +626,11 @@ public class CreatePlacementDto {
     // add `propertyId` to the URL query string
     if (getPropertyId() != null) {
       joiner.add(String.format("%spropertyId%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPropertyId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `appId` to the URL query string
+    if (getAppId() != null) {
+      joiner.add(String.format("%sappId%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getAppId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `name` to the URL query string

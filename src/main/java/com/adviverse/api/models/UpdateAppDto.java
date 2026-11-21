@@ -28,6 +28,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.openapitools.jackson.nullable.JsonNullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -40,7 +44,8 @@ import com.adviverse.api.ApiClient;
   UpdateAppDto.JSON_PROPERTY_SKADNETWORK_IDS,
   UpdateAppDto.JSON_PROPERTY_CTV_META,
   UpdateAppDto.JSON_PROPERTY_STORE_URL,
-  UpdateAppDto.JSON_PROPERTY_PLATFORM
+  UpdateAppDto.JSON_PROPERTY_PLATFORM,
+  UpdateAppDto.JSON_PROPERTY_DEVELOPER_PROPERTY_ID
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class UpdateAppDto {
@@ -103,6 +108,9 @@ public class UpdateAppDto {
 
   public static final String JSON_PROPERTY_PLATFORM = "platform";
   private PlatformEnum platform;
+
+  public static final String JSON_PROPERTY_DEVELOPER_PROPERTY_ID = "developerPropertyId";
+  private JsonNullable<String> developerPropertyId = JsonNullable.<String>undefined();
 
   public UpdateAppDto() { 
   }
@@ -243,6 +251,38 @@ public class UpdateAppDto {
   }
 
 
+  public UpdateAppDto developerPropertyId(String developerPropertyId) {
+    this.developerPropertyId = JsonNullable.<String>of(developerPropertyId);
+    return this;
+  }
+
+  /**
+   * Get developerPropertyId
+   * @return developerPropertyId
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public String getDeveloperPropertyId() {
+        return developerPropertyId.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_DEVELOPER_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<String> getDeveloperPropertyId_JsonNullable() {
+    return developerPropertyId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_DEVELOPER_PROPERTY_ID)
+  public void setDeveloperPropertyId_JsonNullable(JsonNullable<String> developerPropertyId) {
+    this.developerPropertyId = developerPropertyId;
+  }
+
+  public void setDeveloperPropertyId(String developerPropertyId) {
+    this.developerPropertyId = JsonNullable.<String>of(developerPropertyId);
+  }
+
+
   /**
    * Return true if this UpdateAppDto object is equal to o.
    */
@@ -259,12 +299,24 @@ public class UpdateAppDto {
         Objects.equals(this.skadnetworkIds, updateAppDto.skadnetworkIds) &&
         Objects.equals(this.ctvMeta, updateAppDto.ctvMeta) &&
         Objects.equals(this.storeUrl, updateAppDto.storeUrl) &&
-        Objects.equals(this.platform, updateAppDto.platform);
+        Objects.equals(this.platform, updateAppDto.platform) &&
+        equalsNullable(this.developerPropertyId, updateAppDto.developerPropertyId);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(appAdsTxt, skadnetworkIds, ctvMeta, storeUrl, platform);
+    return Objects.hash(appAdsTxt, skadnetworkIds, ctvMeta, storeUrl, platform, hashCodeNullable(developerPropertyId));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
   }
 
   @Override
@@ -276,6 +328,7 @@ public class UpdateAppDto {
     sb.append("    ctvMeta: ").append(toIndentedString(ctvMeta)).append("\n");
     sb.append("    storeUrl: ").append(toIndentedString(storeUrl)).append("\n");
     sb.append("    platform: ").append(toIndentedString(platform)).append("\n");
+    sb.append("    developerPropertyId: ").append(toIndentedString(developerPropertyId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -355,6 +408,11 @@ public class UpdateAppDto {
     // add `platform` to the URL query string
     if (getPlatform() != null) {
       joiner.add(String.format("%splatform%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getPlatform()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `developerPropertyId` to the URL query string
+    if (getDeveloperPropertyId() != null) {
+      joiner.add(String.format("%sdeveloperPropertyId%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getDeveloperPropertyId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     return joiner.toString();

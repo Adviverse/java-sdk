@@ -28,7 +28,7 @@ import com.adviverse.api.models.SegmentsControllerRevoke201Response;
 import com.adviverse.api.models.SettingsControllerBidRec200Response;
 import com.adviverse.api.models.SettingsControllerCreateTerminalToken201Response;
 import com.adviverse.api.models.SettingsControllerListTerminalTokens200ResponseInner;
-import com.adviverse.api.models.SettingsControllerRevokeKey200Response;
+import com.adviverse.api.models.SettingsControllerRevokeCurrentKey200Response;
 import com.adviverse.api.models.SettingsControllerRotateTerminalToken201Response;
 import com.adviverse.api.models.SettingsControllerSetTerminalTokenPolicy200Response;
 import com.adviverse.api.models.SettingsControllerUpdateNetwork200Response;
@@ -565,14 +565,80 @@ public class SettingsApi {
   }
 
   /**
+   * Revoke the API key making this request
+   * Revokes the key sent in &#x60;x-api-key&#x60; (used by &#x60;adviverse logout&#x60;) and removes it from the engine&#39;s Redis credential map. 400 when called with a session token instead of an API key.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @return SettingsControllerRevokeCurrentKey200Response
+   * @throws ApiException if fails to make API call
+   */
+  public SettingsControllerRevokeCurrentKey200Response settingsControllerRevokeCurrentKey() throws ApiException {
+    ApiResponse<SettingsControllerRevokeCurrentKey200Response> localVarResponse = settingsControllerRevokeCurrentKeyWithHttpInfo();
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Revoke the API key making this request
+   * Revokes the key sent in &#x60;x-api-key&#x60; (used by &#x60;adviverse logout&#x60;) and removes it from the engine&#39;s Redis credential map. 400 when called with a session token instead of an API key.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
+   * @return ApiResponse&lt;SettingsControllerRevokeCurrentKey200Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<SettingsControllerRevokeCurrentKey200Response> settingsControllerRevokeCurrentKeyWithHttpInfo() throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = settingsControllerRevokeCurrentKeyRequestBuilder();
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("settingsControllerRevokeCurrentKey", localVarResponse);
+        }
+        return new ApiResponse<SettingsControllerRevokeCurrentKey200Response>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerRevokeCurrentKey200Response>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder settingsControllerRevokeCurrentKeyRequestBuilder() throws ApiException {
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/keys/current";
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
    * Revoke an API key
    * Marks the key revoked and removes it from the engine&#39;s Redis credential map, so it stops working everywhere. Revoking an unknown or foreign id is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
-   * @return SettingsControllerRevokeKey200Response
+   * @return SettingsControllerRevokeCurrentKey200Response
    * @throws ApiException if fails to make API call
    */
-  public SettingsControllerRevokeKey200Response settingsControllerRevokeKey(String id) throws ApiException {
-    ApiResponse<SettingsControllerRevokeKey200Response> localVarResponse = settingsControllerRevokeKeyWithHttpInfo(id);
+  public SettingsControllerRevokeCurrentKey200Response settingsControllerRevokeKey(String id) throws ApiException {
+    ApiResponse<SettingsControllerRevokeCurrentKey200Response> localVarResponse = settingsControllerRevokeKeyWithHttpInfo(id);
     return localVarResponse.getData();
   }
 
@@ -580,10 +646,10 @@ public class SettingsApi {
    * Revoke an API key
    * Marks the key revoked and removes it from the engine&#39;s Redis credential map, so it stops working everywhere. Revoking an unknown or foreign id is a silent no-op.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;).
    * @param id  (required)
-   * @return ApiResponse&lt;SettingsControllerRevokeKey200Response&gt;
+   * @return ApiResponse&lt;SettingsControllerRevokeCurrentKey200Response&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<SettingsControllerRevokeKey200Response> settingsControllerRevokeKeyWithHttpInfo(String id) throws ApiException {
+  public ApiResponse<SettingsControllerRevokeCurrentKey200Response> settingsControllerRevokeKeyWithHttpInfo(String id) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = settingsControllerRevokeKeyRequestBuilder(id);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -596,10 +662,10 @@ public class SettingsApi {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("settingsControllerRevokeKey", localVarResponse);
         }
-        return new ApiResponse<SettingsControllerRevokeKey200Response>(
+        return new ApiResponse<SettingsControllerRevokeCurrentKey200Response>(
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
-          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerRevokeKey200Response>() {}) // closes the InputStream
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<SettingsControllerRevokeCurrentKey200Response>() {}) // closes the InputStream
         );
       } finally {
       }

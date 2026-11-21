@@ -28,6 +28,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -36,6 +37,7 @@ import com.adviverse.api.ApiClient;
  * ApiKeyCreated
  */
 @JsonPropertyOrder({
+  ApiKeyCreated.JSON_PROPERTY_ID,
   ApiKeyCreated.JSON_PROPERTY_KEY,
   ApiKeyCreated.JSON_PROPERTY_PREFIX,
   ApiKeyCreated.JSON_PROPERTY_SCOPES,
@@ -43,6 +45,9 @@ import com.adviverse.api.ApiClient;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.9.0")
 public class ApiKeyCreated {
+  public static final String JSON_PROPERTY_ID = "id";
+  private UUID id;
+
   public static final String JSON_PROPERTY_KEY = "key";
   private String key;
 
@@ -57,6 +62,30 @@ public class ApiKeyCreated {
 
   public ApiKeyCreated() { 
   }
+
+  public ApiKeyCreated id(UUID id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * The key id (for DELETE /v1/keys/{id}).
+   * @return id
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public UUID getId() {
+    return id;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
 
   public ApiKeyCreated key(String key) {
     this.key = key;
@@ -174,7 +203,8 @@ public class ApiKeyCreated {
       return false;
     }
     ApiKeyCreated apiKeyCreated = (ApiKeyCreated) o;
-    return Objects.equals(this.key, apiKeyCreated.key) &&
+    return Objects.equals(this.id, apiKeyCreated.id) &&
+        Objects.equals(this.key, apiKeyCreated.key) &&
         Objects.equals(this.prefix, apiKeyCreated.prefix) &&
         Objects.equals(this.scopes, apiKeyCreated.scopes) &&
         Objects.equals(this.expiresAt, apiKeyCreated.expiresAt);
@@ -182,13 +212,14 @@ public class ApiKeyCreated {
 
   @Override
   public int hashCode() {
-    return Objects.hash(key, prefix, scopes, expiresAt);
+    return Objects.hash(id, key, prefix, scopes, expiresAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ApiKeyCreated {\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    prefix: ").append(toIndentedString(prefix)).append("\n");
     sb.append("    scopes: ").append(toIndentedString(scopes)).append("\n");
@@ -239,6 +270,11 @@ public class ApiKeyCreated {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `id` to the URL query string
+    if (getId() != null) {
+      joiner.add(String.format("%sid%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
 
     // add `key` to the URL query string
     if (getKey() != null) {

@@ -34,6 +34,7 @@ import com.adviverse.api.models.ServingDomainDto;
 import com.adviverse.api.models.UpdateAppDto;
 import com.adviverse.api.models.UpdatePlacementDto;
 import com.adviverse.api.models.UpdatePropertyDto;
+import com.adviverse.api.models.VerifyAppDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -180,7 +181,7 @@ public class PublisherApi {
 
   /**
    * Register a mobile or CTV app
-   * Creates a &#x60;mobile_app&#x60; or &#x60;ctv&#x60; property from &#x60;kind&#x60;, &#x60;name&#x60;, &#x60;bundleId&#x60; and &#x60;platform&#x60; (ios, android, roku, firetv, appletv, androidtv, web), with optional &#x60;storeUrl&#x60;, &#x60;appStoreId&#x60;, &#x60;category&#x60; and &#x60;ctvMeta&#x60;. The bundle id is stored in both &#x60;bundle_id&#x60; and &#x60;domain&#x60;; the app enters the normal &#x60;pending&#x60; approval flow with file verification.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Creates a &#x60;mobile_app&#x60; or &#x60;ctv&#x60; property from &#x60;kind&#x60;, &#x60;name&#x60;, &#x60;bundleId&#x60; and &#x60;platform&#x60; (ios, android, roku, firetv, appletv, androidtv, web), with optional &#x60;storeUrl&#x60;, &#x60;appStoreId&#x60;, &#x60;category&#x60; and &#x60;ctvMeta&#x60;. The bundle id is stored in both &#x60;bundle_id&#x60; and &#x60;domain&#x60;. Optional &#x60;developerPropertyId&#x60; links one of your website properties as the developer site. The app starts &#x60;pending&#x60; / &#x60;unverified&#x60;; prove it with POST /v1/publisher/apps/{id}/verify (IAB app-ads.txt on the verified developer site, optionally plus the store listing), which approves it. For QA before verification, request ads with the test tag &#x60;tk_test&#x60;, which always fills. 400 if &#x60;developerPropertyId&#x60; is not one of your website properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createAppDto  (required)
    * @return PubProperty
    * @throws ApiException if fails to make API call
@@ -192,7 +193,7 @@ public class PublisherApi {
 
   /**
    * Register a mobile or CTV app
-   * Creates a &#x60;mobile_app&#x60; or &#x60;ctv&#x60; property from &#x60;kind&#x60;, &#x60;name&#x60;, &#x60;bundleId&#x60; and &#x60;platform&#x60; (ios, android, roku, firetv, appletv, androidtv, web), with optional &#x60;storeUrl&#x60;, &#x60;appStoreId&#x60;, &#x60;category&#x60; and &#x60;ctvMeta&#x60;. The bundle id is stored in both &#x60;bundle_id&#x60; and &#x60;domain&#x60;; the app enters the normal &#x60;pending&#x60; approval flow with file verification.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Creates a &#x60;mobile_app&#x60; or &#x60;ctv&#x60; property from &#x60;kind&#x60;, &#x60;name&#x60;, &#x60;bundleId&#x60; and &#x60;platform&#x60; (ios, android, roku, firetv, appletv, androidtv, web), with optional &#x60;storeUrl&#x60;, &#x60;appStoreId&#x60;, &#x60;category&#x60; and &#x60;ctvMeta&#x60;. The bundle id is stored in both &#x60;bundle_id&#x60; and &#x60;domain&#x60;. Optional &#x60;developerPropertyId&#x60; links one of your website properties as the developer site. The app starts &#x60;pending&#x60; / &#x60;unverified&#x60;; prove it with POST /v1/publisher/apps/{id}/verify (IAB app-ads.txt on the verified developer site, optionally plus the store listing), which approves it. For QA before verification, request ads with the test tag &#x60;tk_test&#x60;, which always fills. 400 if &#x60;developerPropertyId&#x60; is not one of your website properties.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createAppDto  (required)
    * @return ApiResponse&lt;PubProperty&gt;
    * @throws ApiException if fails to make API call
@@ -258,7 +259,7 @@ public class PublisherApi {
 
   /**
    * Create a placement
-   * Creates an ad unit on one of your properties (&#x60;propertyId&#x60;, &#x60;name&#x60;, &#x60;format&#x60; required) with a generated &#x60;tag_key&#x60;. Optional fields cover size (&#x60;width&#x60;/&#x60;height&#x60; or &#x60;responsive&#x60;), &#x60;floorCpm&#x60;, &#x60;revShare&#x60; (defaults to the network rev-share), &#x60;auctionType&#x60; (default &#x60;first_price&#x60;), &#x60;passbackUrl&#x60;, &#x60;frequencyCap&#x60;, format &#x60;settings&#x60;, and yield fill (&#x60;houseOnly&#x60;, &#x60;houseShare&#x60; clamped to 0-1, &#x60;houseBackfill&#x60;, &#x60;floorFallback&#x60;). Popunders default to a 1-per-visitor-per-24h frequency cap unless &#x60;frequencyCap&#x60; is given (&#x60;{}&#x60; opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Creates an ad unit on one of your properties (&#x60;name&#x60;, &#x60;format&#x60; and exactly one of &#x60;propertyId&#x60; / &#x60;appId&#x60; required; an app id from /v1/publisher/apps is a valid property id) with a generated &#x60;tag_key&#x60;. On a mobile_app or ctv property only app formats are accepted (banner, native, interstitial, rewarded, app_open, video, audio, carousel, pod, direct_link); web-only formats such as popunder, social_bar and in_page_push return 400. Optional fields cover size (&#x60;width&#x60;/&#x60;height&#x60; or &#x60;responsive&#x60;), &#x60;floorCpm&#x60;, &#x60;revShare&#x60; (defaults to the network rev-share), &#x60;auctionType&#x60; (default &#x60;first_price&#x60;), &#x60;passbackUrl&#x60;, &#x60;frequencyCap&#x60;, format &#x60;settings&#x60;, and yield fill (&#x60;houseOnly&#x60;, &#x60;houseShare&#x60; clamped to 0-1, &#x60;houseBackfill&#x60;, &#x60;floorFallback&#x60;). Popunders default to a 1-per-visitor-per-24h frequency cap unless &#x60;frequencyCap&#x60; is given (&#x60;{}&#x60; opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createPlacementDto  (required)
    * @return PubPlacement
    * @throws ApiException if fails to make API call
@@ -270,7 +271,7 @@ public class PublisherApi {
 
   /**
    * Create a placement
-   * Creates an ad unit on one of your properties (&#x60;propertyId&#x60;, &#x60;name&#x60;, &#x60;format&#x60; required) with a generated &#x60;tag_key&#x60;. Optional fields cover size (&#x60;width&#x60;/&#x60;height&#x60; or &#x60;responsive&#x60;), &#x60;floorCpm&#x60;, &#x60;revShare&#x60; (defaults to the network rev-share), &#x60;auctionType&#x60; (default &#x60;first_price&#x60;), &#x60;passbackUrl&#x60;, &#x60;frequencyCap&#x60;, format &#x60;settings&#x60;, and yield fill (&#x60;houseOnly&#x60;, &#x60;houseShare&#x60; clamped to 0-1, &#x60;houseBackfill&#x60;, &#x60;floorFallback&#x60;). Popunders default to a 1-per-visitor-per-24h frequency cap unless &#x60;frequencyCap&#x60; is given (&#x60;{}&#x60; opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Creates an ad unit on one of your properties (&#x60;name&#x60;, &#x60;format&#x60; and exactly one of &#x60;propertyId&#x60; / &#x60;appId&#x60; required; an app id from /v1/publisher/apps is a valid property id) with a generated &#x60;tag_key&#x60;. On a mobile_app or ctv property only app formats are accepted (banner, native, interstitial, rewarded, app_open, video, audio, carousel, pod, direct_link); web-only formats such as popunder, social_bar and in_page_push return 400. Optional fields cover size (&#x60;width&#x60;/&#x60;height&#x60; or &#x60;responsive&#x60;), &#x60;floorCpm&#x60;, &#x60;revShare&#x60; (defaults to the network rev-share), &#x60;auctionType&#x60; (default &#x60;first_price&#x60;), &#x60;passbackUrl&#x60;, &#x60;frequencyCap&#x60;, format &#x60;settings&#x60;, and yield fill (&#x60;houseOnly&#x60;, &#x60;houseShare&#x60; clamped to 0-1, &#x60;houseBackfill&#x60;, &#x60;floorFallback&#x60;). Popunders default to a 1-per-visitor-per-24h frequency cap unless &#x60;frequencyCap&#x60; is given (&#x60;{}&#x60; opts out). The serving index is republished. 404 if the property is missing, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param createPlacementDto  (required)
    * @return ApiResponse&lt;PubPlacement&gt;
    * @throws ApiException if fails to make API call
@@ -984,6 +985,79 @@ public class PublisherApi {
   }
 
   /**
+   * Delete a mobile or CTV app
+   * Soft-deletes the app and all of its placements, then republishes the serving index so ads stop promptly (same as deleting a property). 404 if not found or not an app, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @return AuthControllerResendVerification201Response
+   * @throws ApiException if fails to make API call
+   */
+  public AuthControllerResendVerification201Response publisherControllerRemoveApp(String id) throws ApiException {
+    ApiResponse<AuthControllerResendVerification201Response> localVarResponse = publisherControllerRemoveAppWithHttpInfo(id);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Delete a mobile or CTV app
+   * Soft-deletes the app and all of its placements, then republishes the serving index so ads stop promptly (same as deleting a property). 404 if not found or not an app, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @return ApiResponse&lt;AuthControllerResendVerification201Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<AuthControllerResendVerification201Response> publisherControllerRemoveAppWithHttpInfo(String id) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = publisherControllerRemoveAppRequestBuilder(id);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("publisherControllerRemoveApp", localVarResponse);
+        }
+        return new ApiResponse<AuthControllerResendVerification201Response>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<AuthControllerResendVerification201Response>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder publisherControllerRemoveAppRequestBuilder(String id) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling publisherControllerRemoveApp");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/publisher/apps/{id}"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
    * Delete a property
    * Soft-deletes the property and all of its placements, then republishes the serving index so ads stop promptly. 404 if not found, 403 if not yours.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
@@ -1362,7 +1436,7 @@ public class PublisherApi {
 
   /**
    * Update app-ads.txt, SKAdNetwork and CTV metadata
-   * Patches only the fields sent: &#x60;appAdsTxt&#x60; (authorized-seller entries &#x60;{domain, sellerId, relationship?, certId?}&#x60;, normalized and invalid ones dropped), &#x60;skadnetworkIds&#x60;, &#x60;ctvMeta&#x60;, &#x60;storeUrl&#x60;, &#x60;platform&#x60;. Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches only the fields sent: &#x60;appAdsTxt&#x60; (authorized-seller entries &#x60;{domain, sellerId, relationship?, certId?}&#x60;, normalized and invalid ones dropped), &#x60;skadnetworkIds&#x60;, &#x60;ctvMeta&#x60;, &#x60;storeUrl&#x60;, &#x60;platform&#x60;, &#x60;developerPropertyId&#x60; (one of your website properties; &#x60;null&#x60; unlinks; 400 otherwise). Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updateAppDto  (required)
    * @return PubProperty
@@ -1375,7 +1449,7 @@ public class PublisherApi {
 
   /**
    * Update app-ads.txt, SKAdNetwork and CTV metadata
-   * Patches only the fields sent: &#x60;appAdsTxt&#x60; (authorized-seller entries &#x60;{domain, sellerId, relationship?, certId?}&#x60;, normalized and invalid ones dropped), &#x60;skadnetworkIds&#x60;, &#x60;ctvMeta&#x60;, &#x60;storeUrl&#x60;, &#x60;platform&#x60;. Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * Patches only the fields sent: &#x60;appAdsTxt&#x60; (authorized-seller entries &#x60;{domain, sellerId, relationship?, certId?}&#x60;, normalized and invalid ones dropped), &#x60;skadnetworkIds&#x60;, &#x60;ctvMeta&#x60;, &#x60;storeUrl&#x60;, &#x60;platform&#x60;, &#x60;developerPropertyId&#x60; (one of your website properties; &#x60;null&#x60; unlinks; 400 otherwise). Republishes the serving index. 404/403 as for get.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
    * @param id  (required)
    * @param updateAppDto  (required)
    * @return ApiResponse&lt;PubProperty&gt;
@@ -1679,6 +1753,91 @@ public class PublisherApi {
     localVarRequestBuilder.header("Accept", "application/json");
 
     localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Verify a mobile or CTV app
+   * Body &#x60;{method?: \&quot;developer_site\&quot; | \&quot;store_listing\&quot;}&#x60; (default &#x60;developer_site&#x60;). &#x60;developer_site&#x60;: the app&#39;s &#x60;developerPropertyId&#x60; must be one of your website properties and already verified; its &#x60;https://&lt;domain&gt;/app-ads.txt&#x60; (cache-busted, http fallback) must contain &#x60;adviverse.com, &lt;publisherAccountId&gt;, DIRECT&#x60; (case/space-insensitive; see GET /v1/publisher/apps/{id}/app-ads.txt). &#x60;store_listing&#x60;: &#x60;storeUrl&#x60; must be on apps.apple.com or play.google.com, answer 200 and show the Play package id (&#x60;id&#x3D;&#x60;) or the App Store id; then the developer_site check also runs. On success the app becomes &#x60;verified&#x60;, a &#x60;pending&#x60; app is approved and the serving index is republished. A failed check returns &#x60;verified: false&#x60; with &#x60;error&#x60; (no_developer_property | developer_property_unverified | app_ads_txt_missing_line | http_error | fetch_failed | store_listing_not_found), a &#x60;message&#x60; saying what to put where, and &#x60;check&#x60;. Same shape as property verify.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @param verifyAppDto  (required)
+   * @return PublisherControllerVerify201Response
+   * @throws ApiException if fails to make API call
+   */
+  public PublisherControllerVerify201Response publisherControllerVerifyApp(String id, VerifyAppDto verifyAppDto) throws ApiException {
+    ApiResponse<PublisherControllerVerify201Response> localVarResponse = publisherControllerVerifyAppWithHttpInfo(id, verifyAppDto);
+    return localVarResponse.getData();
+  }
+
+  /**
+   * Verify a mobile or CTV app
+   * Body &#x60;{method?: \&quot;developer_site\&quot; | \&quot;store_listing\&quot;}&#x60; (default &#x60;developer_site&#x60;). &#x60;developer_site&#x60;: the app&#39;s &#x60;developerPropertyId&#x60; must be one of your website properties and already verified; its &#x60;https://&lt;domain&gt;/app-ads.txt&#x60; (cache-busted, http fallback) must contain &#x60;adviverse.com, &lt;publisherAccountId&gt;, DIRECT&#x60; (case/space-insensitive; see GET /v1/publisher/apps/{id}/app-ads.txt). &#x60;store_listing&#x60;: &#x60;storeUrl&#x60; must be on apps.apple.com or play.google.com, answer 200 and show the Play package id (&#x60;id&#x3D;&#x60;) or the App Store id; then the developer_site check also runs. On success the app becomes &#x60;verified&#x60;, a &#x60;pending&#x60; app is approved and the serving index is republished. A failed check returns &#x60;verified: false&#x60; with &#x60;error&#x60; (no_developer_property | developer_property_unverified | app_ads_txt_missing_line | http_error | fetch_failed | store_listing_not_found), a &#x60;message&#x60; saying what to put where, and &#x60;check&#x60;. Same shape as property verify.  Auth: session bearer token, or API key (x-api-key) with scope &#x60;write&#x60; (or &#x60;*&#x60;). Roles: publisher.
+   * @param id  (required)
+   * @param verifyAppDto  (required)
+   * @return ApiResponse&lt;PublisherControllerVerify201Response&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<PublisherControllerVerify201Response> publisherControllerVerifyAppWithHttpInfo(String id, VerifyAppDto verifyAppDto) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = publisherControllerVerifyAppRequestBuilder(id, verifyAppDto);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("publisherControllerVerifyApp", localVarResponse);
+        }
+        return new ApiResponse<PublisherControllerVerify201Response>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<PublisherControllerVerify201Response>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder publisherControllerVerifyAppRequestBuilder(String id, VerifyAppDto verifyAppDto) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling publisherControllerVerifyApp");
+    }
+    // verify the required parameter 'verifyAppDto' is set
+    if (verifyAppDto == null) {
+      throw new ApiException(400, "Missing the required parameter 'verifyAppDto' when calling publisherControllerVerifyApp");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/v1/publisher/apps/{id}/verify"
+        .replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(verifyAppDto);
+      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
     if (memberVarReadTimeout != null) {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }

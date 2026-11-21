@@ -107,7 +107,7 @@ public class PublisherControllerVerify201ResponseCheck {
   }
 
   /**
-   * URL fetched (file/meta) or DNS name queried (dns)
+   * URL fetched (file/meta/app-ads.txt/store listing) or DNS name queried (dns)
    * @return target
    */
   @javax.annotation.Nonnull

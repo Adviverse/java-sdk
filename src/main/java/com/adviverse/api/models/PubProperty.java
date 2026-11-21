@@ -81,6 +81,7 @@ import com.adviverse.api.ApiClient;
   PubProperty.JSON_PROPERTY_APP_ADS_TXT,
   PubProperty.JSON_PROPERTY_SKADNETWORK_IDS,
   PubProperty.JSON_PROPERTY_CTV_META,
+  PubProperty.JSON_PROPERTY_DEVELOPER_PROPERTY_ID,
   PubProperty.JSON_PROPERTY_CREATED_AT,
   PubProperty.JSON_PROPERTY_UPDATED_AT,
   PubProperty.JSON_PROPERTY_DELETED_AT
@@ -324,6 +325,9 @@ public class PubProperty extends HashMap<String, Object> {
 
   public static final String JSON_PROPERTY_CTV_META = "ctv_meta";
   private Map<String, Object> ctvMeta = new HashMap<>();
+
+  public static final String JSON_PROPERTY_DEVELOPER_PROPERTY_ID = "developer_property_id";
+  private JsonNullable<UUID> developerPropertyId = JsonNullable.<UUID>undefined();
 
   public static final String JSON_PROPERTY_CREATED_AT = "created_at";
   private OffsetDateTime createdAt;
@@ -1241,6 +1245,38 @@ public class PubProperty extends HashMap<String, Object> {
   }
 
 
+  public PubProperty developerPropertyId(UUID developerPropertyId) {
+    this.developerPropertyId = JsonNullable.<UUID>of(developerPropertyId);
+    return this;
+  }
+
+  /**
+   * Apps: the website property whose /app-ads.txt verifies the app
+   * @return developerPropertyId
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public UUID getDeveloperPropertyId() {
+        return developerPropertyId.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_DEVELOPER_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public JsonNullable<UUID> getDeveloperPropertyId_JsonNullable() {
+    return developerPropertyId;
+  }
+  
+  @JsonProperty(JSON_PROPERTY_DEVELOPER_PROPERTY_ID)
+  public void setDeveloperPropertyId_JsonNullable(JsonNullable<UUID> developerPropertyId) {
+    this.developerPropertyId = developerPropertyId;
+  }
+
+  public void setDeveloperPropertyId(UUID developerPropertyId) {
+    this.developerPropertyId = JsonNullable.<UUID>of(developerPropertyId);
+  }
+
+
   public PubProperty createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
@@ -1408,6 +1444,7 @@ public class PubProperty extends HashMap<String, Object> {
         Objects.equals(this.appAdsTxt, pubProperty.appAdsTxt) &&
         Objects.equals(this.skadnetworkIds, pubProperty.skadnetworkIds) &&
         Objects.equals(this.ctvMeta, pubProperty.ctvMeta) &&
+        equalsNullable(this.developerPropertyId, pubProperty.developerPropertyId) &&
         Objects.equals(this.createdAt, pubProperty.createdAt) &&
         Objects.equals(this.updatedAt, pubProperty.updatedAt) &&
         equalsNullable(this.deletedAt, pubProperty.deletedAt)&&
@@ -1421,7 +1458,7 @@ public class PubProperty extends HashMap<String, Object> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, publisherId, kind, hashCodeNullable(name), domain, hashCodeNullable(category), categorySource, categories, hashCodeNullable(classifiedAt), hashCodeNullable(classifyError), trustTier, trustLocked, hashCodeNullable(verifiedAt), trustProgress, verificationStatus, hashCodeNullable(verificationMethod), hashCodeNullable(verificationToken), status, qualityScore, crossFill, contextualWithoutConsent, enhancedCapping, hashCodeNullable(servingDomain), servingDomainVerified, hashCodeNullable(servingDomainCheckedAt), hashCodeNullable(bundleId), hashCodeNullable(storeUrl), hashCodeNullable(platform), hashCodeNullable(appStoreId), appAdsTxt, skadnetworkIds, ctvMeta, createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
+    return Objects.hash(id, publisherId, kind, hashCodeNullable(name), domain, hashCodeNullable(category), categorySource, categories, hashCodeNullable(classifiedAt), hashCodeNullable(classifyError), trustTier, trustLocked, hashCodeNullable(verifiedAt), trustProgress, verificationStatus, hashCodeNullable(verificationMethod), hashCodeNullable(verificationToken), status, qualityScore, crossFill, contextualWithoutConsent, enhancedCapping, hashCodeNullable(servingDomain), servingDomainVerified, hashCodeNullable(servingDomainCheckedAt), hashCodeNullable(bundleId), hashCodeNullable(storeUrl), hashCodeNullable(platform), hashCodeNullable(appStoreId), appAdsTxt, skadnetworkIds, ctvMeta, hashCodeNullable(developerPropertyId), createdAt, updatedAt, hashCodeNullable(deletedAt), super.hashCode(), additionalProperties);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -1468,6 +1505,7 @@ public class PubProperty extends HashMap<String, Object> {
     sb.append("    appAdsTxt: ").append(toIndentedString(appAdsTxt)).append("\n");
     sb.append("    skadnetworkIds: ").append(toIndentedString(skadnetworkIds)).append("\n");
     sb.append("    ctvMeta: ").append(toIndentedString(ctvMeta)).append("\n");
+    sb.append("    developerPropertyId: ").append(toIndentedString(developerPropertyId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    deletedAt: ").append(toIndentedString(deletedAt)).append("\n");
@@ -1694,6 +1732,11 @@ public class PubProperty extends HashMap<String, Object> {
             "".equals(suffix) ? "" : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
             getCtvMeta().get(_key), URLEncoder.encode(ApiClient.valueToString(getCtvMeta().get(_key)), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
       }
+    }
+
+    // add `developer_property_id` to the URL query string
+    if (getDeveloperPropertyId() != null) {
+      joiner.add(String.format("%sdeveloper_property_id%s=%s", prefix, suffix, URLEncoder.encode(ApiClient.valueToString(getDeveloperPropertyId()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `created_at` to the URL query string
